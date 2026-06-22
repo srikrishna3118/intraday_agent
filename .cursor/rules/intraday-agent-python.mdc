@@ -1,0 +1,43 @@
+---
+description: Python conventions for intraday_agent modules
+globs: intraday_agent/**/*.py,run_agent.py,tools/**/*.py
+alwaysApply: false
+---
+
+# intraday_agent Python conventions
+
+## Module roles
+
+| Module | Responsibility |
+|--------|----------------|
+| `agent.py` | Loop orchestration only — no indicator math |
+| `strategy.py` | Entry/exit signal logic (`Strategy` ABC) |
+| `screener.py` | Universe scan + broker candle calls |
+| `orders.py` | Paper/live execution, `Position` state |
+| `broker.py` | Angel SmartAPI wrapper |
+| `instruments.py` | Token lookup from cached scrip master |
+| `config.py` | Env-backed settings; add new vars here + `.env.example` |
+
+## Patterns
+
+- Import config as `from intraday_agent.config import Config`
+- Use module loggers: `logger = logging.getLogger(__name__)`
+- Return structured dicts from broker/order methods: `{"success": bool, "message": str, ...}`
+- Use `Signal` enum and `ScreenResult` dataclass from `strategy.py` for screener output
+
+## Avoid
+
+- Duplicating RSI/volume calculations outside `strategy.py`
+- Calling SmartAPI directly from `agent.py` (go through `broker` / `orders`)
+- Using bare symbol strings as `symboltoken` in order params
+- Adding heavy dependencies (Flask, matplotlib) without user request
+
+## Example: adding a config knob
+
+```python
+# config.py
+NEW_SETTING = int(os.getenv("NEW_SETTING", "10"))
+
+# .env.example
+NEW_SETTING=10
+```

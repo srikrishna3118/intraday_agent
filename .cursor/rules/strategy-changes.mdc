@@ -1,0 +1,33 @@
+---
+description: Rules for changing RSI/volume strategy and screener logic
+globs: intraday_agent/strategy.py,intraday_agent/screener.py,intraday_agent/universe.py
+alwaysApply: false
+---
+
+# Strategy & screener changes
+
+## Entry logic (v1 baseline)
+
+- **Long**: RSI < `RSI_OVERSOLD` AND volume > `VOLUME_MA_MULT` × SMA(volume, `VOLUME_MA_LEN`)
+- **Short**: RSI > `RSI_OVERBOUGHT` with same volume filter (if `ALLOW_SHORT`)
+- RSI computed on 15-min closes via `compute_rsi()` in `strategy.py`
+
+## Exit logic
+
+- SL/target % from entry price (`orders.py` / `agent.manage_positions`)
+- RSI mid-line: long exits when RSI ≥ `RSI_EXIT`; short when RSI ≤ `RSI_EXIT`
+- EOD forced close — not strategy's job
+
+## Extending strategy
+
+Implement the `Strategy` ABC; keep `RsiVolumeMeanReversionStrategy` as default unless replacing it.
+
+For TradingView webhook later: add a separate signal source that feeds `OrderManager`, do not embed webhook HTTP in `strategy.py`.
+
+## Universe
+
+Edit `NIFTY_50` in `universe.py` when index constituents change. Do not scrape NSE for constituents in v1.
+
+## Reality check
+
+RSI mean-reversion is a scaffold, not proven alpha. Document behavioral changes in commit messages; prefer paper-mode validation.

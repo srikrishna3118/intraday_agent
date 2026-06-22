@@ -1,0 +1,324 @@
+{
+  "days": 180,
+  "data_source": "cache",
+  "new_stack": {
+    "name": "new_stack",
+    "overrides": {
+      "RSI_OVERBOUGHT": 80.0,
+      "ENTRY_CUTOFF_TIME": "14:00",
+      "EXCLUDED_SYMBOLS": [
+        "ONGC",
+        "SBIN",
+        "BAJFINANCE"
+      ]
+    },
+    "portfolio": {
+      "trades": 47,
+      "gross_pnl_rs": 1176.0,
+      "total_costs_rs": 1974.0,
+      "net_pnl_rs": -798.0,
+      "avg_cost_per_trade_rs": 42.0,
+      "avg_gross_per_trade_rs": 25.0,
+      "avg_net_per_trade_rs": -17.0,
+      "cost_model": "flat \u20b942.0/trade",
+      "win_rate_pct": 42.6,
+      "expectancy_rs": -17.0,
+      "profit_factor": 0.71,
+      "max_drawdown_rs": 1216.0,
+      "sharpe": -0.99
+    },
+    "atr_stops": {
+      "count": 12,
+      "total_gross_rs": -1561.0,
+      "total_net_rs": -2065.0,
+      "avg_hold_minutes": 65.0,
+      "by_rsi": [
+        {
+          "rsi_bucket": "RSI 80-82",
+          "count": 7,
+          "gross_rs": -893.0,
+          "net_rs": -1187.0
+        },
+        {
+          "rsi_bucket": "RSI 82-85",
+          "count": 3,
+          "gross_rs": -433.0,
+          "net_rs": -559.0
+        },
+        {
+          "rsi_bucket": "RSI 85-90",
+          "count": 1,
+          "gross_rs": -113.0,
+          "net_rs": -155.0
+        },
+        {
+          "rsi_bucket": "RSI 90+",
+          "count": 1,
+          "gross_rs": -122.0,
+          "net_rs": -164.0
+        }
+      ],
+      "by_hold": [
+        {
+          "hold_bucket": "10-20 min",
+          "count": 1,
+          "gross_rs": -115.0,
+          "net_rs": -157.0
+        },
+        {
+          "hold_bucket": ">20 min",
+          "count": 11,
+          "gross_rs": -1446.0,
+          "net_rs": -1908.0
+        }
+      ],
+      "by_symbol": [
+        {
+          "symbol": "COALINDIA",
+          "count": 3,
+          "gross_rs": -350.0,
+          "net_rs": -476.0
+        },
+        {
+          "symbol": "INFY",
+          "count": 2,
+          "gross_rs": -317.0,
+          "net_rs": -401.0
+        },
+        {
+          "symbol": "INDUSINDBK",
+          "count": 2,
+          "gross_rs": -310.0,
+          "net_rs": -394.0
+        },
+        {
+          "symbol": "TECHM",
+          "count": 1,
+          "gross_rs": -137.0,
+          "net_rs": -179.0
+        },
+        {
+          "symbol": "NTPC",
+          "count": 1,
+          "gross_rs": -136.0,
+          "net_rs": -178.0
+        },
+        {
+          "symbol": "ITC",
+          "count": 1,
+          "gross_rs": -120.0,
+          "net_rs": -162.0
+        },
+        {
+          "symbol": "MARUTI",
+          "count": 1,
+          "gross_rs": -113.0,
+          "net_rs": -155.0
+        },
+        {
+          "symbol": "M&M",
+          "count": 1,
+          "gross_rs": -78.0,
+          "net_rs": -120.0
+        }
+      ],
+      "pct_within_5min": 0.0,
+      "pct_within_10min": 0.0,
+      "pct_within_20min": 8.3
+    },
+    "atr_stop_trades": [
+      {
+        "symbol": "INDUSINDBK",
+        "entry_time": "2026-01-01 10:30 IST",
+        "rsi": 81.6,
+        "volume_ratio": 1.88,
+        "atr_pct": 0.4717,
+        "vwap_distance": 1.0112,
+        "holding_minutes": 75.0,
+        "loss_pct": -0.774,
+        "gross_rs": -116.0,
+        "net_rs": -158.0,
+        "exit_reason": "ATR stop (-0.77%)",
+        "rsi_bucket": "RSI 80-82",
+        "hold_bucket": ">20 min"
+      },
+      {
+        "symbol": "NTPC",
+        "entry_time": "2026-01-02 10:00 IST",
+        "rsi": 81.29,
+        "volume_ratio": 1.232,
+        "atr_pct": 0.3788,
+        "vwap_distance": 0.4718,
+        "holding_minutes": 30.0,
+        "loss_pct": -0.911,
+        "gross_rs": -136.0,
+        "net_rs": -178.0,
+        "exit_reason": "ATR stop (-0.91%)",
+        "rsi_bucket": "RSI 80-82",
+        "hold_bucket": ">20 min"
+      },
+      {
+        "symbol": "COALINDIA",
+        "entry_time": "2026-01-02 11:00 IST",
+        "rsi": 85.28,
+        "volume_ratio": 1.395,
+        "atr_pct": 0.4151,
+        "vwap_distance": 0.9512,
+        "holding_minutes": 60.0,
+        "loss_pct": -0.763,
+        "gross_rs": -113.0,
+        "net_rs": -155.0,
+        "exit_reason": "ATR stop (-0.76%)",
+        "rsi_bucket": "RSI 85-90",
+        "hold_bucket": ">20 min"
+      },
+      {
+        "symbol": "COALINDIA",
+        "entry_time": "2026-01-02 13:30 IST",
+        "rsi": 92.99,
+        "volume_ratio": 1.642,
+        "atr_pct": 0.5448,
+        "vwap_distance": 1.768,
+        "holding_minutes": 105.0,
+        "loss_pct": -0.822,
+        "gross_rs": -122.0,
+        "net_rs": -164.0,
+        "exit_reason": "ATR stop (-0.82%)",
+        "rsi_bucket": "RSI 90+",
+        "hold_bucket": ">20 min"
+      },
+      {
+        "symbol": "MARUTI",
+        "entry_time": "2026-01-05 10:15 IST",
+        "rsi": 80.85,
+        "volume_ratio": 1.524,
+        "atr_pct": 0.3128,
+        "vwap_distance": 0.6727,
+        "holding_minutes": 30.0,
+        "loss_pct": -0.655,
+        "gross_rs": -113.0,
+        "net_rs": -155.0,
+        "exit_reason": "ATR stop (-0.66%)",
+        "rsi_bucket": "RSI 80-82",
+        "hold_bucket": ">20 min"
+      },
+      {
+        "symbol": "INFY",
+        "entry_time": "2026-01-16 09:45 IST",
+        "rsi": 82.53,
+        "volume_ratio": 1.382,
+        "atr_pct": 0.6838,
+        "vwap_distance": 0.0517,
+        "holding_minutes": 135.0,
+        "loss_pct": -1.202,
+        "gross_rs": -161.0,
+        "net_rs": -203.0,
+        "exit_reason": "ATR stop (-1.20%)",
+        "rsi_bucket": "RSI 82-85",
+        "hold_bucket": ">20 min"
+      },
+      {
+        "symbol": "M&M",
+        "entry_time": "2026-02-10 10:45 IST",
+        "rsi": 83.29,
+        "volume_ratio": 1.483,
+        "atr_pct": 0.3181,
+        "vwap_distance": 0.6135,
+        "holding_minutes": 30.0,
+        "loss_pct": -0.535,
+        "gross_rs": -78.0,
+        "net_rs": -120.0,
+        "exit_reason": "ATR stop (-0.54%)",
+        "rsi_bucket": "RSI 82-85",
+        "hold_bucket": ">20 min"
+      },
+      {
+        "symbol": "TECHM",
+        "entry_time": "2026-04-29 09:45 IST",
+        "rsi": 80.74,
+        "volume_ratio": 1.821,
+        "atr_pct": 0.586,
+        "vwap_distance": 0.74,
+        "holding_minutes": 75.0,
+        "loss_pct": -0.948,
+        "gross_rs": -137.0,
+        "net_rs": -179.0,
+        "exit_reason": "ATR stop (-0.95%)",
+        "rsi_bucket": "RSI 80-82",
+        "hold_bucket": ">20 min"
+      },
+      {
+        "symbol": "ITC",
+        "entry_time": "2026-04-29 11:00 IST",
+        "rsi": 80.61,
+        "volume_ratio": 1.379,
+        "atr_pct": 0.4321,
+        "vwap_distance": 0.6628,
+        "holding_minutes": 105.0,
+        "loss_pct": -0.813,
+        "gross_rs": -120.0,
+        "net_rs": -162.0,
+        "exit_reason": "ATR stop (-0.81%)",
+        "rsi_bucket": "RSI 80-82",
+        "hold_bucket": ">20 min"
+      },
+      {
+        "symbol": "COALINDIA",
+        "entry_time": "2026-05-26 10:30 IST",
+        "rsi": 81.82,
+        "volume_ratio": 1.536,
+        "atr_pct": 0.4824,
+        "vwap_distance": 0.8467,
+        "holding_minutes": 15.0,
+        "loss_pct": -0.788,
+        "gross_rs": -115.0,
+        "net_rs": -157.0,
+        "exit_reason": "ATR stop (-0.79%)",
+        "rsi_bucket": "RSI 80-82",
+        "hold_bucket": "10-20 min"
+      },
+      {
+        "symbol": "INFY",
+        "entry_time": "2026-06-02 10:00 IST",
+        "rsi": 80.09,
+        "volume_ratio": 1.305,
+        "atr_pct": 0.6666,
+        "vwap_distance": 0.8174,
+        "holding_minutes": 30.0,
+        "loss_pct": -1.126,
+        "gross_rs": -156.0,
+        "net_rs": -198.0,
+        "exit_reason": "ATR stop (-1.13%)",
+        "rsi_bucket": "RSI 80-82",
+        "hold_bucket": ">20 min"
+      },
+      {
+        "symbol": "INDUSINDBK",
+        "entry_time": "2026-06-15 09:15 IST",
+        "rsi": 83.36,
+        "volume_ratio": 1.845,
+        "atr_pct": 0.592,
+        "vwap_distance": 0.0054,
+        "holding_minutes": 90.0,
+        "loss_pct": -1.305,
+        "gross_rs": -194.0,
+        "net_rs": -236.0,
+        "exit_reason": "ATR stop (-1.30%)",
+        "rsi_bucket": "RSI 82-85",
+        "hold_bucket": ">20 min"
+      }
+    ],
+    "cost_ratio": 1.68,
+    "success_gates": {
+      "gross_gt_1000": true,
+      "cost_ratio_lt_3": true,
+      "gross_pnl_rs": 1176.0,
+      "cost_ratio": 1.68
+    }
+  },
+  "answers": {
+    "q1_new_stack": "New stack \u2014 Q1 RSI concentration: dominant bucket **RSI 80-82** (7 stops). Focus buckets: RSI 80-82: 7 stops (net \u20b9-1,187), RSI 82-85: 3 stops (net \u20b9-559), RSI 90+: 1 stops (net \u20b9-164).",
+    "q2_new_stack": "New stack \u2014 Q2 time concentration: **0%** within 5 min, **0%** within 10 min, **8%** within 20 min. Largest bucket: **>20 min** (11 stops). Holds spread beyond 10 min \u2014 time exit alone may not replace ATR stop.",
+    "q3_new_stack": "New stack \u2014 Q3 symbol cluster (worst net): COALINDIA (3, \u20b9-476), INFY (2, \u20b9-401), INDUSINDBK (2, \u20b9-394), TECHM (1, \u20b9-179), NTPC (1, \u20b9-178)."
+  }
+}

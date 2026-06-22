@@ -1,0 +1,127 @@
+{
+  "days": 180,
+  "data_source": "cache",
+  "strategy": "rsi_mr",
+  "baseline_reference": {
+    "trades": 142,
+    "net_pnl_rs": -4789.0
+  },
+  "results": [
+    {
+      "id": "baseline",
+      "label": "Baseline (no filter)",
+      "filter": {
+        "max_entry_hour": null,
+        "min_rsi": null,
+        "max_volume_ratio": null,
+        "exclude_symbols": []
+      },
+      "config": {},
+      "stats": {
+        "trades": 98,
+        "gross_pnl_rs": 994.0,
+        "total_costs_rs": 4116.0,
+        "net_pnl_rs": -3122.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 10.1,
+        "avg_net_per_trade_rs": -31.9,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 35.7,
+        "expectancy_rs": -31.9,
+        "profit_factor": 0.51,
+        "max_drawdown_rs": 3632.0,
+        "sharpe": -2.634
+      }
+    },
+    {
+      "id": "test6_pivot_proximity",
+      "label": "Test 6: pivot proximity (MR at S/R)",
+      "filter": {
+        "max_entry_hour": null,
+        "min_rsi": null,
+        "max_volume_ratio": null,
+        "exclude_symbols": []
+      },
+      "config": {
+        "PIVOT_FILTER_ENABLED": true,
+        "PIVOT_FILTER_MODE": "proximity",
+        "PIVOT_TOUCH_PCT": 0.35
+      },
+      "stats": {
+        "trades": 64,
+        "gross_pnl_rs": 1091.0,
+        "total_costs_rs": 2688.0,
+        "net_pnl_rs": -1597.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 17.0,
+        "avg_net_per_trade_rs": -25.0,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 34.4,
+        "expectancy_rs": -25.0,
+        "profit_factor": 0.58,
+        "max_drawdown_rs": 2715.0,
+        "sharpe": -1.786
+      }
+    },
+    {
+      "id": "test7_pivot_zone",
+      "label": "Test 7: pivot zone (long below PP, short above)",
+      "filter": {
+        "max_entry_hour": null,
+        "min_rsi": null,
+        "max_volume_ratio": null,
+        "exclude_symbols": []
+      },
+      "config": {
+        "PIVOT_FILTER_ENABLED": true,
+        "PIVOT_FILTER_MODE": "zone"
+      },
+      "stats": {
+        "trades": 98,
+        "gross_pnl_rs": 994.0,
+        "total_costs_rs": 4116.0,
+        "net_pnl_rs": -3122.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 10.1,
+        "avg_net_per_trade_rs": -31.9,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 35.7,
+        "expectancy_rs": -31.9,
+        "profit_factor": 0.51,
+        "max_drawdown_rs": 3632.0,
+        "sharpe": -2.634
+      }
+    },
+    {
+      "id": "test8_pivot_both",
+      "label": "Test 8: pivot zone + proximity",
+      "filter": {
+        "max_entry_hour": null,
+        "min_rsi": null,
+        "max_volume_ratio": null,
+        "exclude_symbols": []
+      },
+      "config": {
+        "PIVOT_FILTER_ENABLED": true,
+        "PIVOT_FILTER_MODE": "both",
+        "PIVOT_TOUCH_PCT": 0.35
+      },
+      "stats": {
+        "trades": 64,
+        "gross_pnl_rs": 1091.0,
+        "total_costs_rs": 2688.0,
+        "net_pnl_rs": -1597.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 17.0,
+        "avg_net_per_trade_rs": -25.0,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 34.4,
+        "expectancy_rs": -25.0,
+        "profit_factor": 0.58,
+        "max_drawdown_rs": 2715.0,
+        "sharpe": -1.786
+      }
+    }
+  ],
+  "interpretation": "Best single filter: **Test 6: pivot proximity (MR at S/R)** \u2014 net \u20b9-1,597 (+1,525 vs baseline), 64 trades, Sharpe -1.786. All variants still net negative \u2014 filters may reduce damage but do not flip expectancy; ATR stop review remains next after confirming best filter stack in paper."
+}

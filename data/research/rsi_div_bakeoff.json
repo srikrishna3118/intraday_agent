@@ -1,0 +1,115 @@
+{
+  "days": 180,
+  "data_source": "cache",
+  "symbol_count": 30,
+  "candidates": {
+    "rsi_mr_baseline": {
+      "strategy": "rsi_mr",
+      "overrides": {},
+      "note": "Current tuned short-only profile",
+      "stats": {
+        "trades": 110,
+        "gross_pnl_rs": 1423.0,
+        "total_costs_rs": 4620.0,
+        "net_pnl_rs": -3197.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 12.9,
+        "avg_net_per_trade_rs": -29.1,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 36.4,
+        "expectancy_rs": -29.1,
+        "profit_factor": 0.53,
+        "max_drawdown_rs": 3832.0,
+        "sharpe": -2.634
+      },
+      "rolling": {},
+      "gates": {
+        "pass_net": true,
+        "pass_sharpe": true,
+        "pass_trades": true,
+        "pass_oos": true,
+        "pass_all": true,
+        "baseline_net": -5290.0,
+        "baseline_sharpe": -2.655,
+        "min_trades": 43
+      }
+    },
+    "rsi_div": {
+      "strategy": "rsi_div",
+      "overrides": {
+        "USE_ATR_EXITS": false,
+        "VWAP_FILTER_ENABLED": false,
+        "VWAP_EXIT_ENABLED": false,
+        "RSI_DIV_SL_TYPE": "NONE"
+      },
+      "note": null,
+      "stats": {
+        "trades": 119,
+        "gross_pnl_rs": -31.0,
+        "total_costs_rs": 4998.0,
+        "net_pnl_rs": -5029.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -0.3,
+        "avg_net_per_trade_rs": -42.3,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 30.3,
+        "expectancy_rs": -42.3,
+        "profit_factor": 0.37,
+        "max_drawdown_rs": 5048.0,
+        "sharpe": -4.407
+      },
+      "rolling": {},
+      "gates": {
+        "pass_net": true,
+        "pass_sharpe": false,
+        "pass_trades": true,
+        "pass_oos": true,
+        "pass_all": false,
+        "baseline_net": -5290.0,
+        "baseline_sharpe": -2.655,
+        "min_trades": 43
+      }
+    },
+    "rsi_div_short": {
+      "strategy": "rsi_div",
+      "overrides": {
+        "ALLOW_LONG": false,
+        "ALLOW_SHORT": true,
+        "RSI_DIV_PLOT_BULL": false,
+        "RSI_DIV_PLOT_HIDDEN_BULL": false,
+        "USE_ATR_EXITS": false,
+        "VWAP_FILTER_ENABLED": false,
+        "VWAP_EXIT_ENABLED": false,
+        "RSI_DIV_SL_TYPE": "NONE"
+      },
+      "note": null,
+      "stats": {
+        "trades": 119,
+        "gross_pnl_rs": -31.0,
+        "total_costs_rs": 4998.0,
+        "net_pnl_rs": -5029.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -0.3,
+        "avg_net_per_trade_rs": -42.3,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 30.3,
+        "expectancy_rs": -42.3,
+        "profit_factor": 0.37,
+        "max_drawdown_rs": 5048.0,
+        "sharpe": -4.407
+      },
+      "rolling": {},
+      "gates": {
+        "pass_net": true,
+        "pass_sharpe": false,
+        "pass_trades": true,
+        "pass_oos": true,
+        "pass_all": false,
+        "baseline_net": -5290.0,
+        "baseline_sharpe": -2.655,
+        "min_trades": 43
+      }
+    }
+  },
+  "decision": "FAIL \u2014 no candidate beats baseline on all gates. Baseline rsi_mr: net \u20b9-3,197, Sharpe -2.634, 110 trades. Keep current paper stack; shelve new entry strategies until exits/guards improve."
+}

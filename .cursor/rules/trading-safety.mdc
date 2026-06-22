@@ -1,0 +1,31 @@
+---
+description: Trading safety — paper mode, secrets, risk guards
+alwaysApply: true
+---
+
+# Trading safety
+
+## Secrets
+
+- Never commit `.env`, API keys, passwords, or TOTP secrets
+- Never log credential values; redact secrets in trade logs
+- Update `.env.example` only with placeholders, not real values
+
+## Live trading
+
+- `LIVE_TRADING` defaults to **false** — paper mode logs orders without placing them
+- Do not hardcode `LIVE_TRADING=true` or remove paper-mode branches in `orders.py`
+- Warn the user before any change that enables real broker orders
+
+## Risk guards (do not remove without explicit user approval)
+
+- `MAX_POSITIONS`, `MAX_QUANTITY`, `CAPITAL_PER_TRADE` caps
+- `STOP_LOSS_PCT`, `TARGET_PCT` exits in `agent.manage_positions()`
+- EOD square-off at `SQUARE_OFF_TIME` (default 15:15 IST)
+- Market-hours check in `agent.is_market_open()`
+
+## Broker orders
+
+- Always resolve symbols through `instruments.resolve()` for `symboltoken`
+- Use `product_type=INTRADAY` (MIS) for intraday equity
+- Respect `SCREENER_DELAY_SEC` when scanning Nifty 50 to avoid API throttling

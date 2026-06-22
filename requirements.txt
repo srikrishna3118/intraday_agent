@@ -1,0 +1,23 @@
+# Core
+pandas>=1.3.0
+numpy>=1.20.0
+pyarrow>=10.0.0
+
+# Angel One SmartAPI
+smartapi-python>=1.3.0
+pyotp>=2.7.0
+logzero>=1.7.0
+websocket-client>=1.6.0
+requests>=2.27.0
+python-dotenv>=0.20.0
+pytz>=2023.3
+
+# Optional screener data (SCREENER_DATA_SOURCE=openchart|yahoo)
+openchart>=0.2.0
+yfinance>=0.2.40
+
+# Lightweight ML meta-label (optional trade filter)
+scikit-learn>=1.0.0
+
+# Reports (optional — for tools/report_journal.py)
+matplotlib>=3.5.0
