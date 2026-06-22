@@ -1,0 +1,122 @@
+{
+  "days": 180,
+  "data_source": "cache",
+  "symbol_count": 30,
+  "candidates": {
+    "rsi_mr_baseline": {
+      "strategy": "rsi_mr",
+      "overrides": {},
+      "note": "Current tuned short-only profile",
+      "stats": {
+        "trades": 23,
+        "gross_pnl_rs": 1007.0,
+        "total_costs_rs": 966.0,
+        "net_pnl_rs": 41.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 43.8,
+        "avg_net_per_trade_rs": 1.8,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 52.2,
+        "expectancy_rs": 1.8,
+        "profit_factor": 1.04,
+        "max_drawdown_rs": 494.0,
+        "sharpe": 0.099
+      },
+      "rolling": {},
+      "gates": {
+        "pass_net": true,
+        "pass_sharpe": true,
+        "pass_trades": false,
+        "pass_oos": true,
+        "pass_all": false,
+        "baseline_net": -5290.0,
+        "baseline_sharpe": -2.655,
+        "min_trades": 43
+      }
+    },
+    "rsi_mr_paper_stack": {
+      "strategy": "rsi_mr",
+      "overrides": {
+        "PIVOT_FILTER_ENABLED": true,
+        "PIVOT_FILTER_MODE": "proximity",
+        "PIVOT_TOUCH_PCT": 0.35,
+        "RSI_OVERBOUGHT": 80.0,
+        "ENTRY_CUTOFF_TIME": "14:00",
+        "EXCLUDED_SYMBOLS": "frozenset({'SBIN', 'BAJFINANCE', 'ONGC'})",
+        "ALLOW_LONG": false,
+        "ALLOW_SHORT": true,
+        "VWAP_FILTER_ENABLED": false,
+        "VWAP_EXIT_ENABLED": false,
+        "ATR_TARGET_MULT": 3.5,
+        "ATR_STOP_MULT": 1.5
+      },
+      "note": "Phase sprint paper stack (primary SBP gate)",
+      "stats": {
+        "trades": 23,
+        "gross_pnl_rs": 1007.0,
+        "total_costs_rs": 966.0,
+        "net_pnl_rs": 41.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 43.8,
+        "avg_net_per_trade_rs": 1.8,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 52.2,
+        "expectancy_rs": 1.8,
+        "profit_factor": 1.04,
+        "max_drawdown_rs": 494.0,
+        "sharpe": 0.099
+      },
+      "rolling": {},
+      "gates": {
+        "pass_net": true,
+        "pass_sharpe": true,
+        "pass_trades": false,
+        "pass_oos": true,
+        "pass_all": false,
+        "baseline_net": -5290.0,
+        "baseline_sharpe": -2.655,
+        "min_trades": 43
+      }
+    },
+    "sbp_tm_short": {
+      "strategy": "sbp_tm",
+      "overrides": {
+        "ALLOW_LONG": false,
+        "ALLOW_SHORT": true,
+        "TRAILING_STOP_ENABLED": false,
+        "USE_ATR_EXITS": false,
+        "SBP_USE_TRAIL_EXIT": true,
+        "VWAP_FILTER_ENABLED": false,
+        "VWAP_EXIT_ENABLED": false
+      },
+      "note": null,
+      "stats": {
+        "trades": 484,
+        "gross_pnl_rs": -1035.0,
+        "total_costs_rs": 20328.0,
+        "net_pnl_rs": -21363.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -2.1,
+        "avg_net_per_trade_rs": -44.1,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 20.7,
+        "expectancy_rs": -44.1,
+        "profit_factor": 0.19,
+        "max_drawdown_rs": 21171.0,
+        "sharpe": -8.432
+      },
+      "rolling": {},
+      "gates": {
+        "pass_net": false,
+        "pass_sharpe": false,
+        "pass_trades": true,
+        "pass_oos": true,
+        "pass_all": false,
+        "baseline_net": -5290.0,
+        "baseline_sharpe": -2.655,
+        "min_trades": 43
+      }
+    }
+  },
+  "decision": "FAIL \u2014 no candidate beats baseline on all gates. Baseline rsi_mr: net \u20b941, Sharpe 0.099, 23 trades. Keep current paper stack; shelve new entry strategies until exits/guards improve."
+}

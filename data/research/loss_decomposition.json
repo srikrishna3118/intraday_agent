@@ -1,0 +1,763 @@
+{
+  "days": 180,
+  "strategy": "rsi_mr",
+  "data_source": "cache",
+  "symbol_count": 30,
+  "min_segment_trades": 5,
+  "totals": {
+    "trades": 142,
+    "gross_pnl_rs": 1175.0,
+    "total_costs_rs": 5964.0,
+    "net_pnl_rs": -4789.0,
+    "avg_cost_per_trade_rs": 42.0,
+    "avg_gross_per_trade_rs": 8.3,
+    "avg_net_per_trade_rs": -33.7,
+    "cost_model": "flat \u20b942.0/trade",
+    "win_rate_pct": 39.4,
+    "expectancy_rs": -33.7,
+    "profit_factor": 0.56,
+    "max_drawdown_rs": 5801.0,
+    "sharpe": -2.432
+  },
+  "waterfall": [
+    {
+      "layer": "Gross P&L (price)",
+      "amount": 1175.0,
+      "share_pct": 24.5
+    },
+    {
+      "layer": "Estimated costs",
+      "amount": -5964.0,
+      "share_pct": 124.5
+    },
+    {
+      "layer": "Net P&L",
+      "amount": -4789.0,
+      "share_pct": 100.0
+    }
+  ],
+  "by_symbol": [
+    {
+      "symbol": "TCS",
+      "trades": 3,
+      "win_rate_pct": 100.0,
+      "gross_rs": 988.0,
+      "costs_rs": 126.0,
+      "net_pnl_rs": 862.0,
+      "avg_gross_rs": 329.5,
+      "passes_min_trades": false
+    },
+    {
+      "symbol": "MARUTI",
+      "trades": 6,
+      "win_rate_pct": 83.3,
+      "gross_rs": 695.0,
+      "costs_rs": 252.0,
+      "net_pnl_rs": 443.0,
+      "avg_gross_rs": 115.8,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "RELIANCE",
+      "trades": 4,
+      "win_rate_pct": 100.0,
+      "gross_rs": 517.0,
+      "costs_rs": 168.0,
+      "net_pnl_rs": 349.0,
+      "avg_gross_rs": 129.2,
+      "passes_min_trades": false
+    },
+    {
+      "symbol": "M&M",
+      "trades": 9,
+      "win_rate_pct": 66.7,
+      "gross_rs": 534.0,
+      "costs_rs": 378.0,
+      "net_pnl_rs": 156.0,
+      "avg_gross_rs": 59.3,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "ASIANPAINT",
+      "trades": 4,
+      "win_rate_pct": 100.0,
+      "gross_rs": 321.0,
+      "costs_rs": 168.0,
+      "net_pnl_rs": 153.0,
+      "avg_gross_rs": 80.2,
+      "passes_min_trades": false
+    },
+    {
+      "symbol": "JSWSTEEL",
+      "trades": 2,
+      "win_rate_pct": 50.0,
+      "gross_rs": 187.0,
+      "costs_rs": 84.0,
+      "net_pnl_rs": 103.0,
+      "avg_gross_rs": 93.5,
+      "passes_min_trades": false
+    },
+    {
+      "symbol": "TATACONSUM",
+      "trades": 3,
+      "win_rate_pct": 66.7,
+      "gross_rs": 182.0,
+      "costs_rs": 126.0,
+      "net_pnl_rs": 56.0,
+      "avg_gross_rs": 60.6,
+      "passes_min_trades": false
+    },
+    {
+      "symbol": "NTPC",
+      "trades": 8,
+      "win_rate_pct": 62.5,
+      "gross_rs": 374.0,
+      "costs_rs": 336.0,
+      "net_pnl_rs": 38.0,
+      "avg_gross_rs": 46.7,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "SUNPHARMA",
+      "trades": 4,
+      "win_rate_pct": 75.0,
+      "gross_rs": 190.0,
+      "costs_rs": 168.0,
+      "net_pnl_rs": 22.0,
+      "avg_gross_rs": 47.4,
+      "passes_min_trades": false
+    },
+    {
+      "symbol": "WIPRO",
+      "trades": 3,
+      "win_rate_pct": 100.0,
+      "gross_rs": 123.0,
+      "costs_rs": 126.0,
+      "net_pnl_rs": -3.0,
+      "avg_gross_rs": 41.0,
+      "passes_min_trades": false
+    },
+    {
+      "symbol": "KOTAKBANK",
+      "trades": 4,
+      "win_rate_pct": 50.0,
+      "gross_rs": 50.0,
+      "costs_rs": 168.0,
+      "net_pnl_rs": -118.0,
+      "avg_gross_rs": 12.6,
+      "passes_min_trades": false
+    },
+    {
+      "symbol": "ULTRACEMCO",
+      "trades": 5,
+      "win_rate_pct": 80.0,
+      "gross_rs": 53.0,
+      "costs_rs": 210.0,
+      "net_pnl_rs": -157.0,
+      "avg_gross_rs": 10.6,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "INFY",
+      "trades": 3,
+      "win_rate_pct": 33.3,
+      "gross_rs": -102.0,
+      "costs_rs": 126.0,
+      "net_pnl_rs": -228.0,
+      "avg_gross_rs": -34.1,
+      "passes_min_trades": false
+    },
+    {
+      "symbol": "HDFCBANK",
+      "trades": 2,
+      "win_rate_pct": 50.0,
+      "gross_rs": -294.0,
+      "costs_rs": 84.0,
+      "net_pnl_rs": -378.0,
+      "avg_gross_rs": -146.8,
+      "passes_min_trades": false
+    },
+    {
+      "symbol": "LT",
+      "trades": 6,
+      "win_rate_pct": 33.3,
+      "gross_rs": -151.0,
+      "costs_rs": 252.0,
+      "net_pnl_rs": -403.0,
+      "avg_gross_rs": -25.1,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "COALINDIA",
+      "trades": 12,
+      "win_rate_pct": 50.0,
+      "gross_rs": 87.0,
+      "costs_rs": 504.0,
+      "net_pnl_rs": -417.0,
+      "avg_gross_rs": 7.2,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "TATASTEEL",
+      "trades": 6,
+      "win_rate_pct": 33.3,
+      "gross_rs": -195.0,
+      "costs_rs": 252.0,
+      "net_pnl_rs": -447.0,
+      "avg_gross_rs": -32.6,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "ITC",
+      "trades": 5,
+      "win_rate_pct": 60.0,
+      "gross_rs": -292.0,
+      "costs_rs": 210.0,
+      "net_pnl_rs": -502.0,
+      "avg_gross_rs": -58.5,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "POWERGRID",
+      "trades": 5,
+      "win_rate_pct": 40.0,
+      "gross_rs": -308.0,
+      "costs_rs": 210.0,
+      "net_pnl_rs": -518.0,
+      "avg_gross_rs": -61.6,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "TECHM",
+      "trades": 10,
+      "win_rate_pct": 40.0,
+      "gross_rs": -153.0,
+      "costs_rs": 420.0,
+      "net_pnl_rs": -573.0,
+      "avg_gross_rs": -15.3,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "INDUSINDBK",
+      "trades": 8,
+      "win_rate_pct": 37.5,
+      "gross_rs": -324.0,
+      "costs_rs": 336.0,
+      "net_pnl_rs": -660.0,
+      "avg_gross_rs": -40.5,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "SBIN",
+      "trades": 14,
+      "win_rate_pct": 50.0,
+      "gross_rs": -109.0,
+      "costs_rs": 588.0,
+      "net_pnl_rs": -697.0,
+      "avg_gross_rs": -7.8,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "BAJFINANCE",
+      "trades": 6,
+      "win_rate_pct": 50.0,
+      "gross_rs": -603.0,
+      "costs_rs": 252.0,
+      "net_pnl_rs": -855.0,
+      "avg_gross_rs": -100.5,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "ONGC",
+      "trades": 10,
+      "win_rate_pct": 30.0,
+      "gross_rs": -594.0,
+      "costs_rs": 420.0,
+      "net_pnl_rs": -1014.0,
+      "avg_gross_rs": -59.4,
+      "passes_min_trades": true
+    }
+  ],
+  "by_hour": [
+    {
+      "hour_label": "16:00 IST",
+      "trades": 1,
+      "win_rate_pct": 100.0,
+      "gross_rs": 34.0,
+      "costs_rs": 42.0,
+      "net_pnl_rs": -8.0,
+      "avg_gross_rs": 33.8,
+      "passes_min_trades": false
+    },
+    {
+      "hour_label": "15:00 IST",
+      "trades": 3,
+      "win_rate_pct": 66.7,
+      "gross_rs": -69.0,
+      "costs_rs": 126.0,
+      "net_pnl_rs": -195.0,
+      "avg_gross_rs": -22.9,
+      "passes_min_trades": false
+    },
+    {
+      "hour_label": "11:00 IST",
+      "trades": 13,
+      "win_rate_pct": 61.5,
+      "gross_rs": 207.0,
+      "costs_rs": 546.0,
+      "net_pnl_rs": -339.0,
+      "avg_gross_rs": 15.9,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "12:00 IST",
+      "trades": 14,
+      "win_rate_pct": 64.3,
+      "gross_rs": 237.0,
+      "costs_rs": 588.0,
+      "net_pnl_rs": -351.0,
+      "avg_gross_rs": 16.9,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "10:00 IST",
+      "trades": 37,
+      "win_rate_pct": 54.1,
+      "gross_rs": 942.0,
+      "costs_rs": 1554.0,
+      "net_pnl_rs": -612.0,
+      "avg_gross_rs": 25.4,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "09:00 IST",
+      "trades": 42,
+      "win_rate_pct": 61.9,
+      "gross_rs": 1093.0,
+      "costs_rs": 1764.0,
+      "net_pnl_rs": -671.0,
+      "avg_gross_rs": 26.0,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "13:00 IST",
+      "trades": 12,
+      "win_rate_pct": 41.7,
+      "gross_rs": -202.0,
+      "costs_rs": 504.0,
+      "net_pnl_rs": -706.0,
+      "avg_gross_rs": -16.8,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "14:00 IST",
+      "trades": 20,
+      "win_rate_pct": 40.0,
+      "gross_rs": -1065.0,
+      "costs_rs": 840.0,
+      "net_pnl_rs": -1905.0,
+      "avg_gross_rs": -53.3,
+      "passes_min_trades": true
+    }
+  ],
+  "by_exit": [
+    {
+      "exit_family": "ATR target",
+      "trades": 15,
+      "win_rate_pct": 100.0,
+      "gross_rs": 3605.0,
+      "costs_rs": 630.0,
+      "net_pnl_rs": 2975.0,
+      "avg_gross_rs": 240.3,
+      "passes_min_trades": true
+    },
+    {
+      "exit_family": "RSI mid-line exit",
+      "trades": 22,
+      "win_rate_pct": 100.0,
+      "gross_rs": 3154.0,
+      "costs_rs": 924.0,
+      "net_pnl_rs": 2230.0,
+      "avg_gross_rs": 143.4,
+      "passes_min_trades": true
+    },
+    {
+      "exit_family": "trailing stop",
+      "trades": 56,
+      "win_rate_pct": 75.0,
+      "gross_rs": 1700.0,
+      "costs_rs": 2352.0,
+      "net_pnl_rs": -652.0,
+      "avg_gross_rs": 30.4,
+      "passes_min_trades": true
+    },
+    {
+      "exit_family": "ATR stop",
+      "trades": 49,
+      "win_rate_pct": 0.0,
+      "gross_rs": -7284.0,
+      "costs_rs": 2058.0,
+      "net_pnl_rs": -9342.0,
+      "avg_gross_rs": -148.6,
+      "passes_min_trades": true
+    }
+  ],
+  "by_rsi": [
+    {
+      "rsi_bucket": "short_rsi_>80",
+      "trades": 46,
+      "win_rate_pct": 56.5,
+      "gross_rs": 1695.0,
+      "costs_rs": 1932.0,
+      "net_pnl_rs": -237.0,
+      "avg_gross_rs": 36.8,
+      "passes_min_trades": true
+    },
+    {
+      "rsi_bucket": "short_rsi_75-80",
+      "trades": 96,
+      "win_rate_pct": 55.2,
+      "gross_rs": -520.0,
+      "costs_rs": 4032.0,
+      "net_pnl_rs": -4552.0,
+      "avg_gross_rs": -5.4,
+      "passes_min_trades": true
+    }
+  ],
+  "by_volume": [
+    {
+      "volume_bucket": "vol_1.2-1.5x",
+      "trades": 59,
+      "win_rate_pct": 62.7,
+      "gross_rs": 1109.0,
+      "costs_rs": 2478.0,
+      "net_pnl_rs": -1369.0,
+      "avg_gross_rs": 18.8,
+      "passes_min_trades": true
+    },
+    {
+      "volume_bucket": "vol_1.5-2x",
+      "trades": 83,
+      "win_rate_pct": 50.6,
+      "gross_rs": 66.0,
+      "costs_rs": 3486.0,
+      "net_pnl_rs": -3420.0,
+      "avg_gross_rs": 0.8,
+      "passes_min_trades": true
+    }
+  ],
+  "best_symbols": [
+    {
+      "symbol": "MARUTI",
+      "trades": 6,
+      "win_rate_pct": 83.3,
+      "gross_rs": 695.0,
+      "costs_rs": 252.0,
+      "net_pnl_rs": 443.0,
+      "avg_gross_rs": 115.8,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "M&M",
+      "trades": 9,
+      "win_rate_pct": 66.7,
+      "gross_rs": 534.0,
+      "costs_rs": 378.0,
+      "net_pnl_rs": 156.0,
+      "avg_gross_rs": 59.3,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "NTPC",
+      "trades": 8,
+      "win_rate_pct": 62.5,
+      "gross_rs": 374.0,
+      "costs_rs": 336.0,
+      "net_pnl_rs": 38.0,
+      "avg_gross_rs": 46.7,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "ULTRACEMCO",
+      "trades": 5,
+      "win_rate_pct": 80.0,
+      "gross_rs": 53.0,
+      "costs_rs": 210.0,
+      "net_pnl_rs": -157.0,
+      "avg_gross_rs": 10.6,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "LT",
+      "trades": 6,
+      "win_rate_pct": 33.3,
+      "gross_rs": -151.0,
+      "costs_rs": 252.0,
+      "net_pnl_rs": -403.0,
+      "avg_gross_rs": -25.1,
+      "passes_min_trades": true
+    }
+  ],
+  "worst_symbols": [
+    {
+      "symbol": "ONGC",
+      "trades": 10,
+      "win_rate_pct": 30.0,
+      "gross_rs": -594.0,
+      "costs_rs": 420.0,
+      "net_pnl_rs": -1014.0,
+      "avg_gross_rs": -59.4,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "BAJFINANCE",
+      "trades": 6,
+      "win_rate_pct": 50.0,
+      "gross_rs": -603.0,
+      "costs_rs": 252.0,
+      "net_pnl_rs": -855.0,
+      "avg_gross_rs": -100.5,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "SBIN",
+      "trades": 14,
+      "win_rate_pct": 50.0,
+      "gross_rs": -109.0,
+      "costs_rs": 588.0,
+      "net_pnl_rs": -697.0,
+      "avg_gross_rs": -7.8,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "INDUSINDBK",
+      "trades": 8,
+      "win_rate_pct": 37.5,
+      "gross_rs": -324.0,
+      "costs_rs": 336.0,
+      "net_pnl_rs": -660.0,
+      "avg_gross_rs": -40.5,
+      "passes_min_trades": true
+    },
+    {
+      "symbol": "TECHM",
+      "trades": 10,
+      "win_rate_pct": 40.0,
+      "gross_rs": -153.0,
+      "costs_rs": 420.0,
+      "net_pnl_rs": -573.0,
+      "avg_gross_rs": -15.3,
+      "passes_min_trades": true
+    }
+  ],
+  "best_hours": [
+    {
+      "hour_label": "11:00 IST",
+      "trades": 13,
+      "win_rate_pct": 61.5,
+      "gross_rs": 207.0,
+      "costs_rs": 546.0,
+      "net_pnl_rs": -339.0,
+      "avg_gross_rs": 15.9,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "12:00 IST",
+      "trades": 14,
+      "win_rate_pct": 64.3,
+      "gross_rs": 237.0,
+      "costs_rs": 588.0,
+      "net_pnl_rs": -351.0,
+      "avg_gross_rs": 16.9,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "10:00 IST",
+      "trades": 37,
+      "win_rate_pct": 54.1,
+      "gross_rs": 942.0,
+      "costs_rs": 1554.0,
+      "net_pnl_rs": -612.0,
+      "avg_gross_rs": 25.4,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "09:00 IST",
+      "trades": 42,
+      "win_rate_pct": 61.9,
+      "gross_rs": 1093.0,
+      "costs_rs": 1764.0,
+      "net_pnl_rs": -671.0,
+      "avg_gross_rs": 26.0,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "13:00 IST",
+      "trades": 12,
+      "win_rate_pct": 41.7,
+      "gross_rs": -202.0,
+      "costs_rs": 504.0,
+      "net_pnl_rs": -706.0,
+      "avg_gross_rs": -16.8,
+      "passes_min_trades": true
+    }
+  ],
+  "worst_hours": [
+    {
+      "hour_label": "14:00 IST",
+      "trades": 20,
+      "win_rate_pct": 40.0,
+      "gross_rs": -1065.0,
+      "costs_rs": 840.0,
+      "net_pnl_rs": -1905.0,
+      "avg_gross_rs": -53.3,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "13:00 IST",
+      "trades": 12,
+      "win_rate_pct": 41.7,
+      "gross_rs": -202.0,
+      "costs_rs": 504.0,
+      "net_pnl_rs": -706.0,
+      "avg_gross_rs": -16.8,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "09:00 IST",
+      "trades": 42,
+      "win_rate_pct": 61.9,
+      "gross_rs": 1093.0,
+      "costs_rs": 1764.0,
+      "net_pnl_rs": -671.0,
+      "avg_gross_rs": 26.0,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "10:00 IST",
+      "trades": 37,
+      "win_rate_pct": 54.1,
+      "gross_rs": 942.0,
+      "costs_rs": 1554.0,
+      "net_pnl_rs": -612.0,
+      "avg_gross_rs": 25.4,
+      "passes_min_trades": true
+    },
+    {
+      "hour_label": "12:00 IST",
+      "trades": 14,
+      "win_rate_pct": 64.3,
+      "gross_rs": 237.0,
+      "costs_rs": 588.0,
+      "net_pnl_rs": -351.0,
+      "avg_gross_rs": 16.9,
+      "passes_min_trades": true
+    }
+  ],
+  "worst_exits": [
+    {
+      "exit_family": "ATR stop",
+      "trades": 49,
+      "win_rate_pct": 0.0,
+      "gross_rs": -7284.0,
+      "costs_rs": 2058.0,
+      "net_pnl_rs": -9342.0,
+      "avg_gross_rs": -148.6,
+      "passes_min_trades": true
+    },
+    {
+      "exit_family": "trailing stop",
+      "trades": 56,
+      "win_rate_pct": 75.0,
+      "gross_rs": 1700.0,
+      "costs_rs": 2352.0,
+      "net_pnl_rs": -652.0,
+      "avg_gross_rs": 30.4,
+      "passes_min_trades": true
+    },
+    {
+      "exit_family": "RSI mid-line exit",
+      "trades": 22,
+      "win_rate_pct": 100.0,
+      "gross_rs": 3154.0,
+      "costs_rs": 924.0,
+      "net_pnl_rs": 2230.0,
+      "avg_gross_rs": 143.4,
+      "passes_min_trades": true
+    },
+    {
+      "exit_family": "ATR target",
+      "trades": 15,
+      "win_rate_pct": 100.0,
+      "gross_rs": 3605.0,
+      "costs_rs": 630.0,
+      "net_pnl_rs": 2975.0,
+      "avg_gross_rs": 240.3,
+      "passes_min_trades": true
+    }
+  ],
+  "best_exits": [
+    {
+      "exit_family": "ATR target",
+      "trades": 15,
+      "win_rate_pct": 100.0,
+      "gross_rs": 3605.0,
+      "costs_rs": 630.0,
+      "net_pnl_rs": 2975.0,
+      "avg_gross_rs": 240.3,
+      "passes_min_trades": true
+    },
+    {
+      "exit_family": "RSI mid-line exit",
+      "trades": 22,
+      "win_rate_pct": 100.0,
+      "gross_rs": 3154.0,
+      "costs_rs": 924.0,
+      "net_pnl_rs": 2230.0,
+      "avg_gross_rs": 143.4,
+      "passes_min_trades": true
+    },
+    {
+      "exit_family": "trailing stop",
+      "trades": 56,
+      "win_rate_pct": 75.0,
+      "gross_rs": 1700.0,
+      "costs_rs": 2352.0,
+      "net_pnl_rs": -652.0,
+      "avg_gross_rs": 30.4,
+      "passes_min_trades": true
+    },
+    {
+      "exit_family": "ATR stop",
+      "trades": 49,
+      "win_rate_pct": 0.0,
+      "gross_rs": -7284.0,
+      "costs_rs": 2058.0,
+      "net_pnl_rs": -9342.0,
+      "avg_gross_rs": -148.6,
+      "passes_min_trades": true
+    }
+  ],
+  "edge_pockets": [
+    {
+      "dimension": "symbol",
+      "segment": "MARUTI",
+      "trades": 6,
+      "net_pnl_rs": 443.0
+    },
+    {
+      "dimension": "symbol",
+      "segment": "M&M",
+      "trades": 9,
+      "net_pnl_rs": 156.0
+    },
+    {
+      "dimension": "symbol",
+      "segment": "NTPC",
+      "trades": 8,
+      "net_pnl_rs": 38.0
+    }
+  ],
+  "narrative": "Gross edge is **positive** (+\u20b91,175) but **costs (\u20b95,964) exceed gross by \u20b94,789** \u2014 the strategy is not losing on price action alone; friction dominates. Largest symbol drag: **ONGC** (10 trades, net \u20b9-1,014). Worst entry hour: **14:00 IST** (20 trades, net \u20b9-1,905). Largest exit leak: **ATR stop** (49 trades, net \u20b9-9,342). Best exit path: **ATR target** (15 trades, net +\u20b92,975). Best symbol pocket: **MARUTI** \u2014 6 trades, net +\u20b9443.",
+  "recommendations": "1. **Cut trade count** in worst hours/symbols before tuning RSI \u2014 costs scale linearly per trade.\n2. **Review or exclude** chronic losers: ONGC, BAJFINANCE, SBIN.\n3. **Time filter**: block or reduce size for entries at 14:00 IST, 13:00 IST.\n4. **Exit review**: losses concentrate in ATR stop, trailing stop \u2014 tighten stops or skip weak entries.\n5. **Keep winners working**: ATR target (+\u20b92,975 net) \u2014 don't cut this exit path while fixing stops.\n6. **Entry filter test**: `short_rsi_75-80` (96 trades, \u20b9-4,552) \u2014 paper-block before any new strategy.\nDo not add strategy #6 until gross/net per trade improves after symbol+time filters."
+}

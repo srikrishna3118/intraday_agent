@@ -1,0 +1,39 @@
+---
+description: Adaptive learning layer — journal, stats, ranking rules
+globs: intraday_agent/learning/**,intraday_agent/agent.py,intraday_agent/orders.py,tools/bootstrap_backtest.py
+alwaysApply: false
+---
+
+# Adaptive learning
+
+The learning layer **does not change signal generation** (RSI+volume in `strategy.py`). It only **filters and ranks** screener candidates in `agent.try_entries()` when `LEARNING_ENABLED=true`.
+
+## Source of truth
+
+- Trade outcomes live in SQLite: `data/trade_journal.db` (`TradeJournal`)
+- Each closed trade records: symbol, side, entry RSI, volume ratio, exit reason, PnL, `source` (`backtest` | `paper` | `live`)
+- Never disable risk guards (SL, target, EOD square-off, max positions) for learning
+
+## Behavior
+
+- `StatsEngine` computes per-symbol rolling win rate over `LEARNING_LOOKBACK_DAYS`
+- Skip symbols only when `trade_count >= LEARNING_MIN_TRADES` and `win_rate < LEARNING_SKIP_WIN_RATE`
+- `AdaptiveRanker` scores candidates by RSI extremity + symbol win-rate bonus; sorts long+short together
+- If `LEARNING_ENABLED=false` **or** journal is empty → legacy RSI-only ordering (longs before shorts)
+
+## Bootstrap
+
+Seed history before first paper session:
+
+```bash
+python tools/bootstrap_backtest.py --days 60
+python tools/bootstrap_backtest.py --symbols RELIANCE,SBIN --days 60
+```
+
+Backtest trades are tagged `source=backtest`. Treat paper/live stats as higher trust for live filtering.
+
+## Do not (v1)
+
+- Auto-tune RSI thresholds from learning
+- Add sklearn/XGBoost or RL dependencies
+- Remove or bypass `should_skip` minimum sample size

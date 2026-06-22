@@ -1,0 +1,22 @@
+---
+description: Core project context for the Angel One intraday agent
+alwaysApply: true
+---
+
+# Auto_trading — core context
+
+This repo is a **single-purpose** autonomous intraday equity agent on Angel One SmartAPI.
+
+- Package: `intraday_agent/` (not root-level scripts except `run_agent.py`)
+- Strategy: Nifty 50 RSI mean-reversion + volume filter, MIS intraday, long and short
+- Data: Angel SmartAPI only (`getCandleData`, `ltpData`); scrip master in `instruments.py`
+- Entry: `python run_agent.py` (paper default)
+
+When editing:
+
+- Read `AGENTS.md` for architecture and safety rules
+- Keep changes minimal and scoped to the request
+- Do not add Flask/webhooks, Docker, backtests, or crypto unless explicitly requested
+- Do not commit or log secrets from `.env`
+
+Deferred features (add via pluggable `Strategy` in `strategy.py`): TradingView webhook, options/futures.

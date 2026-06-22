@@ -1,0 +1,104 @@
+{
+  "days": 180,
+  "stack": {
+    "ENTRY_CUTOFF_TIME": "14:00",
+    "EXCLUDED_SYMBOLS": "frozenset({'SBIN', 'ONGC', 'BAJFINANCE'})",
+    "ALLOW_LONG": false,
+    "ALLOW_SHORT": true
+  },
+  "results": [
+    {
+      "rsi_overbought": 80,
+      "stats": {
+        "trades": 47,
+        "gross_pnl_rs": 1310.0,
+        "total_costs_rs": 1974.0,
+        "net_pnl_rs": -664.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 27.9,
+        "avg_net_per_trade_rs": -14.1,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 44.7,
+        "expectancy_rs": -14.1,
+        "profit_factor": 0.75,
+        "max_drawdown_rs": 1216.0,
+        "sharpe": -0.847
+      },
+      "atr_stops": {
+        "atr_stop_count": 12,
+        "atr_stop_net_rs": -2066.0,
+        "max_atr_hold_min": 135.0
+      }
+    },
+    {
+      "rsi_overbought": 82,
+      "stats": {
+        "trades": 30,
+        "gross_pnl_rs": 188.0,
+        "total_costs_rs": 1260.0,
+        "net_pnl_rs": -1072.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 6.3,
+        "avg_net_per_trade_rs": -35.7,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 36.7,
+        "expectancy_rs": -35.7,
+        "profit_factor": 0.5,
+        "max_drawdown_rs": 1356.0,
+        "sharpe": -1.756
+      },
+      "atr_stops": {
+        "atr_stop_count": 8,
+        "atr_stop_net_rs": -1455.0,
+        "max_atr_hold_min": 135.0
+      }
+    },
+    {
+      "rsi_overbought": 84,
+      "stats": {
+        "trades": 13,
+        "gross_pnl_rs": 247.0,
+        "total_costs_rs": 546.0,
+        "net_pnl_rs": -299.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 19.0,
+        "avg_net_per_trade_rs": -23.0,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 38.5,
+        "expectancy_rs": -23.0,
+        "profit_factor": 0.7,
+        "max_drawdown_rs": 376.0,
+        "sharpe": -0.573
+      },
+      "atr_stops": {
+        "atr_stop_count": 5,
+        "atr_stop_net_rs": -871.0,
+        "max_atr_hold_min": 135.0
+      }
+    },
+    {
+      "rsi_overbought": 85,
+      "stats": {
+        "trades": 10,
+        "gross_pnl_rs": -271.0,
+        "total_costs_rs": 420.0,
+        "net_pnl_rs": -691.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -27.1,
+        "avg_net_per_trade_rs": -69.1,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 20.0,
+        "expectancy_rs": -69.1,
+        "profit_factor": 0.31,
+        "max_drawdown_rs": 474.0,
+        "sharpe": -1.381
+      },
+      "atr_stops": {
+        "atr_stop_count": 5,
+        "atr_stop_net_rs": -871.0,
+        "max_atr_hold_min": 135.0
+      }
+    }
+  ],
+  "recommendation": "Best net: **RSI > 84** (\u20b9-299, 13 trades). Paper Tier 1 uses RSI>80 until Tier 2 confirms a higher floor."
+}

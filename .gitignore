@@ -1,0 +1,34 @@
+# Environment
+.env
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Runtime data (keep local; may contain paths or session state)
+logs/
+data/candles/
+data/instruments.json
+data/trade_journal.db
+data/models/
+data/reports/
+data/run_agent.lock
+data/*.db
+*.log
+
+# Research markdown/json are tracked under data/research/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Legacy artifacts (if recreated)
+backtest_results/

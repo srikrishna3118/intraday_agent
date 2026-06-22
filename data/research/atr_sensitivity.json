@@ -1,0 +1,76 @@
+{
+  "days": 180,
+  "rsi_overbought": 80.0,
+  "results": [
+    {
+      "atr_stop_mult": 1.0,
+      "stats": {
+        "trades": 47,
+        "gross_pnl_rs": 1155.0,
+        "total_costs_rs": 1974.0,
+        "net_pnl_rs": -819.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 24.6,
+        "avg_net_per_trade_rs": -17.4,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 42.6,
+        "expectancy_rs": -17.4,
+        "profit_factor": 0.7,
+        "max_drawdown_rs": 1208.0,
+        "sharpe": -1.005
+      },
+      "atr_stops": {
+        "count": 15,
+        "net_rs": -2167.0,
+        "avg_loss_pct": -0.71
+      }
+    },
+    {
+      "atr_stop_mult": 1.25,
+      "stats": {
+        "trades": 47,
+        "gross_pnl_rs": 1291.0,
+        "total_costs_rs": 1974.0,
+        "net_pnl_rs": -683.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 27.5,
+        "avg_net_per_trade_rs": -14.5,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 42.6,
+        "expectancy_rs": -14.5,
+        "profit_factor": 0.74,
+        "max_drawdown_rs": 1173.0,
+        "sharpe": -0.869
+      },
+      "atr_stops": {
+        "count": 12,
+        "net_rs": -1951.0,
+        "avg_loss_pct": -0.821
+      }
+    },
+    {
+      "atr_stop_mult": 1.5,
+      "stats": {
+        "trades": 47,
+        "gross_pnl_rs": 1176.0,
+        "total_costs_rs": 1974.0,
+        "net_pnl_rs": -798.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 25.0,
+        "avg_net_per_trade_rs": -17.0,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 42.6,
+        "expectancy_rs": -17.0,
+        "profit_factor": 0.71,
+        "max_drawdown_rs": 1216.0,
+        "sharpe": -0.99
+      },
+      "atr_stops": {
+        "count": 12,
+        "net_rs": -2066.0,
+        "avg_loss_pct": -0.887
+      }
+    }
+  ],
+  "recommendation": "Best net at ATR_STOP_MULT=1.25 (\u20b9-683). Validate in paper before changing .env."
+}

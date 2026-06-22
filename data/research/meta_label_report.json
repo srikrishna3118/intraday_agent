@@ -1,0 +1,35 @@
+{
+  "samples": 32,
+  "paper_samples": 4,
+  "sources": "backtest,paper",
+  "min_samples": 20,
+  "threshold": 0.55,
+  "ready_for_live": false,
+  "walk_forward": {
+    "folds": [
+      {
+        "fold": 0,
+        "train": 10,
+        "test": 10
+      },
+      {
+        "fold": 1,
+        "train": 20,
+        "test": 10
+      }
+    ],
+    "baseline_trades": 20,
+    "filtered_trades": 1,
+    "keep_ratio": 0.05,
+    "baseline_net_pnl_rs": 228.0,
+    "filtered_net_pnl_rs": -46.0,
+    "baseline_sharpe": 0.0,
+    "filtered_sharpe": 0.0,
+    "threshold": 0.55,
+    "pass_keep_ratio": false,
+    "pass_sharpe": false,
+    "pass": false
+  },
+  "model_path": "data/models/meta_label.joblib",
+  "train_samples": 32
+}

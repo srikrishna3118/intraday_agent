@@ -1,0 +1,17 @@
+{
+  "name": "t2_180d",
+  "description": "Phase B portfolio research: T2 symbols + NIFTY/INDIAVIX, 180 calendar days, Angel 15m parquet cache",
+  "days": 180,
+  "interval": "FIFTEEN_MINUTE",
+  "data_source": "angel",
+  "symbols": [
+    "RELIANCE", "SBIN", "TCS", "HDFCBANK", "INFY",
+    "ICICIBANK", "KOTAKBANK", "AXISBANK", "LT", "ITC",
+    "BHARTIARTL", "HINDUNILVR", "MARUTI", "TATASTEEL", "TATACONSUM",
+    "WIPRO", "HCLTECH", "TECHM", "SUNPHARMA", "NTPC",
+    "ONGC", "POWERGRID", "TITAN", "M&M", "BAJFINANCE",
+    "ASIANPAINT", "ULTRACEMCO", "JSWSTEEL", "INDUSINDBK", "COALINDIA"
+  ],
+  "indexes": ["NIFTY", "INDIAVIX"],
+  "manifest_path": "data/research/candle_cache_t2_180d.json"
+}
