@@ -1060,6 +1060,15 @@ class Strategy(ABC):
 class BaseStrategy(Strategy):
     """Shared ATR/VWAP helpers, trailing stops, and default exit stack."""
 
+    @property
+    def name(self) -> str:
+        """Strategy key as registered in STRATEGY_REGISTRY (lowercase)."""
+        cls = type(self)
+        for key, val in STRATEGY_REGISTRY.items():
+            if val is cls:
+                return key
+        return Config.STRATEGY
+
     def min_bars(self) -> int:
         return max(Config.ATR_PERIOD + 1, Config.VOLUME_MA_LEN + 1)
 
@@ -1182,7 +1191,33 @@ class BaseStrategy(Strategy):
             return True
         if side == "LONG":
             return close > vwap
+        # MR short fade: require extension above VWAP (Sprint 5)
+        if Config.VWAP_MR_FADE_SHORT:
+            if close <= vwap:
+                return False
+            ext_pct = (close - vwap) / vwap * 100.0
+            return ext_pct >= Config.VWAP_MR_MIN_EXTENSION_PCT
         return close < vwap
+
+    def volume_surge_blocks(self, result: ScreenResult) -> bool:
+        """True when entry should be skipped due to extreme volume vs MA."""
+        mult = Config.VOLUME_SURGE_BLOCK_MULT
+        if mult <= 0 or result.volume_ma is None or result.volume_ma <= 0:
+            return False
+        return (result.volume / result.volume_ma) >= mult
+
+    def circuit_blocks_short(self, df: pd.DataFrame, ltp: float) -> bool:
+        """True when short entry is blocked — price too close to upper circuit."""
+        if not Config.CIRCUIT_GUARD_ENABLED or df is None or ltp <= 0:
+            return False
+        prev = prior_session_close(df)
+        if prev is None or prev <= 0:
+            return False
+        upper = prev * (1.0 + Config.CIRCUIT_LIMIT_PCT / 100.0)
+        if upper <= ltp:
+            return True
+        dist_pct = (upper - ltp) / ltp * 100.0
+        return dist_pct < Config.CIRCUIT_MIN_DISTANCE_PCT
 
     def vwap_breakdown(self, df: pd.DataFrame, side: str) -> bool:
         if not Config.VWAP_EXIT_ENABLED:
@@ -1418,6 +1453,10 @@ class RsiVolumeMeanReversionStrategy(BaseStrategy):
                 signal = Signal.SELL
 
         signal = self._gate_pivot_entry(signal, base["close"], df)
+        if signal == Signal.SELL:
+            tmp = ScreenResult(signal=signal, **base)
+            if self.volume_surge_blocks(tmp) or self.circuit_blocks_short(df, base["close"]):
+                signal = Signal.NONE
         return ScreenResult(signal=signal, **base)
 
 
@@ -2348,6 +2387,639 @@ class SbpTmStrategy(BaseStrategy):
         return ScreenResult(signal=signal, **base)
 
 
+# ─── [Quadapt] Machine Learning Trader ───────────────────────────────────────
+
+def _ta_falling(series: pd.Series, n: int) -> pd.Series:
+    """Ports Pine ta.falling(x, n): True when x has been monotonically decreasing for n bars.
+
+    Implemented as: all n successive first-differences are negative.
+    Fill NaN rolling slots with a positive sentinel so the < 0 comparison
+    yields False (not NaN), keeping the result as dtype=bool throughout.
+    """
+    diffs = series.diff()
+    rolling_max = diffs.rolling(n, min_periods=n).max().fillna(1.0)
+    return (rolling_max < 0).astype(bool)
+
+
+def compute_mlma_rq(
+    close: pd.Series,
+    window: int,
+    alpha: float = 1.0,
+    bandwidth: float = 8.0,
+) -> pd.Series:
+    """Adaptive Rational Quadratic kernel MLMA (Pine 'Adaptive RQ' regressor).
+
+    Weight for lag j: (1 + j² / (2·alpha·bandwidth²))^(-alpha).
+    Vectorised with numpy stride tricks — O(n·window) but no Python loop.
+    """
+    arr = close.ffill().to_numpy(dtype=float)
+    n = len(arr)
+    out = np.full(n, np.nan)
+    if n < window:
+        return pd.Series(out, index=close.index)
+
+    distances = np.arange(window, dtype=float)
+    raw_w = (1.0 + distances ** 2 / (2.0 * alpha * bandwidth ** 2)) ** (-alpha)
+    weights = raw_w / raw_w.sum()
+
+    # Sliding window matrix: sliding[i, k] = arr[i + k]
+    strides = arr.strides
+    shape = (n - window + 1, window)
+    sliding = np.lib.stride_tricks.as_strided(
+        arr, shape=shape, strides=(strides[0], strides[0]),
+    )
+    # out[i + window - 1] = sliding[i, :] @ weights[::-1]
+    #   = sum_k arr[i+k] * weights[window-1-k]
+    #   = sum_j weights[j] * arr[i+window-1-j]   (j = window-1-k)
+    out[window - 1 :] = sliding @ weights[::-1]
+    return pd.Series(out, index=close.index)
+
+
+def compute_dual_envelope(
+    close: pd.Series,
+    length: int,
+    rsi_14: pd.Series,
+) -> tuple[pd.Series, pd.Series, pd.Series, pd.Series, pd.Series, pd.Series]:
+    """Ports the Pine nonlinear signal envelope (instrument-agnostic).
+
+    Price distance is normalised by EMA level before the nonlinear transform
+    and restored afterwards, keeping the shape consistent across all price scales.
+
+    Returns:
+        smooth_upper, smooth_lower, ema_close, buy_signal, sell_signal, wedge
+    """
+    ema_c = close.ewm(span=length, adjust=False).mean()
+    norm = (close - ema_c).abs() / ema_c.abs().replace(0, np.nan)
+
+    # Pine: synth = sin(0.68x² + 0.79x + x) * cos(...)  →  arg = 0.68x² + 1.79x
+    arg = 0.68 * norm ** 2 + 1.79 * norm
+    b = (np.sin(arg) * np.cos(arg)).abs() * ema_c.abs()
+    d = b.ewm(span=length, adjust=False).mean()
+
+    upper = ema_c + d
+    lower = ema_c - d
+    smooth_upper = (
+        pd.concat([upper, close], axis=1).max(axis=1).ewm(span=length, adjust=False).mean()
+    )
+    smooth_lower = (
+        pd.concat([close, lower], axis=1).min(axis=1).ewm(span=length, adjust=False).mean()
+    )
+
+    range_val = smooth_upper - smooth_lower
+    falling_range = _ta_falling(range_val, length)
+    prev_falling = falling_range.shift(1, fill_value=False)
+    falling_ended = prev_falling & ~falling_range
+
+    rising_period = max(1, length // 5)
+    wedge = (smooth_lower > smooth_lower.shift(rising_period)) & (
+        smooth_upper < smooth_upper.shift(rising_period)
+    )
+
+    buy = falling_ended & (close > smooth_lower) & ~wedge
+    sell = falling_ended & (close < smooth_upper) & ~wedge
+    strong_buy = buy & (close > ema_c) & (rsi_14 < 70)
+    strong_sell = sell & (close < ema_c) & (rsi_14 > 30)
+
+    return smooth_upper, smooth_lower, ema_c, (strong_buy | buy), (strong_sell | sell), wedge
+
+
+def detect_quadapt_order_blocks(
+    df: pd.DataFrame,
+    mlma: pd.Series,
+    *,
+    vol_len: int = 6,
+    smooth_len: int = 9,
+    multiplier: float = 1.2,
+    consolidation_threshold: float = 1.8,
+    regime_atr_period: int = 20,
+) -> tuple[pd.Series, pd.Series, pd.Series, pd.Series]:
+    """Detect bullish/bearish order blocks via volatility expansion on the prior candle.
+
+    Returns the price levels (top, bottom) of the most recent valid block at
+    each bar as four Series.  NaN until the first qualifying block is seen.
+    """
+    close = df["close"]
+    open_ = df["open"]
+    volume = df["volume"]
+    atr_regime = compute_atr(df, regime_atr_period)
+
+    ob_vol = (close - mlma).abs().fillna(0.0)
+    ob_vol_sma = ob_vol.rolling(smooth_len, min_periods=smooth_len).mean()
+
+    is_consolidating = (
+        (close - close.shift(10)).abs() / atr_regime.replace(0, np.nan)
+    ) < consolidation_threshold
+
+    rsi_mom = compute_rsi(close, 10)
+    mom_ok = (rsi_mom > 30) & (rsi_mom < 70)
+
+    vol_expand = ob_vol.shift(1) > ob_vol_sma.shift(1) * multiplier
+    not_consol = (~is_consolidating.shift(1, fill_value=True)).astype(bool)
+    mom_shifted = mom_ok.shift(1, fill_value=False).astype(bool)
+
+    bull_cond = (
+        vol_expand
+        & (close.shift(1) > open_.shift(1))
+        & not_consol
+        & mom_shifted
+        & (close.shift(1) > mlma.shift(1))
+    )
+    bear_cond = (
+        vol_expand
+        & (close.shift(1) < open_.shift(1))
+        & not_consol
+        & mom_shifted
+        & (close.shift(1) < mlma.shift(1))
+    )
+
+    bull_top = pd.Series(np.nan, index=df.index, dtype=float)
+    bull_bot = pd.Series(np.nan, index=df.index, dtype=float)
+    bear_top = pd.Series(np.nan, index=df.index, dtype=float)
+    bear_bot = pd.Series(np.nan, index=df.index, dtype=float)
+
+    last_bt = last_bb = last_bert = last_berb = np.nan
+    high_arr = df["high"].to_numpy(dtype=float)
+    low_arr = df["low"].to_numpy(dtype=float)
+
+    for i in range(1, len(df)):
+        if bool(bull_cond.iloc[i]):
+            last_bt = high_arr[i - 1]
+            last_bb = low_arr[i - 1]
+        if bool(bear_cond.iloc[i]):
+            last_bert = high_arr[i - 1]
+            last_berb = low_arr[i - 1]
+        bull_top.iloc[i] = last_bt
+        bull_bot.iloc[i] = last_bb
+        bear_top.iloc[i] = last_bert
+        bear_bot.iloc[i] = last_berb
+
+    return bull_top, bull_bot, bear_top, bear_bot
+
+
+def _quadapt_ob_context_score(
+    direction: int,
+    close: float,
+    atr: float,
+    bull_top: float,
+    bull_bot: float,
+    bear_top: float,
+    bear_bot: float,
+    proximity_atr: float = 0.8,
+) -> float:
+    """Score supportive vs opposing order-block pressure (0–100)."""
+    tol = max(atr * proximity_atr, 0.0)
+    supportive = opposing = 0.0
+    if direction == 1:
+        if not np.isnan(bull_top) and bull_bot <= close <= bull_top:
+            supportive = 70.0
+        elif not np.isnan(bull_top) and close > bull_top and close <= bull_top + tol:
+            supportive = 70.0
+        if not np.isnan(bear_bot) and close <= bear_top and close >= bear_bot - tol:
+            opposing = 70.0
+    else:
+        if not np.isnan(bear_bot) and bear_bot <= close <= bear_top:
+            supportive = 70.0
+        elif not np.isnan(bear_bot) and close < bear_bot and close >= bear_bot - tol:
+            supportive = 70.0
+        if not np.isnan(bull_top) and close >= bull_bot and close <= bull_top + tol:
+            opposing = 70.0
+    return float(np.clip(55.0 + supportive * 0.35 - opposing * 0.45, 0.0, 100.0))
+
+
+def _quadapt_mlma_context_score(
+    direction: int,
+    close: float,
+    mlma: float,
+    mlma_prev: float,
+    mlma_upper: float,
+    mlma_lower: float,
+    os_state: int,
+    bull_top: float,
+    bull_bot: float,
+    bear_top: float,
+    bear_bot: float,
+    atr: float,
+    proximity_atr: float = 0.8,
+) -> float:
+    """MLMA trend context score (0–100); ports Pine Signal Quality Engine."""
+    tol = max(atr * proximity_atr, 0.0)
+    trend_ok = (direction == 1 and os_state == 1) or (direction == -1 and os_state == 0)
+    slope_ok = (direction == 1 and mlma > mlma_prev) or (direction == -1 and mlma < mlma_prev)
+    price_ok = (direction == 1 and close > mlma) or (direction == -1 and close < mlma)
+    if direction == 1:
+        near_ob = not np.isnan(bull_top) and (
+            bull_bot <= close <= bull_top or (close > bull_top and close <= bull_top + tol)
+        )
+        cloud_ok = os_state == 1 or near_ob
+    else:
+        near_ob = not np.isnan(bear_bot) and (
+            bear_bot <= close <= bear_top or (close < bear_bot and close >= bear_bot - tol)
+        )
+        cloud_ok = os_state == 0 or near_ob
+    score = (
+        (35.0 if trend_ok else 0.0)
+        + (25.0 if slope_ok else 0.0)
+        + (20.0 if price_ok else 0.0)
+        + (15.0 if cloud_ok else 0.0)
+        + (5.0 if near_ob else 0.0)
+    )
+    return float(np.clip(score, 0.0, 100.0))
+
+
+def _quadapt_momentum_score(
+    direction: int,
+    rsi_14: float,
+    close: float,
+    open_: float,
+    high: float,
+    low: float,
+    sma_slope: float,
+) -> float:
+    """Momentum quality score (0–100)."""
+    candle_range = max(high - low, 1e-8)
+    body_ratio = abs(close - open_) / candle_range
+    rsi_ok = (direction == 1 and 50 < rsi_14 < 72) or (direction == -1 and 28 < rsi_14 < 50)
+    candle_ok = (direction == 1 and close > open_) or (direction == -1 and close < open_)
+    slope_ok = (direction == 1 and sma_slope > 0) or (direction == -1 and sma_slope < 0)
+    score = (
+        (35.0 if rsi_ok else 10.0)
+        + (25.0 if candle_ok else 5.0)
+        + (25.0 if slope_ok else 5.0)
+        + (15.0 if body_ratio > 0.45 else 5.0)
+    )
+    return float(np.clip(score, 0.0, 100.0))
+
+
+def calculate_quadapt_signal_quality(
+    direction: int,
+    close: float,
+    open_: float,
+    high: float,
+    low: float,
+    rsi_14: float,
+    mlma: float,
+    mlma_prev: float,
+    mlma_upper: float,
+    mlma_lower: float,
+    os_state: int,
+    atr: float,
+    avg_atr: float,
+    volume: float,
+    avg_volume: float,
+    bull_top: float,
+    bull_bot: float,
+    bear_top: float,
+    bear_bot: float,
+    sma_slope: float,
+) -> float:
+    """Composite signal quality score 0–100.
+
+    Ports the Pine Signal Quality Engine with MTF alignment replaced by a
+    redistributed weight (no MTF data available in single-TF screener).
+    Component weights: MLMA context 38%, momentum 22%, volatility 16%,
+    OB context 14%, volume 10%.
+    """
+    ctx = _quadapt_mlma_context_score(
+        direction, close, mlma, mlma_prev, mlma_upper, mlma_lower,
+        os_state, bull_top, bull_bot, bear_top, bear_bot, atr,
+    )
+    mom = _quadapt_momentum_score(direction, rsi_14, close, open_, high, low, sma_slope)
+    ob_ctx = _quadapt_ob_context_score(
+        direction, close, atr, bull_top, bull_bot, bear_top, bear_bot,
+    )
+    vol_ratio = volume / max(avg_volume, 1e-8)
+    vol_score = (
+        100.0 if vol_ratio >= 1.5 else
+        85.0 if vol_ratio >= 1.1 else
+        60.0 if vol_ratio >= 0.8 else
+        35.0
+    )
+    atr_ratio = atr / max(avg_atr, 1e-8)
+    vola_score = (
+        25.0 if atr_ratio < 0.55 else
+        60.0 if atr_ratio < 0.80 else
+        90.0 if atr_ratio <= 2.2 else
+        55.0
+    )
+    raw = ctx * 0.38 + mom * 0.22 + vola_score * 0.16 + ob_ctx * 0.14 + vol_score * 0.10
+    return float(np.clip(raw, 0.0, 100.0))
+
+
+def _quadapt_no_trade_regime(
+    mlma: float,
+    mlma_prev: float,
+    mlma_prev3: float,
+    mlma_upper: float,
+    mlma_lower: float,
+    os_state: int,
+    direction: int,
+    atr: float,
+    avg_atr: float,
+    wedge: bool,
+    market_regime: int,
+) -> bool:
+    """Block entries in choppy/compressed/conflicted conditions (Pine no-trade filter)."""
+    atr_safe = max(atr, 1e-8)
+    slope_atr = abs(mlma - mlma_prev3) / atr_safe
+    cloud_width_atr = abs(mlma_upper - mlma_lower) / atr_safe
+    vol_ratio = atr / max(avg_atr, 1e-8)
+    too_choppy = wedge or (market_regime == 2 and slope_atr < 0.15)
+    too_compressed = vol_ratio < 0.55
+    trend_conflict = (direction == 1 and os_state != 1) or (direction == -1 and os_state != 0)
+    trapped = cloud_width_atr < 0.8 and mlma_lower < mlma < mlma_upper
+    return too_choppy or too_compressed or trend_conflict or trapped
+
+
+def precompute_quadapt_signals(df: pd.DataFrame) -> pd.DataFrame:
+    """Precompute all [Quadapt] ML Trader columns for a candle DataFrame.
+
+    Adds: quadapt_long, quadapt_short, mlma, mlma_upper, mlma_lower, mlma_os,
+          quadapt_quality, bull_ob_top, bull_ob_bot, bear_ob_top, bear_ob_bot.
+    """
+    if df is None or df.empty:
+        return df
+    out = df if "quadapt_long" in df.columns else df.copy()
+
+    len1 = Config.QUADAPT_LEN1
+    len2 = Config.QUADAPT_LEN2
+    window = Config.QUADAPT_WINDOW
+    mult = Config.QUADAPT_MULT
+    rq_alpha = Config.QUADAPT_RQ_ALPHA
+    rq_bw = Config.QUADAPT_RQ_BANDWIDTH
+    atr_period = Config.QUADAPT_ATR_PERIOD
+    min_qual = Config.QUADAPT_MIN_QUALITY
+    mode = Config.QUADAPT_SIGNAL_MODE
+
+    n_required = max(window, len1, len2) + 20
+
+    def _blank() -> pd.DataFrame:
+        for col in (
+            "quadapt_long", "quadapt_short", "mlma", "mlma_upper", "mlma_lower",
+            "mlma_os", "quadapt_quality", "bull_ob_top", "bull_ob_bot",
+            "bear_ob_top", "bear_ob_bot",
+        ):
+            out[col] = False if col in ("quadapt_long", "quadapt_short") else (
+                0 if col == "mlma_os" else np.nan
+            )
+        return out
+
+    if len(out) < n_required:
+        return _blank()
+
+    close = out["close"]
+    open_ = out["open"]
+    high = out["high"]
+    low = out["low"]
+    volume = out["volume"]
+
+    atr = compute_atr(out, atr_period)
+    avg_atr = atr.rolling(20, min_periods=20).mean()
+    avg_volume = volume.rolling(20, min_periods=20).mean()
+    rsi_14 = compute_rsi(close, 14)
+
+    # ── MLMA ──────────────────────────────────────────────────────────────────
+    mlma = compute_mlma_rq(close, window, rq_alpha, rq_bw)
+    mae = (close - mlma).abs().rolling(window, min_periods=window).mean() * mult
+    mlma_upper = mlma + mae
+    mlma_lower = mlma - mae
+
+    mlma_arr = mlma.to_numpy(dtype=float)
+    upper_arr = mlma_upper.to_numpy(dtype=float)
+    lower_arr = mlma_lower.to_numpy(dtype=float)
+    close_arr = close.to_numpy(dtype=float)
+
+    os_arr = np.zeros(len(out), dtype=int)
+    for i in range(1, len(out)):
+        if np.isnan(mlma_arr[i]):
+            os_arr[i] = os_arr[i - 1]
+            continue
+        if close_arr[i] > upper_arr[i] and mlma_arr[i] > mlma_arr[i - 1]:
+            os_arr[i] = 1
+        elif close_arr[i] < lower_arr[i] and mlma_arr[i] < mlma_arr[i - 1]:
+            os_arr[i] = 0
+        else:
+            os_arr[i] = os_arr[i - 1]
+    os_state = pd.Series(os_arr, index=out.index)
+
+    # ── Dual-length envelopes ─────────────────────────────────────────────────
+    _su1, _sl1, _ec1, buy1, sell1, wedge1 = compute_dual_envelope(close, len1, rsi_14)
+    _su2, _sl2, _ec2, buy2, sell2, wedge2 = compute_dual_envelope(close, len2, rsi_14)
+
+    if mode == "consensus":
+        final_buy = buy1 & buy2
+        final_sell = sell1 & sell2
+    elif mode == "primary":
+        final_buy = buy1
+        final_sell = sell1
+    else:  # independent
+        final_buy = buy1 | buy2
+        final_sell = sell1 | sell2
+
+    # ── Order blocks ──────────────────────────────────────────────────────────
+    bull_top, bull_bot, bear_top, bear_bot = detect_quadapt_order_blocks(
+        out,
+        mlma,
+        vol_len=Config.QUADAPT_OB_VOL_LEN,
+        smooth_len=Config.QUADAPT_OB_SMOOTH_LEN,
+        multiplier=Config.QUADAPT_OB_MULT,
+    )
+
+    # ── Market regime (large move = 1 trending, else 2 ranging) ──────────────
+    avg_atr_arr = avg_atr.to_numpy(dtype=float)
+    regime_arr = np.full(len(out), 2, dtype=int)
+    for i in range(10, len(out)):
+        ch = abs(close_arr[i] - close_arr[i - 10])
+        a = avg_atr_arr[i] if not np.isnan(avg_atr_arr[i]) else 0.0
+        if a > 0 and ch / a > 0.5:
+            regime_arr[i] = 1
+    market_regime = pd.Series(regime_arr, index=out.index)
+
+    # ── SMA(10) slope ─────────────────────────────────────────────────────────
+    sma10 = close.rolling(10, min_periods=10).mean()
+    sma_slope = sma10 - close.shift(5).rolling(10, min_periods=10).mean()
+
+    # ── Quality filter + final signals ────────────────────────────────────────
+    n = len(out)
+    quality_arr = np.full(n, np.nan)
+    q_long = np.zeros(n, dtype=bool)
+    q_short = np.zeros(n, dtype=bool)
+    warmup = max(window, len1, len2, atr_period + 21, 30)
+
+    bt_a = bull_top.to_numpy(dtype=float)
+    bb_a = bull_bot.to_numpy(dtype=float)
+    brt_a = bear_top.to_numpy(dtype=float)
+    brb_a = bear_bot.to_numpy(dtype=float)
+    atr_a = atr.to_numpy(dtype=float)
+    avg_atr_a = avg_atr.to_numpy(dtype=float)
+    vol_a = volume.to_numpy(dtype=float)
+    avg_vol_a = avg_volume.to_numpy(dtype=float)
+    rsi_a = rsi_14.to_numpy(dtype=float)
+    slope_a = sma_slope.to_numpy(dtype=float)
+    open_arr = open_.to_numpy(dtype=float)
+    high_arr = high.to_numpy(dtype=float)
+    low_arr = low.to_numpy(dtype=float)
+
+    for i in range(warmup, n):
+        has_buy = bool(final_buy.iloc[i])
+        has_sell = bool(final_sell.iloc[i])
+        if not has_buy and not has_sell:
+            continue
+
+        c = close_arr[i]
+        o = open_arr[i]
+        h = high_arr[i]
+        lo = low_arr[i]
+        r = float(rsi_a[i]) if not np.isnan(rsi_a[i]) else 50.0
+        m = float(mlma_arr[i])
+        mp = float(mlma_arr[i - 1])
+        mp3 = float(mlma_arr[max(0, i - 3)])
+        mu = float(upper_arr[i])
+        ml = float(lower_arr[i])
+        ov = int(os_arr[i])
+        atr_v = float(atr_a[i]) if not np.isnan(atr_a[i]) else 0.0
+        avg_atr_v = float(avg_atr_a[i]) if not np.isnan(avg_atr_a[i]) else atr_v
+        vol_v = float(vol_a[i])
+        avg_vol_v = float(avg_vol_a[i]) if not np.isnan(avg_vol_a[i]) else vol_v
+        bt = bt_a[i]; bb = bb_a[i]
+        brt = brt_a[i]; brb = brb_a[i]
+        slope_v = float(slope_a[i]) if not np.isnan(slope_a[i]) else 0.0
+        wedge_v = bool(wedge1.iloc[i]) or bool(wedge2.iloc[i])
+        reg_v = int(market_regime.iloc[i])
+
+        if has_buy and not _quadapt_no_trade_regime(
+            m, mp, mp3, mu, ml, ov, 1, atr_v, avg_atr_v, wedge_v, reg_v,
+        ):
+            q = calculate_quadapt_signal_quality(
+                1, c, o, h, lo, r, m, mp, mu, ml, ov,
+                atr_v, avg_atr_v, vol_v, avg_vol_v, bt, bb, brt, brb, slope_v,
+            )
+            quality_arr[i] = q
+            if q >= min_qual:
+                q_long[i] = True
+
+        if has_sell and not q_long[i] and not _quadapt_no_trade_regime(
+            m, mp, mp3, mu, ml, ov, -1, atr_v, avg_atr_v, wedge_v, reg_v,
+        ):
+            q = calculate_quadapt_signal_quality(
+                -1, c, o, h, lo, r, m, mp, mu, ml, ov,
+                atr_v, avg_atr_v, vol_v, avg_vol_v, bt, bb, brt, brb, slope_v,
+            )
+            quality_arr[i] = q
+            if q >= min_qual:
+                q_short[i] = True
+
+    out["quadapt_long"] = q_long
+    out["quadapt_short"] = q_short
+    out["mlma"] = mlma_arr
+    out["mlma_upper"] = upper_arr
+    out["mlma_lower"] = lower_arr
+    out["mlma_os"] = os_arr
+    out["quadapt_quality"] = quality_arr
+    out["bull_ob_top"] = bt_a
+    out["bull_ob_bot"] = bb_a
+    out["bear_ob_top"] = brt_a
+    out["bear_ob_bot"] = brb_a
+    return out
+
+
+class QuadaptMLTraderStrategy(BaseStrategy):
+    """[Quadapt] Machine Learning Trader.
+
+    Ports the signal-generation core of the Pine v6 Quadapt ML Trader indicator:
+      • Adaptive RQ kernel-regression MLMA trend model + upper/lower MAE bands
+      • Dual-length instrument-agnostic nonlinear signal envelopes
+      • Volatility-expansion order-block detection with trend and momentum filters
+      • Signal quality engine (MLMA context, momentum, volatility, volume, OB)
+      • No-trade regime blocker (choppy / compressed / trend-conflict)
+
+    Visual outputs (chart drawings, tables, webhooks) are not reproduced.
+
+    Configuration (env vars):
+        QUADAPT_LEN1          Primary envelope length          (default 120)
+        QUADAPT_LEN2          Secondary envelope length        (default 70)
+        QUADAPT_WINDOW        MLMA regression window           (default 200)
+        QUADAPT_MULT          MLMA MAE band multiplier         (default 2.0)
+        QUADAPT_RQ_ALPHA      RQ kernel alpha                  (default 1.0)
+        QUADAPT_RQ_BANDWIDTH  RQ kernel bandwidth              (default 8.0)
+        QUADAPT_OB_VOL_LEN    Order-block volatility length    (default 6)
+        QUADAPT_OB_SMOOTH_LEN Order-block smoothing length     (default 9)
+        QUADAPT_OB_MULT       Order-block vol multiplier       (default 1.2)
+        QUADAPT_MIN_QUALITY   Minimum entry quality score      (default 50.0)
+        QUADAPT_SIGNAL_MODE   independent | consensus | primary (default independent)
+
+    Tuning tip: the Pine defaults (LEN1=120, LEN2=70) suit 60-min+ charts.
+    For 15-min intraday set LEN1=30, LEN2=14, WINDOW=60, CANDLE_LOOKBACK≥100.
+    """
+
+    def min_bars(self) -> int:
+        return max(
+            Config.QUADAPT_WINDOW,
+            Config.QUADAPT_LEN1 + 20,
+            Config.QUADAPT_LEN2 + 20,
+            Config.QUADAPT_ATR_PERIOD + 21,
+            Config.VOLUME_MA_LEN + 1,
+        )
+
+    def precompute_df(self, df: pd.DataFrame) -> pd.DataFrame:
+        return precompute_quadapt_signals(df)
+
+    def exit_reason(
+        self,
+        df: pd.DataFrame,
+        side: str,
+        entry: float,
+        price: float,
+        entry_atr: float | None = None,
+        trail_extreme: float | None = None,
+    ) -> str | None:
+        trailing_active = False
+        if Config.TRAILING_STOP_ENABLED and trail_extreme is not None:
+            trailing_active = self._trailing_active(side, entry, trail_extreme, entry_atr)
+            reason = self.trailing_stop_hit(side, entry, price, entry_atr, trail_extreme)
+            if reason:
+                return reason
+
+        reason = self.stop_target_hit(
+            side, entry, price, entry_atr, trailing_active=trailing_active,
+        )
+        if reason:
+            return reason
+
+        if df is not None and "mlma_os" in df.columns:
+            os_val = int(df["mlma_os"].iloc[-1])
+            if side == "LONG" and os_val == 0:
+                return "MLMA trend flip (bearish)"
+            if side == "SHORT" and os_val == 1:
+                return "MLMA trend flip (bullish)"
+
+        if self.exit_signal(df, side):
+            return "RSI mid-line exit"
+        if self.vwap_breakdown(df, side):
+            return "VWAP breakdown"
+        return None
+
+    def analyze(self, df: pd.DataFrame, symbol: str) -> ScreenResult | None:
+        base = self._base_screen_fields(df, symbol)
+        if not base:
+            return None
+
+        signal = Signal.NONE
+        if "quadapt_long" in df.columns and "quadapt_short" in df.columns:
+            if bool(df["quadapt_long"].iloc[-1]):
+                signal = Signal.BUY
+            elif bool(df["quadapt_short"].iloc[-1]):
+                signal = Signal.SELL
+        else:
+            enriched = precompute_quadapt_signals(df)
+            if bool(enriched["quadapt_long"].iloc[-1]):
+                signal = Signal.BUY
+            elif bool(enriched["quadapt_short"].iloc[-1]):
+                signal = Signal.SELL
+
+        signal = self._gate_pivot_entry(signal, base["close"], df, trend=True)
+        return ScreenResult(signal=signal, **base)
+
+
 STRATEGY_REGISTRY: dict[str, type[BaseStrategy]] = {
     "rsi_mr": RsiVolumeMeanReversionStrategy,
     "orb": OpeningRangeBreakoutStrategy,
@@ -2359,6 +3031,7 @@ STRATEGY_REGISTRY: dict[str, type[BaseStrategy]] = {
     "zp_dmi": ZpDmiConfluenceStrategy,
     "vst_ai": VstAiStrategy,
     "sbp_tm": SbpTmStrategy,
+    "quadapt_ml": QuadaptMLTraderStrategy,
 }
 
 

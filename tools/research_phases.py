@@ -59,8 +59,8 @@ PHASE2_WINNER = {
     "TRAILING_ACTIVATION_ATR_MULT": 1.0,
 }
 
-# Mean-reversion exits: ATR stop only; target mult set high so fixed target rarely fires
-MEAN_EXIT_RSI = {
+# Sprint 4 winner — mean RSI exit on Test 9 pivot stack
+SPRINT4_PAPER_STACK = {
     **PIVOT_STACK,
     "ATR_STOP_MULT": 1.5,
     "ATR_TARGET_MULT": 50.0,
@@ -69,6 +69,22 @@ MEAN_EXIT_RSI = {
     "RSI_EXIT": 50.0,
     "VWAP_EXIT_ENABLED": False,
 }
+
+QUADAPT_15M = {
+    "QUADAPT_LEN1": 30,
+    "QUADAPT_LEN2": 14,
+    "QUADAPT_WINDOW": 60,
+    "QUADAPT_MIN_QUALITY": 55.0,
+    "QUADAPT_SIGNAL_MODE": "consensus",
+    "ALLOW_LONG": False,
+    "ALLOW_SHORT": True,
+    "ENTRY_CUTOFF_TIME": "14:00",
+    "VWAP_FILTER_ENABLED": False,
+    "VWAP_EXIT_ENABLED": False,
+}
+
+# Mean-reversion exits: ATR stop only; target mult set high so fixed target rarely fires
+MEAN_EXIT_RSI = dict(SPRINT4_PAPER_STACK)
 
 SLIPPAGE_PCT_PER_LEG = 0.0005  # 0.05% per entry/exit leg (Gemini microstructure stress)
 
@@ -558,20 +574,167 @@ def write_findings(path: str, report: dict[str, Any]) -> None:
         fh.write("\n".join(lines))
 
 
+def phase5(symbol_dfs: dict, regime: Any, *, days: int, source: str, broker: Any = None) -> dict[str, Any]:
+    """Sprint 5 — VWAP gate, volume surge, denylist falsification, slippage on Sprint 4 stack."""
+    from intraday_agent.universe import NIFTY_50, NIFTY_NEXT_50
+
+    print("\n=== PHASE 5 — Robustness (Sprint 5) ===\n")
+
+    base = dict(SPRINT4_PAPER_STACK)
+    variants: list[tuple[str, str, dict[str, Any], bool]] = [
+        ("p5_base", "Sprint 4 paper stack (mean RSI exit)", base, False),
+        (
+            "p5_vwap_fade",
+            "Sprint 4 + VWAP MR fade short (above VWAP + extension)",
+            {
+                **base,
+                "VWAP_FILTER_ENABLED": True,
+                "VWAP_MR_FADE_SHORT": True,
+                "VWAP_MR_MIN_EXTENSION_PCT": 0.3,
+            },
+            False,
+        ),
+        (
+            "p5_vwap_exit",
+            "Sprint 4 + VWAP breakdown exit",
+            {**base, "VWAP_EXIT_ENABLED": True},
+            False,
+        ),
+        (
+            "p5_vol_surge",
+            "Sprint 4 + volume surge block (2.0× MA)",
+            {**base, "VOLUME_SURGE_BLOCK_MULT": 2.0},
+            False,
+        ),
+        (
+            "p5_no_denylist",
+            "Sprint 4, EXCLUDED_SYMBOLS cleared",
+            {**base, "EXCLUDED_SYMBOLS": frozenset()},
+            False,
+        ),
+        ("p5_base_slip", "Sprint 4 + 0.05% slippage per leg", base, True),
+    ]
+
+    results: list[dict[str, Any]] = []
+    for key, label, cfg, use_slip in variants:
+        trades, stats = run_sim(symbol_dfs, regime, config=cfg, source=source)
+        slip_stats = summarize_with_slippage(trades) if use_slip else None
+        row = {
+            "id": key,
+            "label": label,
+            "config": _cfg_for_json(cfg),
+            "stats": stats,
+            "slippage_stats": slip_stats,
+            "slippage_applied": use_slip,
+        }
+        results.append(row)
+        net = slip_stats["net_pnl_rs"] if use_slip and slip_stats else stats["net_pnl_rs"]
+        print(
+            f"{label:<48} trades={stats['trades']:>3}  net=₹{net:>6,.0f}  sharpe={stats['sharpe']:.3f}"
+        )
+
+    # Nifty 100 expansion (symbols with cache only)
+    n100_syms = list(dict.fromkeys(NIFTY_50 + NIFTY_NEXT_50))
+    n100_dfs = load_symbol_dfs(n100_syms, days, source, broker=broker)
+    if n100_dfs:
+        trades, stats = run_sim(
+            n100_dfs, regime, config={**base, "EXCLUDED_SYMBOLS": frozenset()}, source=source,
+        )
+        slip = summarize_with_slippage(trades)
+        n100_row = {
+            "id": "p5_nifty100",
+            "label": f"Nifty 100 ({len(n100_dfs)} symbols cached), no denylist",
+            "stats": stats,
+            "slippage_stats": slip,
+            "symbol_count": len(n100_dfs),
+        }
+        results.append(n100_row)
+        print(
+            f"{n100_row['label']:<48} trades={stats['trades']:>3}  "
+            f"net=₹{stats['net_pnl_rs']:>6,.0f}  slip=₹{slip['net_pnl_rs']:,.0f}"
+        )
+    else:
+        n100_row = None
+
+    base_stats = next(r for r in results if r["id"] == "p5_base")["stats"]
+    slip_row = next(r for r in results if r["id"] == "p5_base_slip")
+    slip_net = (slip_row.get("slippage_stats") or {}).get("net_pnl_rs", 0)
+    trades_ok = base_stats["trades"] >= 15
+    sample_150 = base_stats["trades"] >= 150 or (
+        n100_row is not None and n100_row["stats"]["trades"] >= 150
+    )
+    net_positive = slip_net > 0
+    gate_passed = trades_ok and net_positive
+
+    decision = (
+        "PASS — Sprint 4 stack survives Sprint 5 friction checks."
+        if gate_passed
+        else "PARTIAL — continue tuning VWAP/volume gates; see variant table."
+    )
+
+    return {
+        "results": results,
+        "gates": {
+            "min_trades_15": trades_ok,
+            "sample_150": sample_150,
+            "slippage_net_positive": net_positive,
+            "pass_all": gate_passed and sample_150,
+        },
+        "gate_passed": gate_passed,
+        "decision": decision,
+    }
+
+
+def write_phase5_findings(path: str, report: dict[str, Any]) -> None:
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    p5 = report["phase5"]
+    lines = [
+        "# Sprint 5 — Robustness (VWAP, volume, universe)",
+        "",
+        f"Generated: {report['generated_at']} | Window: {report['days']}d | Source: {report['source']}",
+        "",
+        "## Variants",
+        "",
+        "| ID | Trades | Net ₹ | Sharpe |",
+        "|----|--------|-------|--------|",
+    ]
+    for row in p5["results"]:
+        s = row["stats"]
+        lines.append(f"| {row['id']} | {s['trades']} | **{s['net_pnl_rs']:,.0f}** | {s['sharpe']:.3f} |")
+    g = p5["gates"]
+    lines.extend([
+        "",
+        "## Gates",
+        "",
+        f"- Trades ≥ 15: **{'PASS' if g['min_trades_15'] else 'FAIL'}**",
+        f"- Sample ≥ 150 (or Nifty100): **{'PASS' if g['sample_150'] else 'FAIL'}**",
+        f"- Slippage net > 0: **{'PASS' if g['slippage_net_positive'] else 'FAIL'}**",
+        "",
+        "## Decision",
+        "",
+        p5["decision"],
+        "",
+    ])
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(lines))
+
+
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Run research phases 1–4")
+    p = argparse.ArgumentParser(description="Run research phases 1–5")
     p.add_argument("--days", type=int, default=180)
     p.add_argument("--source", type=str, default="cache")
     p.add_argument(
         "--phase",
         type=str,
         default="1,2,3",
-        help="Comma-separated phases to run (1,2,3,4). Example: --phase 4",
+        help="Comma-separated phases to run (1,2,3,4,5). Example: --phase 5",
     )
     p.add_argument("--output-json", type=str, default="data/research/phase_findings.json")
     p.add_argument("--output-md", type=str, default="data/research/PHASE_FINDINGS.md")
     p.add_argument("--output-json-4", type=str, default="data/research/phase4_findings.json")
     p.add_argument("--output-md-4", type=str, default="data/research/PHASE4_FINDINGS.md")
+    p.add_argument("--output-json-5", type=str, default="data/research/phase5_findings.json")
+    p.add_argument("--output-md-5", type=str, default="data/research/PHASE5_FINDINGS.md")
     return p.parse_args()
 
 
@@ -582,8 +745,8 @@ def _parse_phases(raw: str) -> set[int]:
         if not part:
             continue
         n = int(part)
-        if n not in (1, 2, 3, 4):
-            raise ValueError(f"Invalid phase {n}; use 1, 2, 3, or 4")
+        if n not in (1, 2, 3, 4, 5):
+            raise ValueError(f"Invalid phase {n}; use 1, 2, 3, 4, or 5")
         out.add(n)
     return out
 
@@ -697,6 +860,23 @@ def main() -> int:
         print(f"\nPhase 4 report: {args.output_md_4}")
         print(f"Phase 4 JSON: {args.output_json_4}")
         print(f"DECISION: {p4['decision']}")
+
+    if 5 in phases:
+        p5 = phase5(symbol_dfs, regime, days=args.days, source=source, broker=broker)
+        report5 = {
+            "generated_at": generated_at,
+            "days": args.days,
+            "source": source,
+            "phase5": p5,
+            "decision": p5["decision"],
+        }
+        os.makedirs(os.path.dirname(args.output_json_5) or ".", exist_ok=True)
+        with open(args.output_json_5, "w", encoding="utf-8") as fh:
+            json.dump(report5, fh, indent=2, default=str)
+        write_phase5_findings(args.output_md_5, report5)
+        print(f"\nPhase 5 report: {args.output_md_5}")
+        print(f"Phase 5 JSON: {args.output_json_5}")
+        print(f"DECISION: {p5['decision']}")
 
     if not phases:
         print("Error: no phases selected", file=sys.stderr)

@@ -23,6 +23,7 @@ class SimEntryFilter:
     max_entry_hour: int | None = None  # allow hour < max (e.g. 14 → 09–13)
     min_rsi: float | None = None  # short: RSI must be > min_rsi
     max_volume_ratio: float | None = None  # volume/MA must be < max
+    min_volume_surge_mult: float | None = None  # block when vol/MA >= mult (Sprint 5)
     exclude_symbols: frozenset[str] = field(default_factory=frozenset)
 
     def allows(self, result: ScreenResult, bar_dt: datetime | Any) -> bool:
@@ -40,5 +41,8 @@ class SimEntryFilter:
             vol_ratio = result.volume / result.volume_ma
         if self.max_volume_ratio is not None and vol_ratio is not None:
             if vol_ratio >= self.max_volume_ratio:
+                return False
+        if self.min_volume_surge_mult is not None and vol_ratio is not None:
+            if vol_ratio >= self.min_volume_surge_mult:
                 return False
         return True

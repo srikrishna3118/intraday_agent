@@ -1,0 +1,320 @@
+{
+  "generated_at": "2026-07-05 14:13 UTC",
+  "days": 180,
+  "source": "cache",
+  "phase5": {
+    "results": [
+      {
+        "id": "p5_base",
+        "label": "Sprint 4 paper stack (mean RSI exit)",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "BAJFINANCE",
+            "SBIN",
+            "ONGC"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0
+        },
+        "stats": {
+          "trades": 17,
+          "gross_pnl_rs": 1061.0,
+          "total_costs_rs": 714.0,
+          "net_pnl_rs": 347.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 62.4,
+          "avg_net_per_trade_rs": 20.4,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 64.7,
+          "expectancy_rs": 20.4,
+          "profit_factor": 1.7,
+          "max_drawdown_rs": 250.0,
+          "sharpe": 1.024
+        },
+        "slippage_stats": null,
+        "slippage_applied": false
+      },
+      {
+        "id": "p5_vwap_fade",
+        "label": "Sprint 4 + VWAP MR fade short (above VWAP + extension)",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "BAJFINANCE",
+            "SBIN",
+            "ONGC"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": true,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0,
+          "VWAP_MR_FADE_SHORT": true,
+          "VWAP_MR_MIN_EXTENSION_PCT": 0.3
+        },
+        "stats": {
+          "trades": 16,
+          "gross_pnl_rs": 814.0,
+          "total_costs_rs": 672.0,
+          "net_pnl_rs": 142.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 50.9,
+          "avg_net_per_trade_rs": 8.9,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 62.5,
+          "expectancy_rs": 8.9,
+          "profit_factor": 1.21,
+          "max_drawdown_rs": 250.0,
+          "sharpe": 0.437
+        },
+        "slippage_stats": null,
+        "slippage_applied": false
+      },
+      {
+        "id": "p5_vwap_exit",
+        "label": "Sprint 4 + VWAP breakdown exit",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "BAJFINANCE",
+            "SBIN",
+            "ONGC"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": true,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0
+        },
+        "stats": {
+          "trades": 17,
+          "gross_pnl_rs": -39.0,
+          "total_costs_rs": 714.0,
+          "net_pnl_rs": -753.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": -2.3,
+          "avg_net_per_trade_rs": -44.3,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 11.8,
+          "expectancy_rs": -44.3,
+          "profit_factor": 0.05,
+          "max_drawdown_rs": 722.0,
+          "sharpe": -3.689
+        },
+        "slippage_stats": null,
+        "slippage_applied": false
+      },
+      {
+        "id": "p5_vol_surge",
+        "label": "Sprint 4 + volume surge block (2.0\u00d7 MA)",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "BAJFINANCE",
+            "SBIN",
+            "ONGC"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0,
+          "VOLUME_SURGE_BLOCK_MULT": 2.0
+        },
+        "stats": {
+          "trades": 17,
+          "gross_pnl_rs": 1061.0,
+          "total_costs_rs": 714.0,
+          "net_pnl_rs": 347.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 62.4,
+          "avg_net_per_trade_rs": 20.4,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 64.7,
+          "expectancy_rs": 20.4,
+          "profit_factor": 1.7,
+          "max_drawdown_rs": 250.0,
+          "sharpe": 1.024
+        },
+        "slippage_stats": null,
+        "slippage_applied": false
+      },
+      {
+        "id": "p5_no_denylist",
+        "label": "Sprint 4, EXCLUDED_SYMBOLS cleared",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0
+        },
+        "stats": {
+          "trades": 22,
+          "gross_pnl_rs": 932.0,
+          "total_costs_rs": 924.0,
+          "net_pnl_rs": 8.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 42.3,
+          "avg_net_per_trade_rs": 0.3,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 59.1,
+          "expectancy_rs": 0.3,
+          "profit_factor": 1.01,
+          "max_drawdown_rs": 583.0,
+          "sharpe": 0.017
+        },
+        "slippage_stats": null,
+        "slippage_applied": false
+      },
+      {
+        "id": "p5_base_slip",
+        "label": "Sprint 4 + 0.05% slippage per leg",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "BAJFINANCE",
+            "SBIN",
+            "ONGC"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0
+        },
+        "stats": {
+          "trades": 17,
+          "gross_pnl_rs": 1061.0,
+          "total_costs_rs": 714.0,
+          "net_pnl_rs": 347.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 62.4,
+          "avg_net_per_trade_rs": 20.4,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 64.7,
+          "expectancy_rs": 20.4,
+          "profit_factor": 1.7,
+          "max_drawdown_rs": 250.0,
+          "sharpe": 1.024
+        },
+        "slippage_stats": {
+          "trades": 17,
+          "gross_pnl_rs": 827.0,
+          "total_costs_rs": 714.0,
+          "net_pnl_rs": 113.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 48.6,
+          "avg_net_per_trade_rs": 6.6,
+          "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+          "win_rate_pct": 52.9,
+          "expectancy_rs": 6.6,
+          "profit_factor": 1.19,
+          "max_drawdown_rs": 264.0,
+          "sharpe": 0.345,
+          "slippage_pct_per_leg": 0.0005
+        },
+        "slippage_applied": true
+      },
+      {
+        "id": "p5_nifty100",
+        "label": "Nifty 100 (49 symbols cached), no denylist",
+        "stats": {
+          "trades": 24,
+          "gross_pnl_rs": 1040.0,
+          "total_costs_rs": 1008.0,
+          "net_pnl_rs": 32.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 43.3,
+          "avg_net_per_trade_rs": 1.3,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 58.3,
+          "expectancy_rs": 1.3,
+          "profit_factor": 1.03,
+          "max_drawdown_rs": 583.0,
+          "sharpe": 0.071
+        },
+        "slippage_stats": {
+          "trades": 24,
+          "gross_pnl_rs": 710.0,
+          "total_costs_rs": 1008.0,
+          "net_pnl_rs": -298.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 29.6,
+          "avg_net_per_trade_rs": -12.4,
+          "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+          "win_rate_pct": 50.0,
+          "expectancy_rs": -12.4,
+          "profit_factor": 0.77,
+          "max_drawdown_rs": 665.0,
+          "sharpe": -0.661,
+          "slippage_pct_per_leg": 0.0005
+        },
+        "symbol_count": 49
+      }
+    ],
+    "gates": {
+      "min_trades_15": true,
+      "sample_150": false,
+      "slippage_net_positive": true,
+      "pass_all": false
+    },
+    "gate_passed": true,
+    "decision": "PASS \u2014 Sprint 4 stack survives Sprint 5 friction checks."
+  },
+  "decision": "PASS \u2014 Sprint 4 stack survives Sprint 5 friction checks."
+}

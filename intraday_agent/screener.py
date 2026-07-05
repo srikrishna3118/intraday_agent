@@ -13,7 +13,7 @@ from intraday_agent.broker import AngelBroker
 from intraday_agent.config import Config
 from intraday_agent.learning.candle_store import load, save
 from intraday_agent.strategy import BaseStrategy, ScreenResult, Signal, get_strategy
-from intraday_agent.universe import NIFTY_50, is_symbol_excluded
+from intraday_agent.universe import trading_universe, is_symbol_excluded
 
 logger = logging.getLogger(__name__)
 
@@ -154,7 +154,7 @@ class Screener:
     def scan(
         self, symbols: list[str] | None = None,
     ) -> tuple[list[ScreenResult], list[ScreenResult], bool]:
-        symbols = symbols or NIFTY_50
+        symbols = symbols or trading_universe()
         batch = self._batch_symbols(symbols)
         oversold: list[ScreenResult] = []
         overbought: list[ScreenResult] = []
@@ -216,6 +216,13 @@ class Screener:
                         rsi_low = (sym, val)
                 if not result or result.signal == Signal.NONE:
                     continue
+                if result.signal == Signal.SELL:
+                    if self.strategy.volume_surge_blocks(result):
+                        logger.debug("Skip %s — volume surge block", symbol)
+                        continue
+                    if df is not None and self.strategy.circuit_blocks_short(df, result.close):
+                        logger.debug("Skip %s — upper circuit proximity", symbol)
+                        continue
                 if result.signal == Signal.BUY:
                     oversold.append(result)
                 elif result.signal == Signal.SELL:

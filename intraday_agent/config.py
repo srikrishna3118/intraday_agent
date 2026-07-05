@@ -157,6 +157,25 @@ class Config:
     )
     SBP_MOMENTUM_MIN = float(os.getenv("SBP_MOMENTUM_MIN", "70"))
 
+    # [Quadapt] Machine Learning Trader (STRATEGY=quadapt_ml)
+    # Ports: Adaptive RQ MLMA + dual-length nonlinear envelopes + order-block context +
+    #        signal quality filter.  Defaults match the Pine v6 indicator.
+    # NOTE: min_bars = max(QUADAPT_WINDOW, QUADAPT_LEN1+20, …) ≈ 220.
+    #       Set CANDLE_LOOKBACK=220 (or more) when using this strategy.
+    # For 15-min intraday, consider LEN1=30, LEN2=14, WINDOW=60.
+    QUADAPT_LEN1 = int(os.getenv("QUADAPT_LEN1", "30"))
+    QUADAPT_LEN2 = int(os.getenv("QUADAPT_LEN2", "14"))
+    QUADAPT_WINDOW = int(os.getenv("QUADAPT_WINDOW", "60"))
+    QUADAPT_ATR_PERIOD = int(os.getenv("QUADAPT_ATR_PERIOD", "20"))
+    QUADAPT_MULT = float(os.getenv("QUADAPT_MULT", "2.0"))
+    QUADAPT_RQ_ALPHA = float(os.getenv("QUADAPT_RQ_ALPHA", "1.0"))
+    QUADAPT_RQ_BANDWIDTH = float(os.getenv("QUADAPT_RQ_BANDWIDTH", "8.0"))
+    QUADAPT_OB_VOL_LEN = int(os.getenv("QUADAPT_OB_VOL_LEN", "6"))
+    QUADAPT_OB_SMOOTH_LEN = int(os.getenv("QUADAPT_OB_SMOOTH_LEN", "9"))
+    QUADAPT_OB_MULT = float(os.getenv("QUADAPT_OB_MULT", "1.2"))
+    QUADAPT_MIN_QUALITY = float(os.getenv("QUADAPT_MIN_QUALITY", "55.0"))
+    QUADAPT_SIGNAL_MODE = os.getenv("QUADAPT_SIGNAL_MODE", "consensus").lower().strip()
+
     # Opening drive fade (STRATEGY=open_fade)
     OPEN_FADE_MIN_GAP = float(os.getenv("OPEN_FADE_MIN_GAP", "1.5"))
     OPEN_FADE_MIN_RSI = float(os.getenv("OPEN_FADE_MIN_RSI", "80"))
@@ -210,6 +229,24 @@ class Config:
     TRAILING_STOP_PCT = float(os.getenv("TRAILING_STOP_PCT", "0.8"))
     VWAP_FILTER_ENABLED = os.getenv("VWAP_FILTER_ENABLED", "true").lower() in ("1", "true", "yes", "y")
     VWAP_EXIT_ENABLED = os.getenv("VWAP_EXIT_ENABLED", "true").lower() in ("1", "true", "yes", "y")
+    # MR short fade: require close above VWAP + min extension % (Sprint 5)
+    VWAP_MR_FADE_SHORT = os.getenv("VWAP_MR_FADE_SHORT", "false").lower() in ("1", "true", "yes", "y")
+    VWAP_MR_MIN_EXTENSION_PCT = float(os.getenv("VWAP_MR_MIN_EXTENSION_PCT", "0.3"))
+    # Block entries when bar volume > mult × volume MA (0 = disabled)
+    VOLUME_SURGE_BLOCK_MULT = float(os.getenv("VOLUME_SURGE_BLOCK_MULT", "0"))
+    # Upper circuit proximity guard before short entry
+    CIRCUIT_GUARD_ENABLED = os.getenv("CIRCUIT_GUARD_ENABLED", "true").lower() in (
+        "1", "true", "yes", "y",
+    )
+    CIRCUIT_LIMIT_PCT = float(os.getenv("CIRCUIT_LIMIT_PCT", "20"))
+    CIRCUIT_MIN_DISTANCE_PCT = float(os.getenv("CIRCUIT_MIN_DISTANCE_PCT", "2.0"))
+    # nifty50 | nifty100
+    SCAN_UNIVERSE = os.getenv("SCAN_UNIVERSE", "nifty50").lower().strip()
+    # Optional Telegram alerts
+    ALERTS_ENABLED = os.getenv("ALERTS_ENABLED", "false").lower() in ("1", "true", "yes", "y")
+    TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+    TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
+    STREAM_ENABLED = os.getenv("STREAM_ENABLED", "false").lower() in ("1", "true", "yes", "y")
 
     # Classic pivot confluence (prior-session PP / R1–R3 / S1–S3)
     PIVOT_FILTER_ENABLED = os.getenv("PIVOT_FILTER_ENABLED", "false").lower() in (
@@ -273,6 +310,21 @@ class Config:
 
     # Estimated Angel MIS cost per completed round-trip (0 = use formula from notional)
     ESTIMATED_COST_PER_TRADE = float(os.getenv("ESTIMATED_COST_PER_TRADE", "42"))
+
+    # Risk-based position sizing
+    # RISK_PCT > 0 enables: qty = (ACCOUNT_EQUITY * RISK_PCT%) / |entry - stop|
+    # RISK_PCT = 0 (default) keeps legacy flat CAPITAL_PER_TRADE / price sizing.
+    RISK_PCT = float(os.getenv("RISK_PCT", "0"))
+    ACCOUNT_EQUITY = float(os.getenv("ACCOUNT_EQUITY", "500000"))
+
+    # Regime-adaptive strategy switching
+    # When true, Nifty ADX determines the active strategy at runtime:
+    #   ADX >= REGIME_TREND_ADX_MIN  →  orb   (trend-following)
+    #   ADX <= REGIME_RANGE_ADX_MAX  →  rsi_mr (mean-reversion)
+    #   between                      →  no change (keep current STRATEGY)
+    REGIME_ADAPTIVE = os.getenv("REGIME_ADAPTIVE", "false").lower() in ("1", "true", "yes", "y")
+    REGIME_TREND_ADX_MIN = float(os.getenv("REGIME_TREND_ADX_MIN", "25"))
+    REGIME_RANGE_ADX_MAX = float(os.getenv("REGIME_RANGE_ADX_MAX", "20"))
 
     # Logging
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")

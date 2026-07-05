@@ -24,6 +24,14 @@ from intraday_agent.universe import is_symbol_excluded
 logger = logging.getLogger(__name__)
 IST = pytz.timezone("Asia/Kolkata")
 
+# Maps ADX-derived regime type to preferred strategy name.
+# Empty string means "keep current" — no switch for the neutral band.
+_REGIME_STRATEGY_MAP: dict[str, str] = {
+    "trending": "orb",
+    "ranging":  "rsi_mr",
+    "neutral":  "",
+}
+
 
 class IntradayAgent:
     def __init__(self):
@@ -31,6 +39,8 @@ class IntradayAgent:
         get_registry().load()
         self.broker = AngelBroker()
         self.broker.login()
+        if Config.STREAM_ENABLED:
+            self.broker.connect_stream()
         self.orders = OrderManager(self.broker)
         self.strategy = get_strategy()
         self.screener = Screener(self.broker, self.strategy)
@@ -118,6 +128,7 @@ class IntradayAgent:
         if feed is not None and getattr(self.screener, "_yahoo_ok", False):
             self.regime = MarketRegime.from_feed(feed)
             self._regime_fetched_at = now
+            self._maybe_switch_strategy(self.regime)
             return self.regime
         if self.broker.is_candle_paused():
             return self.regime
@@ -125,7 +136,30 @@ class IntradayAgent:
             return self.regime
         self.regime = MarketRegime.from_broker(self.broker)
         self._regime_fetched_at = now
+        self._maybe_switch_strategy(self.regime)
         return self.regime
+
+    def _maybe_switch_strategy(self, regime: MarketRegime | None) -> None:
+        """Switch active strategy based on Nifty ADX regime (opt-in).
+
+        Only runs when REGIME_ADAPTIVE=true. Maps regime_type() to a strategy
+        name via _REGIME_STRATEGY_MAP and hot-swaps self.strategy + screener.
+        """
+        if not Config.REGIME_ADAPTIVE or regime is None:
+            return
+        rtype = regime.regime_type(self.now_ist())
+        target = _REGIME_STRATEGY_MAP.get(rtype, "")
+        if not target:
+            return
+        current_name = getattr(self.strategy, "name", Config.STRATEGY)
+        if target == current_name:
+            return
+        logger.info(
+            "Regime '%s' (Nifty ADX) → switching strategy %s → %s",
+            rtype, current_name, target,
+        )
+        self.strategy = get_strategy(target)
+        self.screener.strategy = self.strategy
 
     def try_entries(self) -> None:
         if not entry_time_allowed(self.now_ist()):
@@ -208,6 +242,17 @@ class IntradayAgent:
             feats = build_entry_features(
                 side, result, self.strategy, None, regime, bar_dt,
             )
+            # Compute stop price for risk-based sizing (ATR-based when available)
+            atr = result.atr or 0.0
+            atr_stop_dist = atr * Config.ATR_STOP_MULT if atr > 0 else 0.0
+            if atr_stop_dist > 0:
+                stop_price = (
+                    result.close + atr_stop_dist
+                    if side == "SHORT"
+                    else result.close - atr_stop_dist
+                )
+            else:
+                stop_price = None
             logger.info(
                 "Entry signal %s %s RSI=%.1f vol=%.0f vol_ma=%.0f vwap=%s atr=%s",
                 side,
@@ -226,6 +271,7 @@ class IntradayAgent:
                 volume_ratio=vol_ratio,
                 entry_atr=result.atr,
                 entry_features=features_to_json(feats),
+                stop_price=stop_price,
             )
             if res.get("success"):
                 self.guard.record_entry(result.symbol)

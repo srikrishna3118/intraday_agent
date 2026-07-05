@@ -1064,11 +1064,13 @@ Outputs: `data/research/loss_decomposition.json`, `loss_decomposition.md`.
 
 **Key finding (Jun 2026):** gross P&L is **+₹1,175** but **₹5,964 costs** on 142 trades wipe it out. Losses concentrate in **ATR stops** (49 trades, ₹-9,342 net), **14:00 IST entries** (₹-1,905), **ONGC/SBIN/BAJFINANCE**, and **RSI 75–80** entries (96 trades, ₹-4,552). Winners: **ATR targets** (+₹2,975), **RSI mid-line exits** (+₹2,230), **MARUTI/M&M** symbols.
 
-**Implemented in agent defaults (`.env.example`):** `RSI_OVERBOUGHT=80`, `ENTRY_CUTOFF_TIME=14:00`, `EXCLUDED_SYMBOLS=ONGC,SBIN,BAJFINANCE`. Volume cap `<1.5` was **not** applied (research showed poor per-trade quality). Set `CANDLE_NAIVE_TZ=ist` when `SCREENER_DATA_SOURCE=yahoo`. Filter ablation: `python tools/filter_backtests.py`.
+**Implemented in agent defaults (`.env.example`):** Sprint 4 paper stack — `RSI_OVERBOUGHT=80`, `ENTRY_CUTOFF_TIME=14:00`, denylist, pivot proximity, **mean exit** (`RSI_EXIT=50`, `TRAILING_STOP_ENABLED=false`). See [RESEARCH_HANDBOOK.md](data/research/RESEARCH_HANDBOOK.md) §5.
 
 ---
 
 ## 11g. Refinement roadmap (Tiers 1–4)
+
+> **Master research doc:** [data/research/RESEARCH_HANDBOOK.md](data/research/RESEARCH_HANDBOOK.md) — Sprint 4/5 findings, paper stack config, strategy scorecard.
 
 After loss decomposition and filter ablations, work proceeds in order — **do not skip tiers**.
 

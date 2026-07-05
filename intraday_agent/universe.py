@@ -64,6 +64,75 @@ NIFTY_50 = [
     "WIPRO",
 ]
 
+# Nifty Next 50 — static list; edit when index rebalances (research / SCAN_UNIVERSE=nifty100)
+NIFTY_NEXT_50 = [
+    "ABB",
+    "AMBUJACEM",
+    "BANKBARODA",
+    "BEL",
+    "BERGEPAINT",
+    "BOSCHLTD",
+    "CANBK",
+    "CHOLAFIN",
+    "COLPAL",
+    "DABUR",
+    "DLF",
+    "GAIL",
+    "GODREJCP",
+    "HAVELLS",
+    "HDFCAMC",
+    "ICICIGI",
+    "ICICIPRULI",
+    "INDHOTEL",
+    "IOC",
+    "IRFC",
+    "JINDALSTEL",
+    "LICI",
+    "LTIM",
+    "LUPIN",
+    "MOTHERSON",
+    "MUTHOOTFIN",
+    "NAUKRI",
+    "NMDC",
+    "PERSISTENT",
+    "PETRONET",
+    "PIDILITIND",
+    "PNB",
+    "RECLTD",
+    "SHRIRAMFIN",
+    "SIEMENS",
+    "SRF",
+    "TATAPOWER",
+    "TORNTPHARM",
+    "TRENT",
+    "TVSMOTOR",
+    "UNITDSPR",
+    "VBL",
+    "VEDL",
+    "ZOMATO",
+    "ADANIENSOL",
+    "DMART",
+    "HAL",
+    "JIOFIN",
+    "MAXHEALTH",
+    "NHPC",
+    "SUZLON",
+]
+
+
+def trading_universe() -> list[str]:
+    """Return scan universe based on SCAN_UNIVERSE config."""
+    if Config.SCAN_UNIVERSE == "nifty100":
+        seen: set[str] = set()
+        out: list[str] = []
+        for sym in NIFTY_50 + NIFTY_NEXT_50:
+            key = sym.upper()
+            if key not in seen:
+                seen.add(key)
+                out.append(sym)
+        return out
+    return list(NIFTY_50)
+
 
 def is_symbol_excluded(symbol: str) -> bool:
     return symbol.upper() in Config.EXCLUDED_SYMBOLS

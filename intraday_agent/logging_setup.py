@@ -52,5 +52,16 @@ def log_trade(action: str, symbol: str, quantity: int, price: float, result: dic
     }
     if result.get("success"):
         logger.info("TRADE: %s", payload)
+        try:
+            from intraday_agent.alerts import alert_trade
+            side = result.get("side", "")
+            alert_trade(action, symbol, side, quantity, price)
+        except Exception:
+            pass
     else:
         logger.error("TRADE FAILED: %s", payload)
+        try:
+            from intraday_agent.alerts import send_alert
+            send_alert(f"TRADE FAILED {action} {symbol}: {result.get('message', '')}")
+        except Exception:
+            pass

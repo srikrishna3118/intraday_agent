@@ -63,6 +63,12 @@ class MarketRegime:
         out = df.sort_values("datetime").reset_index(drop=True)
         period = Config.NIFTY_EMA_PERIOD
         out["ema"] = out["close"].ewm(span=period, adjust=False).mean()
+        # ADX for regime classification (imported lazily to avoid circular import)
+        try:
+            from intraday_agent.strategy import compute_adx
+            out["adx"] = compute_adx(out, period=Config.ADX_PERIOD)
+        except Exception:
+            out["adx"] = float("nan")
         return out
 
     @staticmethod
@@ -98,10 +104,13 @@ class MarketRegime:
 
     def snapshot(self, dt: datetime | None = None) -> dict[str, float | None]:
         dt = dt or datetime.now()
+        rtype = self.regime_type(dt) if Config.REGIME_ADAPTIVE else None
         return {
             "vix": self._value_at(self._vix, dt, "close"),
             "nifty_close": self._value_at(self._nifty, dt, "close"),
             "nifty_ema": self._value_at(self._nifty, dt, "ema"),
+            "nifty_adx": self._value_at(self._nifty, dt, "adx"),
+            "regime_type": rtype,
         }
 
     def block_reason(self, side: str, dt: datetime) -> str | None:
@@ -127,3 +136,20 @@ class MarketRegime:
 
     def allows_side(self, side: str, dt: datetime) -> bool:
         return self.block_reason(side, dt) is None
+
+    def regime_type(self, dt: datetime) -> str:
+        """Classify the current market regime using Nifty ADX.
+
+        Returns:
+            'trending' — ADX >= REGIME_TREND_ADX_MIN  (trend-following regime)
+            'ranging'  — ADX <= REGIME_RANGE_ADX_MAX  (mean-reversion regime)
+            'neutral'  — ADX between the two thresholds, or data unavailable
+        """
+        adx = self._value_at(self._nifty, dt, "adx")
+        if adx is None:
+            return "neutral"
+        if adx >= Config.REGIME_TREND_ADX_MIN:
+            return "trending"
+        if adx <= Config.REGIME_RANGE_ADX_MAX:
+            return "ranging"
+        return "neutral"

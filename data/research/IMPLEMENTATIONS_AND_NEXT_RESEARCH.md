@@ -2,21 +2,24 @@
 
 **Project:** Auto_trading intraday agent (Angel One, 15m, MIS, paper default)  
 **Window:** 180d T2 portfolio sim (30 symbols, ~₹42/trade costs) unless noted  
-**Last updated:** Jun 2026
+**Last updated:** Jul 2026
 
 ---
 
 ## 1. Executive summary
 
+> **Full narrative:** [RESEARCH_HANDBOOK.md](RESEARCH_HANDBOOK.md) (generated 2026-07-05).
+
 | Finding | Detail |
 |---------|--------|
 | **Gross edge exists** | rsi_mr baseline gross ≈ +₹1,000–1,300 on 180d T2 |
-| **Costs + ATR stops dominate net** | ~₹42/trade × N trades; ATR stop bucket ≈ −₹9,342 gross on 49 trades (baseline decomposition) |
-| **No replacement entry strategy passed bake-off** | rsi_div, zp_dmi, vst_ai, **sbp_tm**, vwap_mr, open_fade, rs_mr all **FAIL** vs rsi_mr |
-| **Best filter stack so far** | **RSI>80 + hour<14 + pivot proximity** → net **−₹133**, 22 trades, Sharpe **−0.31** (still slightly negative) |
-| **Paper Tier 1 (live `.env.example`)** | RSI>80, ENTRY_CUTOFF 14:00, EXCLUDED_SYMBOLS=ONGC,SBIN,BAJFINANCE — **pivot filter not yet enabled in paper** |
+| **Sprint 4 winner** | Mean RSI exit (no ATR target, trailing off) → **+₹347**, 17 trades, Sharpe **1.024** |
+| **Unfiltered baseline** | −₹5,290 / 146 trades — friction + ATR stops |
+| **Quadapt (`quadapt_ml`)** | Bake-off **FAIL** −₹372 / 8 trades — research archive only |
+| **Paper stack** | Config in `.env.example` — pivot on, mean exit, `REGIME_ADAPTIVE=false` |
+| **5m candles** | **DEFERRED** — stay on 15m |
 
-**Research direction:** Stop adding new entry tracks. Combine proven **rsi_mr filters + exit tuning** before any paper promotion of pivot stack.
+**Direction:** Paper-validate Sprint 4 stack (5–10 sessions). Do not promote Quadapt or enable `REGIME_ADAPTIVE` until gates pass.
 
 ---
 
@@ -34,8 +37,21 @@
 | `zp_dmi` | `ZpDmiConfluenceStrategy` | ZPayab DMI + multi-confirm | Bake-off FAIL |
 | `vst_ai` | `VstAiStrategy` | Zeiierman Volume SuperTrend AI + KNN | Bake-off FAIL |
 | `sbp_tm` | `SbpTmStrategy` | SBP Trend & Momentum + Pine ATR trail | Bake-off FAIL (484 trades, −₹21k net) |
+| `quadapt_ml` | `QuadaptMLTraderStrategy` | MLMA + order blocks + quality engine | Bake-off FAIL (−₹372, 8 trades) — archive |
 
-**Shared infrastructure:** `BaseStrategy.precompute_df()`, portfolio sim EOD IST fix, `AdaptiveRanker`, regime (VIX), guards, journal features.
+**Shared infrastructure:** `BaseStrategy.precompute_df()`, portfolio sim EOD IST fix, `AdaptiveRanker`, regime (VIX), guards, journal features, circuit guard, volume surge block, Nifty 100 universe (`SCAN_UNIVERSE`).
+
+### 2.2 Quadapt ML Trader (`quadapt_ml`) — Jul 2026 port
+
+**Code:** `precompute_quadapt_signals()`, `QuadaptMLTraderStrategy` — MLMA RQ kernel, dual envelopes, order blocks, quality engine.
+
+**Config (15m research):** `QUADAPT_LEN1=30`, `LEN2=14`, `WINDOW=60`, `MIN_QUALITY=55`, `SIGNAL_MODE=consensus`, `CANDLE_LOOKBACK=120`.
+
+**180d T2 bake-off vs `rsi_mr_paper_stack`:** **FAIL** — 8 trades, net **−₹372**, Sharpe **−3.254**. Do not promote to paper.
+
+**Artifact:** `data/research/quadapt_ml_bakeoff_verdict.md`, `quadapt_bakeoff.json`
+
+---
 
 ### 2.1 SBP Trend & Momentum (`sbp_tm`) — Jun 2026 port
 
@@ -91,7 +107,7 @@ Artifacts: `filter_backtests.md`, `filter_backtests_combined_pivot.md`
 | Symbol denylist | `EXCLUDED_SYMBOLS=ONGC,SBIN,BAJFINANCE` | Removes chronic losers |
 | Volume cap <1.5× | `SimEntryFilter` | **Not deployed** — poor per-trade quality in ablation |
 
-**Paper Tier 1 in `.env.example`:** RSI>80, cutoff 14:00, denylist. Pivot **off**.
+**Paper stack in `.env.example`:** RSI>80, cutoff 14:00, denylist, **pivot on**, **mean exit (Sprint 4)**. See handbook §5.
 
 ---
 
@@ -330,7 +346,10 @@ PIVOT_TOUCH_PCT=0.35
 | **Phase 1–3 sprint (Jun 2026)** | **`data/research/PHASE_FINDINGS.md`**, `phase_findings.json` |
 | **Gemini critique + Sprint 4 plan** | **`data/research/GEMINI_CRITIQUE_AND_SPRINT4.md`** (Round 1 + **Round 2** §6) |
 | **Mean reversion reference (video summary)** | **`data/research/MEAN_REVERSION_REFERENCE.md`** — Sandeep Rao MR taxonomy + mapping to rsi_mr / Sprint 4 |
-| **Sprint 4 (pending run)** | **`data/research/PHASE4_FINDINGS.md`**, `phase4_findings.json` — `python tools/research_phases.py --phase 4` |
+| **Sprint 4 (complete)** | **`data/research/PHASE4_FINDINGS.md`**, `phase4_findings.json` — mean exit **PASS** |
+| **Sprint 5 (complete)** | **`data/research/PHASE5_FINDINGS.md`**, `phase5_findings.json` |
+| **Quadapt bake-off** | **`data/research/quadapt_ml_bakeoff_verdict.md`** — FAIL |
+| **Research handbook** | **`data/research/RESEARCH_HANDBOOK.md`** — master doc |
 | Loss decomposition | `data/research/loss_decomposition.md` |
 | Filter ablation | `data/research/filter_backtests.md`, `filter_backtests_combined_pivot.md` |
 | Strategy bake-offs | `data/research/strategy_bakeoff_verdict.md`, `rsi_div_*`, `zp_dmi_*`, `vst_ai_*`, `zp_dmi_sd_*` |
@@ -351,4 +370,231 @@ Full report: **`PHASE_FINDINGS.md`** | Tool: `python tools/research_phases.py`
 
 **Research winner:** pivot + RSI>80 + hour<14 + denylist + `ATR_TARGET_MULT=3.5`. Paper trial in progress.
 
-**Sprint 4 (not yet run):** Mean-exit ablation + slippage stress — see `GEMINI_CRITIQUE_AND_SPRINT4.md`. Run after market close: `python tools/research_phases.py --phase 4`.
+**Sprint 4 (2026-07-05):** Mean-exit ablation **PASS** — see `PHASE4_FINDINGS.md`. Paper stack updated in `.env.example`.
+
+---
+
+## 13. Python Ecosystem Stack — Industry Standard Reference
+
+> **Purpose:** Maps the industry-standard Python trading bot ecosystem to this project's current stack, identifies gaps, and records which components are candidates for future adoption.
+
+---
+
+### 13.1 Data Processing & Technical Analysis
+
+| Library | Industry Role | This Project | Gap / Note |
+|---------|--------------|--------------|------------|
+| `pandas` | OHLCV time-series, rolling stats | ✅ Core — all strategy compute, screener, journal | None |
+| `numpy` | Vectorized math | ✅ Used in strategy.py (RSI, ATR, ADX ewm) | None |
+| `polars` | High-speed alternative for large datasets | ❌ Not used | Consider if universe expands to Nifty 100+ or tick data |
+| `TA-Lib` | C-optimised indicator library (RSI, MACD, BB) | ❌ Not used — all indicators hand-rolled | Candidate if compute latency becomes measurable |
+| `pandas-ta` | 130+ indicators, pure Python/Pandas | ❌ Not used | Candidate for rapid indicator prototyping |
+
+**Current verdict:** Hand-rolled `compute_rsi()`, `compute_atr()`, `compute_adx()` in `strategy.py` are sufficient for 15-min 50-symbol Nifty 50 scans. No migration needed until latency profiling shows bottleneck.
+
+---
+
+### 13.2 Backtesting Frameworks
+
+| Framework | Style | Industry Best-For | This Project |
+|-----------|-------|------------------|--------------|
+| `vectorbt` | Vectorized | Rapid param sweeps, millions of combinations | ❌ Not used — custom `bootstrap_backtest.py` + `walk_forward.py` serve this role |
+| `Backtrader` | Event-driven | Realistic broker sim, multi-asset | ❌ Not used |
+| `Zipline-Reloaded` | Event-driven | Institutional equity, point-in-time data | ❌ Not used |
+| `Nautilus Trader` | Rust-core event-driven | Production HFT, backtest→live code reuse | ❌ Not used |
+| **Custom sim** | Vectorized | Portfolio-realistic 15m MIS, ₹42/trade friction | ✅ `research_validation.py`, `bootstrap_backtest.py`, `walk_forward.py` |
+
+**Current verdict:** Custom backtester is fit-for-purpose for this strategy and asset class. Quantlib/Nautilus would add value only if migrating to multi-asset, options, or sub-second execution.
+
+**Known custom sim gap:** No slippage model beyond flat `ESTIMATED_COST_PER_TRADE`. Sprint 4 adds 0.05% per-leg stress test. True slippage modelling would require `Backtrader` or `vectorbt` fill-price simulation.
+
+---
+
+### 13.3 Production Infrastructure
+
+| Component | Industry Tool | This Project | Gap / Plan |
+|-----------|--------------|--------------|-----------|
+| Real-time data | `asyncio` + `websockets` | ❌ Synchronous polling (`time.sleep` loop in `run_agent.py`) | **Known gap** — Angel SmartAPI supports WebSocket; migration needed before live trading |
+| Logging | `loguru` (drop-in, rotating, structured) | `logging` stdlib via `logging_setup.py` | Functional but `loguru` would simplify file rotation + structured JSON logs |
+| Alerting | `python-telegram-bot` / `discord.py` | ❌ Not implemented | Required before live trading — order fills, stop triggers, API errors |
+| Scheduler / resilience | `APScheduler` / `systemd` | `while True` loop in `run_agent.py` | `systemd` service or `APScheduler` recommended for auto-restart on crash |
+
+---
+
+### 13.4 Architecture: Current vs. Blueprint
+
+Industry blueprint decouples **signal generation** from **order execution** via a standardised interface, enabling identical code to run in both backtest and live modes.
+
+**Industry blueprint:**
+```
+Strategy Engine (signal + sizing)
+         │
+         ▼  Standardised Order / Event Bus
+Execution Layer (abstract interface)
+         │
+    ┌────┴────┐
+Historical    Live
+(CSV/Parquet) (WebSocket → Angel API)
+```
+
+**This project's actual architecture:**
+```
+Screener (candles → ScreenResult)
+         │
+         ▼
+Agent.try_entries() → OrderManager.open_position()
+         │                      │
+    BacktestSim            AngelBroker.place_order()
+  (research_validation)   (LIVE_TRADING=true)
+```
+
+**Alignment:**
+- ✅ `OrderManager` is the execution abstraction — paper/live switch is clean
+- ✅ `BaseStrategy` ABC decouples signal from execution — `get_strategy()` factory
+- ✅ `AngelBroker` isolated in `broker.py` — replaceable
+- ⚠️ Research sim and live agent are separate codebases (not unified via a shared event bus)
+- ❌ No async / WebSocket layer — synchronous polling only
+
+---
+
+### 13.5 Gaps Prioritised by Live-Trading Readiness
+
+| Priority | Gap | Risk if Unaddressed | Remediation |
+|----------|-----|---------------------|-------------|
+| 🔴 **P1** | No alerting (Telegram/Discord) | Blind to fills, stops, and API failures during live session | Add `python-telegram-bot`; hook into `log_trade()` and error handlers |
+| 🔴 **P1** | Synchronous polling loop | Missed ticks, latency spikes, API hammering | Migrate to Angel WebSocket feed or async scheduler |
+| 🟡 **P2** | No auto-restart on crash | Bot stops silently mid-session | `systemd` unit or supervisor process |
+| 🟡 **P2** | Flat-cost friction model (no slippage) | Backtest overstates net P&L | Add per-leg slippage param (Sprint 4 stress test covers 0.05%) |
+| 🟢 **P3** | Hand-rolled indicators vs TA-Lib | Minor speed gap; no correctness risk | Profile first; migrate only if 50-symbol scan exceeds 30s |
+| 🟢 **P3** | Single-file backtest vs vectorbt | Harder to run large param sweeps | Candidate if needing >1000 strategy variants |
+
+---
+
+### 13.6 Ecosystem Adoption Decision Log
+
+| Library | Decision | Date | Reason |
+|---------|----------|------|--------|
+| `TA-Lib` | Deferred | Jul 2026 | Hand-rolled indicators correct and fast enough at 50-symbol scale |
+| `polars` | Deferred | Jul 2026 | pandas sufficient; universe < 100 symbols |
+| `vectorbt` | Deferred | Jul 2026 | Custom sim serves portfolio-realistic needs; vectorbt lacks MIS cost model |
+| `Nautilus Trader` | Deferred | Jul 2026 | Overkill for single-broker Angel One MIS strategy |
+| `loguru` | Candidate | Jul 2026 | Worth adopting — minimal effort, structured logs, file rotation |
+| `python-telegram-bot` | Required (P1) | Jul 2026 | Needed before any live trading session |
+| Angel WebSocket | Required (P1) | Jul 2026 | Must replace polling loop before live |
+
+---
+
+## 14. Broker Execution & Data — Angel One SmartAPI Reference
+
+> **Purpose:** Documents the Angel One SmartAPI stack, historical data options, and the recommended three-step pipeline. Maps each component to the project's current implementation.
+
+---
+
+### 14.1 Angel One SmartAPI — Current Usage
+
+**SDK:** `smartapi-python` (official, free for active Angel One accounts)
+
+```bash
+pip install smartapi-python
+```
+
+| Capability | API | Current Usage in Project |
+|------------|-----|--------------------------|
+| Order placement / modify / cancel | REST | ✅ `broker.py → place_order()` — MIS market orders |
+| Last Traded Price (LTP) | REST poll | ✅ `broker.get_ltp_for_symbol()` — position management |
+| Historical candles (OHLCV) | `getCandleData` REST | ✅ `broker.get_candles_for_symbol()` — screener + research |
+| Live market feed | SmartStream WebSocket | 🟡 Stub — `broker.connect_stream()`; REST default |
+| Index candles (Nifty, VIX) | `getCandleData` REST | ✅ `market_regime.py → from_broker()` |
+
+**Known limitation:** `getCandleData` restricts free historical depth. At 15-minute resolution the Angel API reliably covers ~60–90 days intraday. The project uses Yahoo Finance as a research fallback (`RESEARCH_DATA_SOURCE=yahoo`) and pre-fetched local `.parquet` cache (`RESEARCH_DATA_SOURCE=cache`) to work around this.
+
+---
+
+### 14.2 Historical Data Sources — Comparison
+
+#### For this project's 15-minute intraday strategy
+
+| Source | Depth (15m) | Cost | Used in Project | Notes |
+|--------|-------------|------|-----------------|-------|
+| Angel SmartAPI `getCandleData` | ~60–90 days | Free | ✅ Live screener, position mgmt | Rate-limited; `SCREENER_DELAY_SEC=1.0` |
+| Yahoo Finance (`yfinance`) | ~59 days (15m) | Free | ✅ Research fallback + screener alt | `.NS` suffix; `SCREENER_DATA_SOURCE=yahoo` |
+| Local `.parquet` cache | Up to 180d (pre-fetched) | Free (stored) | ✅ Default research source | Pre-fetched via `tools/fetch_history.py` |
+| **TrueData** | Years of tick/1m/5m | Paid | ❌ Not integrated | Gold standard for Indian quants; NSE Cash + F&O |
+| **Zerodha Kite Connect** | 7–8 years (1m) | ₹2,000/mo | ❌ Not integrated | Best depth for multi-year intraday backtests |
+| **Global Datafeeds (GDFL)** | Years | Paid | ❌ Not integrated | NSE/MCX authorized vendor; Backtrader native |
+| `jugaad-data` / `nsepy` | EOD only | Free | ❌ Not used | NSE bhavcopy; daily strategies only |
+
+**Current data verdict:** For 180-day simulations on 15m Nifty 50, the `cache` backend (pre-fetched Angel parquet) is sufficient. TrueData or Kite Connect data become necessary if expanding to: (a) multi-year backtests, (b) 1-minute resolution, or (c) options/F&O.
+
+---
+
+### 14.3 Recommended Three-Step Production Pipeline
+
+Industry standard workflow — how it maps to this project today vs. target state:
+
+```
+┌─────────────────────────────────────────────────────┐
+│  Step 1: Data Ingestion                             │
+│  Fetch historical OHLCV → save as local .parquet   │
+│                                                     │
+│  Current:  tools/fetch_history.py (Angel + Yahoo)  │
+│  Target:   add TrueData / Kite Connect adapter     │
+└────────────────────┬────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────┐
+│  Step 2: Offline Backtest                           │
+│  Feed local files → simulate trades with friction  │
+│                                                     │
+│  Current:  research_validation.py (custom sim)     │
+│            bootstrap_backtest.py / walk_forward.py │
+│  Gap:      no slippage model (Sprint 4 adds 0.05%) │
+└────────────────────┬────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────┐
+│  Step 3: Live Execution                             │
+│  Signal generator → Angel SmartAPI orders          │
+│                                                     │
+│  Current:  REST poll loop (run_agent.py)           │
+│  Gap P1:   no SmartStream WebSocket                │
+│  Gap P1:   no alerting (Telegram/Discord)          │
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
+### 14.4 SmartStream WebSocket — Migration Plan
+
+The project currently polls LTP and candles via synchronous REST calls inside a `while True / time.sleep` loop. Angel One's **SmartStream** WebSocket provides sub-second live ticks without the polling overhead.
+
+**Migration scope** (Step 3 of pipeline — P1 before live trading):
+
+| Current | Target |
+|---------|--------|
+| `broker.get_ltp_for_symbol()` — REST poll per position | Subscribe position symbols to SmartStream; receive LTP push |
+| `time.sleep(CHECK_INTERVAL)` main loop | `asyncio` event loop; tick callback triggers `manage_positions()` |
+| Candle fetch rate-limited by `SCREENER_DELAY_SEC` | SmartStream quote data removes screener latency dependency |
+| Silent failures — no operator notification | On order fill / stop hit / API error → Telegram alert |
+
+**Implementation entry points:**
+- `broker.py` — add `connect_stream()` and `subscribe(tokens)` methods wrapping `smartapi.SmartWebSocket`
+- `agent.py` — convert `run_once()` loop to `asyncio` coroutine; bind tick handler to `manage_positions()`
+- New module `intraday_agent/alerts.py` — Telegram / Discord push via `python-telegram-bot`
+
+**Prerequisite:** Strategy must be validated paper-positive before this work is started. WebSocket migration is infrastructure, not alpha.
+
+---
+
+### 14.5 Data Source Adoption Decision Log
+
+| Source / Tool | Decision | Trigger for Adoption |
+|---------------|----------|----------------------|
+| Angel `getCandleData` (current) | ✅ Active | — |
+| Yahoo Finance (current) | ✅ Active fallback | — |
+| Local parquet cache (current) | ✅ Active research | — |
+| `TrueData` | Deferred — paid | When multi-year 1m backtest needed or options strategy added |
+| `Zerodha Kite Connect` (data only) | Deferred — ₹2k/mo | When 180d window insufficient for statistical confidence |
+| `GDFL` | Deferred — paid | If Backtrader integration adopted |
+| `jugaad-data` / `nsepy` | Not planned | EOD only; project is intraday |
+| Angel SmartStream WebSocket | Required P1 | Before any live (non-paper) trading session |

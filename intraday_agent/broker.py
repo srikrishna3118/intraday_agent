@@ -29,6 +29,8 @@ class AngelBroker:
         self.refresh_token: str | None = None
         self._candle_pause_until: float = 0.0
         self._rate_limit_streak: int = 0
+        self._stream: Any | None = None
+        self._stream_tokens: set[str] = set()
 
     @property
     def rate_limit_streak(self) -> int:
@@ -386,3 +388,58 @@ class AngelBroker:
                 self.smart_api.terminateSession(self.client_id)
             except Exception:
                 pass
+        self.disconnect_stream()
+
+    # ── SmartStream WebSocket (optional; REST remains default) ─────────────
+
+    def connect_stream(self) -> bool:
+        """Initialize Angel SmartStream WebSocket for LTP push (live sessions only).
+
+        Returns True when the socket object is created. The agent still uses REST
+        polling by default; wire tick callbacks in agent.py when migrating fully.
+        """
+        if not Config.STREAM_ENABLED:
+            return False
+        self.ensure_session()
+        if self.smart_api is None:
+            return False
+        try:
+            from SmartApi.smartWebSocketV2 import SmartWebSocketV2
+
+            feed_token = getattr(self.smart_api, "getfeedToken", lambda: None)()
+            if not feed_token:
+                logger.warning("SmartStream: no feed token — REST polling only")
+                return False
+            self._stream = SmartWebSocketV2(
+                self.api_key,
+                self.client_id,
+                self.password,
+                feed_token,
+            )
+            logger.info("SmartStream WebSocket initialized (subscribe via subscribe_stream)")
+            return True
+        except ImportError:
+            logger.info("SmartApi.smartWebSocketV2 not installed — REST polling only")
+            return False
+        except Exception as exc:
+            logger.warning("SmartStream connect failed: %s", exc)
+            return False
+
+    def subscribe_stream(self, tokens: list[str], exchange: str = "NSE") -> None:
+        """Subscribe symbols to SmartStream (no-op if stream not connected)."""
+        if self._stream is None:
+            return
+        self._stream_tokens.update(tokens)
+        logger.info("SmartStream subscribe queued for %d tokens", len(tokens))
+
+    def disconnect_stream(self) -> None:
+        stream = getattr(self, "_stream", None)
+        if stream is not None:
+            try:
+                close = getattr(stream, "close_connection", None)
+                if callable(close):
+                    close()
+            except Exception:
+                pass
+        self._stream = None
+        self._stream_tokens = set()

@@ -1,0 +1,242 @@
+{
+  "days": 180,
+  "symbols": 30,
+  "source": "cache",
+  "cost_per_trade": 42.0,
+  "candidates": {
+    "tier2_rsi_mr": {
+      "label": "Tier 2 paper stack",
+      "strategy": "rsi_mr",
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 278.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": -856.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 10.3,
+        "avg_net_per_trade_rs": -31.7,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 40.7,
+        "expectancy_rs": -31.7,
+        "profit_factor": 0.5,
+        "max_drawdown_rs": 1126.0,
+        "sharpe": -1.905
+      },
+      "exits": {
+        "trailing stop": {
+          "n": 12,
+          "pnl": 277.7000000000036
+        },
+        "ATR stop": {
+          "n": 8,
+          "pnl": -1091.899316406252
+        },
+        "ATR target": {
+          "n": 1,
+          "pnl": 154.0
+        },
+        "RSI mid-line exit": {
+          "n": 5,
+          "pnl": 784.0999999999992
+        },
+        "EOD square-off": {
+          "n": 1,
+          "pnl": 154.0
+        }
+      },
+      "rolling": {
+        "positive_oos_folds": 0,
+        "total_folds": 1,
+        "pass": false
+      }
+    },
+    "orb_short": {
+      "label": "ORB short-only",
+      "strategy": "orb",
+      "stats": {
+        "trades": 872,
+        "gross_pnl_rs": 1504.0,
+        "total_costs_rs": 36624.0,
+        "net_pnl_rs": -35120.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 1.7,
+        "avg_net_per_trade_rs": -40.3,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 11.4,
+        "expectancy_rs": -40.3,
+        "profit_factor": 0.1,
+        "max_drawdown_rs": 34659.0,
+        "sharpe": -15.397
+      },
+      "exits": {
+        "RSI mid-line exit": {
+          "n": 838,
+          "pnl": 4400.95167236329
+        },
+        "trailing stop": {
+          "n": 14,
+          "pnl": -140.44999999999504
+        },
+        "OR stop": {
+          "n": 8,
+          "pnl": -1736.000000000001
+        },
+        "EOD square-off": {
+          "n": 10,
+          "pnl": -1735.45022583008
+        },
+        "OR target": {
+          "n": 2,
+          "pnl": 715.0
+        }
+      },
+      "rolling": {
+        "positive_oos_folds": 0,
+        "total_folds": 1,
+        "pass": false
+      }
+    },
+    "orb_both": {
+      "label": "ORB long+short",
+      "strategy": "orb",
+      "stats": {
+        "trades": 1077,
+        "gross_pnl_rs": 3088.0,
+        "total_costs_rs": 45234.0,
+        "net_pnl_rs": -42146.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 2.9,
+        "avg_net_per_trade_rs": -39.1,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 13.5,
+        "expectancy_rs": -39.1,
+        "profit_factor": 0.13,
+        "max_drawdown_rs": 41725.0,
+        "sharpe": -16.38
+      },
+      "exits": {
+        "RSI mid-line exit": {
+          "n": 1028,
+          "pnl": 4351.755206298843
+        },
+        "trailing stop": {
+          "n": 26,
+          "pnl": 533.3499999999997
+        },
+        "EOD square-off": {
+          "n": 11,
+          "pnl": -1746.7002258300795
+        },
+        "OR stop": {
+          "n": 7,
+          "pnl": -1545.0999999999985
+        },
+        "OR target": {
+          "n": 5,
+          "pnl": 1494.5999999999976
+        }
+      },
+      "rolling": {
+        "positive_oos_folds": 0,
+        "total_folds": 1,
+        "pass": false
+      }
+    },
+    "vwap_pullback_short": {
+      "label": "VWAP pullback short-only",
+      "strategy": "vwap_pullback",
+      "stats": {
+        "trades": 980,
+        "gross_pnl_rs": 3294.0,
+        "total_costs_rs": 41160.0,
+        "net_pnl_rs": -37866.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 3.4,
+        "avg_net_per_trade_rs": -38.6,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 16.3,
+        "expectancy_rs": -38.6,
+        "profit_factor": 0.19,
+        "max_drawdown_rs": 37547.0,
+        "sharpe": -13.484
+      },
+      "exits": {
+        "RSI mid-line exit": {
+          "n": 797,
+          "pnl": 10253.250012207049
+        },
+        "trailing stop": {
+          "n": 62,
+          "pnl": 1945.549603271472
+        },
+        "ATR stop": {
+          "n": 95,
+          "pnl": -11202.549285888683
+        },
+        "EOD square-off": {
+          "n": 14,
+          "pnl": -401.2497314453134
+        },
+        "ATR target": {
+          "n": 11,
+          "pnl": 2729.399999999996
+        },
+        "window end square-off": {
+          "n": 1,
+          "pnl": -30.0
+        }
+      },
+      "rolling": {
+        "positive_oos_folds": 0,
+        "total_folds": 1,
+        "pass": false
+      }
+    },
+    "vwap_pullback_both": {
+      "label": "VWAP pullback long+short",
+      "strategy": "vwap_pullback",
+      "stats": {
+        "trades": 1054,
+        "gross_pnl_rs": 1922.0,
+        "total_costs_rs": 44268.0,
+        "net_pnl_rs": -42346.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 1.8,
+        "avg_net_per_trade_rs": -40.2,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 20.5,
+        "expectancy_rs": -40.2,
+        "profit_factor": 0.19,
+        "max_drawdown_rs": 42115.0,
+        "sharpe": -14.506
+      },
+      "exits": {
+        "RSI mid-line exit": {
+          "n": 826,
+          "pnl": 15906.846301269543
+        },
+        "ATR stop": {
+          "n": 133,
+          "pnl": -16398.399517822247
+        },
+        "EOD square-off": {
+          "n": 11,
+          "pnl": -543.4995117187474
+        },
+        "trailing stop": {
+          "n": 79,
+          "pnl": 1416.3490661621036
+        },
+        "ATR target": {
+          "n": 5,
+          "pnl": 1540.4000000000005
+        }
+      },
+      "rolling": {
+        "positive_oos_folds": 0,
+        "total_folds": 1,
+        "pass": false
+      }
+    }
+  }
+}

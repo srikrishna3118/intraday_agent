@@ -29,6 +29,7 @@ class Position:
     entry_atr: float | None = None
     trail_extreme: float | None = None
     entry_features: str | None = None
+    stop_price: float | None = None
     order_id: str | None = None
     paper: bool = True
 
@@ -62,6 +63,21 @@ class OrderManager:
         qty = math.floor(Config.CAPITAL_PER_TRADE / price)
         return max(1, min(qty, Config.MAX_QUANTITY))
 
+    def compute_quantity_risk_based(self, price: float, stop_price: float) -> int:
+        """Risk-based sizing: qty = (ACCOUNT_EQUITY * RISK_PCT%) / |entry - stop|.
+
+        Falls back to compute_quantity(price) when RISK_PCT=0 or stop distance
+        is too small to compute a meaningful quantity.
+        """
+        if Config.RISK_PCT <= 0 or price <= 0:
+            return self.compute_quantity(price)
+        stop_dist = abs(price - stop_price)
+        if stop_dist < 0.01:
+            return self.compute_quantity(price)
+        risk_amount = Config.ACCOUNT_EQUITY * (Config.RISK_PCT / 100.0)
+        qty = math.floor(risk_amount / stop_dist)
+        return max(1, min(qty, Config.MAX_QUANTITY))
+
     def open_position(
         self,
         symbol: str,
@@ -71,6 +87,7 @@ class OrderManager:
         volume_ratio: float | None = None,
         entry_atr: float | None = None,
         entry_features: str | None = None,
+        stop_price: float | None = None,
     ) -> dict[str, Any]:
         symbol = symbol.upper()
         if is_symbol_excluded(symbol):
@@ -88,7 +105,10 @@ class OrderManager:
         if not ltp:
             return {"success": False, "message": f"Could not get LTP for {symbol}"}
 
-        quantity = self.compute_quantity(ltp)
+        if stop_price is not None and Config.RISK_PCT > 0:
+            quantity = self.compute_quantity_risk_based(ltp, stop_price)
+        else:
+            quantity = self.compute_quantity(ltp)
         action = "BUY" if side == "LONG" else "SELL"
 
         if Config.LIVE_TRADING:
@@ -120,6 +140,7 @@ class OrderManager:
             volume_ratio=volume_ratio,
             entry_atr=entry_atr,
             entry_features=entry_features,
+            stop_price=stop_price,
             trail_extreme=ltp,
             order_id=order_id,
             paper=not Config.LIVE_TRADING,

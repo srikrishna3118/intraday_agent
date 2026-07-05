@@ -1,0 +1,470 @@
+{
+  "generated_at": "2026-07-05 14:06 UTC",
+  "days": 180,
+  "source": "cache",
+  "phase4": {
+    "results": [
+      {
+        "id": "p4_control",
+        "label": "Phase 2 winner (ATR stop 1.5 / target 3.5, trailing on)",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "SBIN",
+            "ONGC",
+            "BAJFINANCE"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 3.5,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": true,
+          "TRAILING_STOP_ATR_MULT": 1.0,
+          "TRAILING_ACTIVATION_ATR_MULT": 1.0
+        },
+        "stats": {
+          "trades": 17,
+          "gross_pnl_rs": 777.0,
+          "total_costs_rs": 714.0,
+          "net_pnl_rs": 63.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 45.7,
+          "avg_net_per_trade_rs": 3.7,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 47.1,
+          "expectancy_rs": 3.7,
+          "profit_factor": 1.1,
+          "max_drawdown_rs": 334.0,
+          "sharpe": 0.2
+        },
+        "slippage_stats": null,
+        "exits": {
+          "by_family": [
+            {
+              "family": "trailing stop",
+              "trades": 9,
+              "net_pnl_rs": -248.0,
+              "gross_pnl_rs": 130.0
+            },
+            {
+              "family": "RSI mid-line exit",
+              "trades": 4,
+              "net_pnl_rs": 469.0,
+              "gross_pnl_rs": 637.0
+            },
+            {
+              "family": "ATR stop",
+              "trades": 2,
+              "net_pnl_rs": -382.0,
+              "gross_pnl_rs": -298.0
+            },
+            {
+              "family": "ATR target",
+              "trades": 1,
+              "net_pnl_rs": 112.0,
+              "gross_pnl_rs": 154.0
+            },
+            {
+              "family": "EOD square-off",
+              "trades": 1,
+              "net_pnl_rs": 112.0,
+              "gross_pnl_rs": 154.0
+            }
+          ],
+          "atr_stop_count": 2,
+          "atr_stop_net_rs": -382.0
+        },
+        "slippage_applied": false
+      },
+      {
+        "id": "p4_mean_rsi",
+        "label": "Test 9 + ATR stop only + RSI_EXIT=50 (no trailing)",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "SBIN",
+            "ONGC",
+            "BAJFINANCE"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0
+        },
+        "stats": {
+          "trades": 17,
+          "gross_pnl_rs": 1061.0,
+          "total_costs_rs": 714.0,
+          "net_pnl_rs": 347.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 62.4,
+          "avg_net_per_trade_rs": 20.4,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 64.7,
+          "expectancy_rs": 20.4,
+          "profit_factor": 1.7,
+          "max_drawdown_rs": 250.0,
+          "sharpe": 1.024
+        },
+        "slippage_stats": null,
+        "exits": {
+          "by_family": [
+            {
+              "family": "RSI mid-line exit",
+              "trades": 9,
+              "net_pnl_rs": 679.0,
+              "gross_pnl_rs": 1057.0
+            },
+            {
+              "family": "EOD square-off",
+              "trades": 6,
+              "net_pnl_rs": 50.0,
+              "gross_pnl_rs": 302.0
+            },
+            {
+              "family": "ATR stop",
+              "trades": 2,
+              "net_pnl_rs": -382.0,
+              "gross_pnl_rs": -298.0
+            }
+          ],
+          "atr_stop_count": 2,
+          "atr_stop_net_rs": -382.0
+        },
+        "slippage_applied": false
+      },
+      {
+        "id": "p4_mean_rsi_vwap",
+        "label": "Test 9 + ATR stop + RSI 50 + VWAP breakdown exit",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "SBIN",
+            "ONGC",
+            "BAJFINANCE"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": true,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0
+        },
+        "stats": {
+          "trades": 17,
+          "gross_pnl_rs": -39.0,
+          "total_costs_rs": 714.0,
+          "net_pnl_rs": -753.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": -2.3,
+          "avg_net_per_trade_rs": -44.3,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 11.8,
+          "expectancy_rs": -44.3,
+          "profit_factor": 0.05,
+          "max_drawdown_rs": 722.0,
+          "sharpe": -3.689
+        },
+        "slippage_stats": null,
+        "exits": {
+          "by_family": [
+            {
+              "family": "VWAP breakdown",
+              "trades": 17,
+              "net_pnl_rs": -753.0,
+              "gross_pnl_rs": -39.0
+            }
+          ],
+          "atr_stop_count": 0,
+          "atr_stop_net_rs": 0
+        },
+        "slippage_applied": false
+      },
+      {
+        "id": "p4_mean_rsi_slip",
+        "label": "Mean RSI exit + 0.05% slippage per leg",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "SBIN",
+            "ONGC",
+            "BAJFINANCE"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0
+        },
+        "stats": {
+          "trades": 17,
+          "gross_pnl_rs": 1061.0,
+          "total_costs_rs": 714.0,
+          "net_pnl_rs": 347.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 62.4,
+          "avg_net_per_trade_rs": 20.4,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 64.7,
+          "expectancy_rs": 20.4,
+          "profit_factor": 1.7,
+          "max_drawdown_rs": 250.0,
+          "sharpe": 1.024
+        },
+        "slippage_stats": {
+          "trades": 17,
+          "gross_pnl_rs": 827.0,
+          "total_costs_rs": 714.0,
+          "net_pnl_rs": 113.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 48.6,
+          "avg_net_per_trade_rs": 6.6,
+          "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+          "win_rate_pct": 52.9,
+          "expectancy_rs": 6.6,
+          "profit_factor": 1.19,
+          "max_drawdown_rs": 264.0,
+          "sharpe": 0.345,
+          "slippage_pct_per_leg": 0.0005
+        },
+        "exits": {
+          "by_family": [
+            {
+              "family": "RSI mid-line exit",
+              "trades": 9,
+              "net_pnl_rs": 679.0,
+              "gross_pnl_rs": 1057.0
+            },
+            {
+              "family": "EOD square-off",
+              "trades": 6,
+              "net_pnl_rs": 50.0,
+              "gross_pnl_rs": 302.0
+            },
+            {
+              "family": "ATR stop",
+              "trades": 2,
+              "net_pnl_rs": -382.0,
+              "gross_pnl_rs": -298.0
+            }
+          ],
+          "atr_stop_count": 2,
+          "atr_stop_net_rs": -382.0
+        },
+        "slippage_applied": true
+      },
+      {
+        "id": "p4_control_slip",
+        "label": "Phase 2 winner + 0.05% slippage per leg",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "SBIN",
+            "ONGC",
+            "BAJFINANCE"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 3.5,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": true,
+          "TRAILING_STOP_ATR_MULT": 1.0,
+          "TRAILING_ACTIVATION_ATR_MULT": 1.0
+        },
+        "stats": {
+          "trades": 17,
+          "gross_pnl_rs": 777.0,
+          "total_costs_rs": 714.0,
+          "net_pnl_rs": 63.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 45.7,
+          "avg_net_per_trade_rs": 3.7,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 47.1,
+          "expectancy_rs": 3.7,
+          "profit_factor": 1.1,
+          "max_drawdown_rs": 334.0,
+          "sharpe": 0.2
+        },
+        "slippage_stats": {
+          "trades": 17,
+          "gross_pnl_rs": 542.0,
+          "total_costs_rs": 714.0,
+          "net_pnl_rs": -172.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 31.9,
+          "avg_net_per_trade_rs": -10.1,
+          "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+          "win_rate_pct": 41.2,
+          "expectancy_rs": -10.1,
+          "profit_factor": 0.78,
+          "max_drawdown_rs": 432.0,
+          "sharpe": -0.552,
+          "slippage_pct_per_leg": 0.0005
+        },
+        "exits": {
+          "by_family": [
+            {
+              "family": "trailing stop",
+              "trades": 9,
+              "net_pnl_rs": -248.0,
+              "gross_pnl_rs": 130.0
+            },
+            {
+              "family": "RSI mid-line exit",
+              "trades": 4,
+              "net_pnl_rs": 469.0,
+              "gross_pnl_rs": 637.0
+            },
+            {
+              "family": "ATR stop",
+              "trades": 2,
+              "net_pnl_rs": -382.0,
+              "gross_pnl_rs": -298.0
+            },
+            {
+              "family": "ATR target",
+              "trades": 1,
+              "net_pnl_rs": 112.0,
+              "gross_pnl_rs": 154.0
+            },
+            {
+              "family": "EOD square-off",
+              "trades": 1,
+              "net_pnl_rs": 112.0,
+              "gross_pnl_rs": 154.0
+            }
+          ],
+          "atr_stop_count": 2,
+          "atr_stop_net_rs": -382.0
+        },
+        "slippage_applied": true
+      },
+      {
+        "id": "p4_no_denylist",
+        "label": "Mean RSI exit, EXCLUDED_SYMBOLS cleared (selection-bias test)",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0
+        },
+        "stats": {
+          "trades": 22,
+          "gross_pnl_rs": 932.0,
+          "total_costs_rs": 924.0,
+          "net_pnl_rs": 8.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 42.3,
+          "avg_net_per_trade_rs": 0.3,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 59.1,
+          "expectancy_rs": 0.3,
+          "profit_factor": 1.01,
+          "max_drawdown_rs": 583.0,
+          "sharpe": 0.017
+        },
+        "slippage_stats": null,
+        "exits": {
+          "by_family": [
+            {
+              "family": "RSI mid-line exit",
+              "trades": 10,
+              "net_pnl_rs": 844.0,
+              "gross_pnl_rs": 1264.0
+            },
+            {
+              "family": "EOD square-off",
+              "trades": 7,
+              "net_pnl_rs": -57.0,
+              "gross_pnl_rs": 237.0
+            },
+            {
+              "family": "ATR stop",
+              "trades": 4,
+              "net_pnl_rs": -818.0,
+              "gross_pnl_rs": -650.0
+            },
+            {
+              "family": "window end square-off",
+              "trades": 1,
+              "net_pnl_rs": 38.0,
+              "gross_pnl_rs": 80.0
+            }
+          ],
+          "atr_stop_count": 4,
+          "atr_stop_net_rs": -818.0
+        },
+        "slippage_applied": false
+      }
+    ],
+    "control_net_rs": 63.0,
+    "mean_rsi_net_rs": 347.0,
+    "mean_rsi_slip_net_rs": 113.0,
+    "control_slip_net_rs": -172.0,
+    "gates": {
+      "beat_control": true,
+      "min_trades": true,
+      "slippage_positive": true,
+      "pass_all": true
+    },
+    "gate_passed": true,
+    "decision": "PASS \u2014 mean RSI exit beats Phase 2 control and survives slippage stress. Review paper journal before changing .env exits.",
+    "deferred": [
+      "TIME_STOP_BARS exit (4\u20136 bars) \u2014 needs strategy/sim hook",
+      "Top-100 volume universe \u2014 Sprint 5 (needs symbol list + cache)",
+      "VWAP extension entry + volume surge block \u2014 Sprint 5 (strategy.py)",
+      "\u2265150 trades statistical gate \u2014 Sprint 5"
+    ]
+  },
+  "decision": "PASS \u2014 mean RSI exit beats Phase 2 control and survives slippage stress. Review paper journal before changing .env exits."
+}
