@@ -25,13 +25,7 @@ from intraday_agent.learning.research_data import (
 from intraday_agent.learning.sim_filters import SimEntryFilter
 from intraday_agent.logging_setup import setup_logger
 from intraday_agent.strategy import get_strategy
-
-T2_SYMBOLS = [
-    "RELIANCE", "SBIN", "TCS", "HDFCBANK", "INFY", "ICICIBANK", "KOTAKBANK", "AXISBANK",
-    "LT", "ITC", "BHARTIARTL", "HINDUNILVR", "MARUTI", "TATASTEEL", "TATACONSUM", "WIPRO",
-    "HCLTECH", "TECHM", "SUNPHARMA", "NTPC", "ONGC", "POWERGRID", "TITAN", "M&M",
-    "BAJFINANCE", "ASIANPAINT", "ULTRACEMCO", "JSWSTEEL", "INDUSINDBK", "COALINDIA",
-]
+from intraday_agent.universe import nifty200_symbols, symbols_for_tier
 
 DENYLIST = frozenset({"ONGC", "SBIN", "BAJFINANCE"})
 PIVOT_STACK = {
@@ -107,7 +101,9 @@ def run_sim(
     *,
     config: dict[str, Any],
     source: str,
+    entry_filter: SimEntryFilter | None = None,
 ) -> tuple[list, dict[str, Any]]:
+    filt = entry_filter if entry_filter is not None else ENTRY_FILTER
     with config_override(**config):
         trades = simulate_portfolio(
             symbol_dfs,
@@ -115,7 +111,7 @@ def run_sim(
             journal=None,
             source=source,
             regime=regime,
-            entry_filter=ENTRY_FILTER,
+            entry_filter=filt,
         )
     stats = summarize_trades(trades)
     return trades, stats
@@ -261,7 +257,8 @@ def write_phase4_findings(path: str, report: dict[str, Any]) -> None:
     lines = [
         "# Sprint 4 — Mean Exit Ablation + Friction",
         "",
-        f"Generated: {report['generated_at']} | Window: {report['days']}d T2 | Source: {report['source']}",
+        f"Generated: {report['generated_at']} | Tier: {report.get('tier', 't2')} "
+        f"({report.get('symbol_count', '?')} symbols) | Window: {report['days']}d | Source: {report['source']}",
         "",
         "Rationale: `data/research/GEMINI_CRITIQUE_AND_SPRINT4.md`",
         "",
@@ -576,8 +573,6 @@ def write_findings(path: str, report: dict[str, Any]) -> None:
 
 def phase5(symbol_dfs: dict, regime: Any, *, days: int, source: str, broker: Any = None) -> dict[str, Any]:
     """Sprint 5 — VWAP gate, volume surge, denylist falsification, slippage on Sprint 4 stack."""
-    from intraday_agent.universe import NIFTY_50, NIFTY_NEXT_50
-
     print("\n=== PHASE 5 — Robustness (Sprint 5) ===\n")
 
     base = dict(SPRINT4_PAPER_STACK)
@@ -633,35 +628,35 @@ def phase5(symbol_dfs: dict, regime: Any, *, days: int, source: str, broker: Any
             f"{label:<48} trades={stats['trades']:>3}  net=₹{net:>6,.0f}  sharpe={stats['sharpe']:.3f}"
         )
 
-    # Nifty 100 expansion (symbols with cache only)
-    n100_syms = list(dict.fromkeys(NIFTY_50 + NIFTY_NEXT_50))
-    n100_dfs = load_symbol_dfs(n100_syms, days, source, broker=broker)
-    if n100_dfs:
+    # Nifty 200 expansion (symbols with cache only)
+    n200_syms = nifty200_symbols()
+    n200_dfs = load_symbol_dfs(n200_syms, days, source, broker=broker)
+    if n200_dfs:
         trades, stats = run_sim(
-            n100_dfs, regime, config={**base, "EXCLUDED_SYMBOLS": frozenset()}, source=source,
+            n200_dfs, regime, config={**base, "EXCLUDED_SYMBOLS": frozenset()}, source=source,
         )
         slip = summarize_with_slippage(trades)
-        n100_row = {
-            "id": "p5_nifty100",
-            "label": f"Nifty 100 ({len(n100_dfs)} symbols cached), no denylist",
+        n200_row = {
+            "id": "p5_nifty200",
+            "label": f"Nifty 200 ({len(n200_dfs)} symbols cached), no denylist",
             "stats": stats,
             "slippage_stats": slip,
-            "symbol_count": len(n100_dfs),
+            "symbol_count": len(n200_dfs),
         }
-        results.append(n100_row)
+        results.append(n200_row)
         print(
-            f"{n100_row['label']:<48} trades={stats['trades']:>3}  "
+            f"{n200_row['label']:<48} trades={stats['trades']:>3}  "
             f"net=₹{stats['net_pnl_rs']:>6,.0f}  slip=₹{slip['net_pnl_rs']:,.0f}"
         )
     else:
-        n100_row = None
+        n200_row = None
 
     base_stats = next(r for r in results if r["id"] == "p5_base")["stats"]
     slip_row = next(r for r in results if r["id"] == "p5_base_slip")
     slip_net = (slip_row.get("slippage_stats") or {}).get("net_pnl_rs", 0)
     trades_ok = base_stats["trades"] >= 15
     sample_150 = base_stats["trades"] >= 150 or (
-        n100_row is not None and n100_row["stats"]["trades"] >= 150
+        n200_row is not None and n200_row["stats"]["trades"] >= 150
     )
     net_positive = slip_net > 0
     gate_passed = trades_ok and net_positive
@@ -691,7 +686,8 @@ def write_phase5_findings(path: str, report: dict[str, Any]) -> None:
     lines = [
         "# Sprint 5 — Robustness (VWAP, volume, universe)",
         "",
-        f"Generated: {report['generated_at']} | Window: {report['days']}d | Source: {report['source']}",
+        f"Generated: {report['generated_at']} | Tier: {report.get('tier', 't2')} "
+        f"({report.get('symbol_count', '?')} symbols) | Window: {report['days']}d | Source: {report['source']}",
         "",
         "## Variants",
         "",
@@ -707,7 +703,7 @@ def write_phase5_findings(path: str, report: dict[str, Any]) -> None:
         "## Gates",
         "",
         f"- Trades ≥ 15: **{'PASS' if g['min_trades_15'] else 'FAIL'}**",
-        f"- Sample ≥ 150 (or Nifty100): **{'PASS' if g['sample_150'] else 'FAIL'}**",
+        f"- Sample ≥ 150 (or Nifty 200): **{'PASS' if g['sample_150'] else 'FAIL'}**",
         f"- Slippage net > 0: **{'PASS' if g['slippage_net_positive'] else 'FAIL'}**",
         "",
         "## Decision",
@@ -723,6 +719,12 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Run research phases 1–5")
     p.add_argument("--days", type=int, default=180)
     p.add_argument("--source", type=str, default="cache")
+    p.add_argument(
+        "--tier",
+        choices=("t1", "t2", "t200", "t250"),
+        default="t2",
+        help="Symbol universe: t2 (30), t200 (Nifty 200), t250 (legacy ~250)",
+    )
     p.add_argument(
         "--phase",
         type=str,
@@ -763,10 +765,12 @@ def main() -> int:
 
     source = normalize_source(args.source or None)
     _, broker = init_research_session(source)
-    symbol_dfs = load_symbol_dfs(T2_SYMBOLS, args.days, source, broker=broker)
+    symbols = symbols_for_tier(args.tier)
+    symbol_dfs = load_symbol_dfs(symbols, args.days, source, broker=broker)
     if not symbol_dfs:
         print("Error: no candle data", file=sys.stderr)
         return 1
+    print(f"Universe: {args.tier} — {len(symbol_dfs)}/{len(symbols)} symbols with cache\n")
 
     regime = build_regime(args.days, source, Config.REGIME_FILTER_ENABLED, broker=broker)
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -778,6 +782,8 @@ def main() -> int:
         "generated_at": generated_at,
         "days": args.days,
         "source": source,
+        "tier": args.tier,
+        "symbol_count": len(symbol_dfs),
         "phases_run": sorted(phases),
     }
 
@@ -850,6 +856,8 @@ def main() -> int:
             "generated_at": generated_at,
             "days": args.days,
             "source": source,
+            "tier": args.tier,
+            "symbol_count": len(symbol_dfs),
             "phase4": p4,
             "decision": p4["decision"],
         }
@@ -867,6 +875,8 @@ def main() -> int:
             "generated_at": generated_at,
             "days": args.days,
             "source": source,
+            "tier": args.tier,
+            "symbol_count": len(symbol_dfs),
             "phase5": p5,
             "decision": p5["decision"],
         }

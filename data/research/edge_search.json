@@ -1,0 +1,1771 @@
+{
+  "generated_at": "2026-07-10 14:03 UTC",
+  "tier": "t2",
+  "symbol_count": 30,
+  "days": 180,
+  "capital": 50000.0,
+  "winner": {
+    "label": "r2_atr1.25",
+    "config": {
+      "ATR_STOP_MULT": 1.25,
+      "ATR_TARGET_MULT": 50.0,
+      "RSI_OVERBOUGHT": 80.0,
+      "RSI_EXIT": 50.0,
+      "EXCLUDED_SYMBOLS": [
+        "BAJFINANCE",
+        "ONGC",
+        "SBIN"
+      ],
+      "TRAILING_STOP_ENABLED": false,
+      "PIVOT_FILTER_ENABLED": true,
+      "ENTRY_CUTOFF_TIME": "14:00"
+    },
+    "filter": {
+      "max_entry_hour": 13,
+      "min_rsi": 80.0
+    },
+    "stats": {
+      "trades": 26,
+      "gross_pnl_rs": 3530.0,
+      "total_costs_rs": 1092.0,
+      "net_pnl_rs": 2438.0,
+      "avg_cost_per_trade_rs": 42.0,
+      "avg_gross_per_trade_rs": 135.8,
+      "avg_net_per_trade_rs": 93.8,
+      "cost_model": "flat \u20b942.0/trade",
+      "win_rate_pct": 65.4,
+      "expectancy_rs": 93.8,
+      "profit_factor": 1.65,
+      "max_drawdown_rs": 789.0,
+      "sharpe": 1.49
+    },
+    "slip_stats": {
+      "trades": 26,
+      "gross_pnl_rs": 2260.0,
+      "total_costs_rs": 1092.0,
+      "net_pnl_rs": 1168.0,
+      "avg_cost_per_trade_rs": 42.0,
+      "avg_gross_per_trade_rs": 86.9,
+      "avg_net_per_trade_rs": 44.9,
+      "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+      "win_rate_pct": 65.4,
+      "expectancy_rs": 44.9,
+      "profit_factor": 1.28,
+      "max_drawdown_rs": 982.0,
+      "sharpe": 0.724,
+      "slippage_pct_per_leg": 0.0005
+    },
+    "exits": {
+      "ATR stop": 8,
+      "EOD": 6,
+      "RSI exit": 12
+    },
+    "edge_pass": true
+  },
+  "round1": [
+    {
+      "label": "r1_baseline",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 3310.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 2176.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 122.6,
+        "avg_net_per_trade_rs": 80.6,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 80.6,
+        "profit_factor": 1.54,
+        "max_drawdown_rs": 857.0,
+        "sharpe": 1.342
+      },
+      "slip_stats": {
+        "trades": 27,
+        "gross_pnl_rs": 1991.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 857.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 73.7,
+        "avg_net_per_trade_rs": 31.7,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 31.7,
+        "profit_factor": 1.19,
+        "max_drawdown_rs": 1054.0,
+        "sharpe": 0.541,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 8,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r1_surge2",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "VOLUME_SURGE_BLOCK_MULT": 2.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 3310.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 2176.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 122.6,
+        "avg_net_per_trade_rs": 80.6,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 80.6,
+        "profit_factor": 1.54,
+        "max_drawdown_rs": 857.0,
+        "sharpe": 1.342
+      },
+      "slip_stats": {
+        "trades": 27,
+        "gross_pnl_rs": 1991.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 857.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 73.7,
+        "avg_net_per_trade_rs": 31.7,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 31.7,
+        "profit_factor": 1.19,
+        "max_drawdown_rs": 1054.0,
+        "sharpe": 0.541,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 8,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r1_trap86",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0,
+        "momentum_trap_rsi": 86.0,
+        "momentum_trap_vol_ratio": 1.7
+      },
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 3310.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 2176.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 122.6,
+        "avg_net_per_trade_rs": 80.6,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 80.6,
+        "profit_factor": 1.54,
+        "max_drawdown_rs": 857.0,
+        "sharpe": 1.342
+      },
+      "slip_stats": {
+        "trades": 27,
+        "gross_pnl_rs": 1991.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 857.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 73.7,
+        "avg_net_per_trade_rs": 31.7,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 31.7,
+        "profit_factor": 1.19,
+        "max_drawdown_rs": 1054.0,
+        "sharpe": 0.541,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 8,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r1_surge_trap",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "VOLUME_SURGE_BLOCK_MULT": 2.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0,
+        "momentum_trap_rsi": 86.0,
+        "momentum_trap_vol_ratio": 1.7
+      },
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 3310.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 2176.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 122.6,
+        "avg_net_per_trade_rs": 80.6,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 80.6,
+        "profit_factor": 1.54,
+        "max_drawdown_rs": 857.0,
+        "sharpe": 1.342
+      },
+      "slip_stats": {
+        "trades": 27,
+        "gross_pnl_rs": 1991.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 857.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 73.7,
+        "avg_net_per_trade_rs": 31.7,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 31.7,
+        "profit_factor": 1.19,
+        "max_drawdown_rs": 1054.0,
+        "sharpe": 0.541,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 8,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r1_no_deny",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 34,
+        "gross_pnl_rs": 3007.0,
+        "total_costs_rs": 1428.0,
+        "net_pnl_rs": 1579.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 88.4,
+        "avg_net_per_trade_rs": 46.4,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 58.8,
+        "expectancy_rs": 46.4,
+        "profit_factor": 1.27,
+        "max_drawdown_rs": 1263.0,
+        "sharpe": 0.861
+      },
+      "slip_stats": {
+        "trades": 34,
+        "gross_pnl_rs": 1342.0,
+        "total_costs_rs": 1428.0,
+        "net_pnl_rs": -86.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 39.5,
+        "avg_net_per_trade_rs": -2.5,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 58.8,
+        "expectancy_rs": -2.5,
+        "profit_factor": 0.99,
+        "max_drawdown_rs": 1626.0,
+        "sharpe": -0.048,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 9,
+        "EOD": 11,
+        "RSI exit": 14
+      },
+      "edge_pass": false
+    },
+    {
+      "label": "r1_surge_no_deny",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "VOLUME_SURGE_BLOCK_MULT": 2.0,
+        "EXCLUDED_SYMBOLS": [],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 34,
+        "gross_pnl_rs": 3007.0,
+        "total_costs_rs": 1428.0,
+        "net_pnl_rs": 1579.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 88.4,
+        "avg_net_per_trade_rs": 46.4,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 58.8,
+        "expectancy_rs": 46.4,
+        "profit_factor": 1.27,
+        "max_drawdown_rs": 1263.0,
+        "sharpe": 0.861
+      },
+      "slip_stats": {
+        "trades": 34,
+        "gross_pnl_rs": 1342.0,
+        "total_costs_rs": 1428.0,
+        "net_pnl_rs": -86.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 39.5,
+        "avg_net_per_trade_rs": -2.5,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 58.8,
+        "expectancy_rs": -2.5,
+        "profit_factor": 0.99,
+        "max_drawdown_rs": 1626.0,
+        "sharpe": -0.048,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 9,
+        "EOD": 11,
+        "RSI exit": 14
+      },
+      "edge_pass": false
+    },
+    {
+      "label": "r1_atr125",
+      "config": {
+        "ATR_STOP_MULT": 1.25,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 3432.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 2298.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 127.1,
+        "avg_net_per_trade_rs": 85.1,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 85.1,
+        "profit_factor": 1.59,
+        "max_drawdown_rs": 857.0,
+        "sharpe": 1.4
+      },
+      "slip_stats": {
+        "trades": 27,
+        "gross_pnl_rs": 2113.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 979.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 78.3,
+        "avg_net_per_trade_rs": 36.3,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 36.3,
+        "profit_factor": 1.22,
+        "max_drawdown_rs": 1054.0,
+        "sharpe": 0.604,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 8,
+        "EOD": 7,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r1_atr20",
+      "config": {
+        "ATR_STOP_MULT": 2.0,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 2580.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 1446.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 95.6,
+        "avg_net_per_trade_rs": 53.6,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 53.6,
+        "profit_factor": 1.31,
+        "max_drawdown_rs": 1183.0,
+        "sharpe": 0.804
+      },
+      "slip_stats": {
+        "trades": 27,
+        "gross_pnl_rs": 1261.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 127.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 46.7,
+        "avg_net_per_trade_rs": 4.7,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 4.7,
+        "profit_factor": 1.02,
+        "max_drawdown_rs": 1327.0,
+        "sharpe": 0.071,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 8,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r1_rsi82",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 82.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 12,
+        "gross_pnl_rs": 534.0,
+        "total_costs_rs": 504.0,
+        "net_pnl_rs": 30.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 44.5,
+        "avg_net_per_trade_rs": 2.5,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 58.3,
+        "expectancy_rs": 2.5,
+        "profit_factor": 1.01,
+        "max_drawdown_rs": 746.0,
+        "sharpe": 0.029
+      },
+      "slip_stats": {
+        "trades": 12,
+        "gross_pnl_rs": -47.0,
+        "total_costs_rs": 504.0,
+        "net_pnl_rs": -551.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -4.0,
+        "avg_net_per_trade_rs": -46.0,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 58.3,
+        "expectancy_rs": -46.0,
+        "profit_factor": 0.82,
+        "max_drawdown_rs": 796.0,
+        "sharpe": -0.543,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 5,
+        "RSI exit": 5,
+        "EOD": 2
+      },
+      "edge_pass": false
+    },
+    {
+      "label": "r1_rsi84",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 84.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 7,
+        "gross_pnl_rs": 750.0,
+        "total_costs_rs": 294.0,
+        "net_pnl_rs": 456.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 107.2,
+        "avg_net_per_trade_rs": 65.2,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 57.1,
+        "expectancy_rs": 65.2,
+        "profit_factor": 1.25,
+        "max_drawdown_rs": 9.0,
+        "sharpe": 0.582
+      },
+      "slip_stats": {
+        "trades": 7,
+        "gross_pnl_rs": 414.0,
+        "total_costs_rs": 294.0,
+        "net_pnl_rs": 120.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 59.1,
+        "avg_net_per_trade_rs": 17.1,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 57.1,
+        "expectancy_rs": 17.1,
+        "profit_factor": 1.06,
+        "max_drawdown_rs": 105.0,
+        "sharpe": 0.156,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 3,
+        "RSI exit": 3,
+        "EOD": 1
+      },
+      "edge_pass": false
+    },
+    {
+      "label": "r1_hour13",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 26,
+        "gross_pnl_rs": 3408.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 2316.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 131.1,
+        "avg_net_per_trade_rs": 89.1,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 89.1,
+        "profit_factor": 1.6,
+        "max_drawdown_rs": 785.0,
+        "sharpe": 1.432
+      },
+      "slip_stats": {
+        "trades": 26,
+        "gross_pnl_rs": 2138.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 1046.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 82.2,
+        "avg_net_per_trade_rs": 40.2,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 40.2,
+        "profit_factor": 1.24,
+        "max_drawdown_rs": 866.0,
+        "sharpe": 0.663,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 7,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r1_minrsi82",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 82.0
+      },
+      "stats": {
+        "trades": 12,
+        "gross_pnl_rs": 534.0,
+        "total_costs_rs": 504.0,
+        "net_pnl_rs": 30.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 44.5,
+        "avg_net_per_trade_rs": 2.5,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 58.3,
+        "expectancy_rs": 2.5,
+        "profit_factor": 1.01,
+        "max_drawdown_rs": 746.0,
+        "sharpe": 0.029
+      },
+      "slip_stats": {
+        "trades": 12,
+        "gross_pnl_rs": -47.0,
+        "total_costs_rs": 504.0,
+        "net_pnl_rs": -551.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -4.0,
+        "avg_net_per_trade_rs": -46.0,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 58.3,
+        "expectancy_rs": -46.0,
+        "profit_factor": 0.82,
+        "max_drawdown_rs": 796.0,
+        "sharpe": -0.543,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 5,
+        "RSI exit": 5,
+        "EOD": 2
+      },
+      "edge_pass": false
+    },
+    {
+      "label": "r1_surge_atr20",
+      "config": {
+        "ATR_STOP_MULT": 2.0,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "VOLUME_SURGE_BLOCK_MULT": 2.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 2580.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 1446.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 95.6,
+        "avg_net_per_trade_rs": 53.6,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 53.6,
+        "profit_factor": 1.31,
+        "max_drawdown_rs": 1183.0,
+        "sharpe": 0.804
+      },
+      "slip_stats": {
+        "trades": 27,
+        "gross_pnl_rs": 1261.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 127.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 46.7,
+        "avg_net_per_trade_rs": 4.7,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 4.7,
+        "profit_factor": 1.02,
+        "max_drawdown_rs": 1327.0,
+        "sharpe": 0.071,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 8,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r1_surge_trap_atr20",
+      "config": {
+        "ATR_STOP_MULT": 2.0,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "VOLUME_SURGE_BLOCK_MULT": 2.0,
+        "RSI_MOMENTUM_TRAP_RSI": 86.0,
+        "RSI_MOMENTUM_TRAP_VOLR": 1.7,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0,
+        "momentum_trap_rsi": 86.0,
+        "momentum_trap_vol_ratio": 1.7
+      },
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 2580.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 1446.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 95.6,
+        "avg_net_per_trade_rs": 53.6,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 53.6,
+        "profit_factor": 1.31,
+        "max_drawdown_rs": 1183.0,
+        "sharpe": 0.804
+      },
+      "slip_stats": {
+        "trades": 27,
+        "gross_pnl_rs": 1261.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 127.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 46.7,
+        "avg_net_per_trade_rs": 4.7,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 4.7,
+        "profit_factor": 1.02,
+        "max_drawdown_rs": 1327.0,
+        "sharpe": 0.071,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 8,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r1_live_stack",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "VOLUME_SURGE_BLOCK_MULT": 2.0,
+        "RSI_MOMENTUM_TRAP_RSI": 86.0,
+        "RSI_MOMENTUM_TRAP_VOLR": 1.7,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0,
+        "momentum_trap_rsi": 86.0,
+        "momentum_trap_vol_ratio": 1.7
+      },
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 3310.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 2176.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 122.6,
+        "avg_net_per_trade_rs": 80.6,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 80.6,
+        "profit_factor": 1.54,
+        "max_drawdown_rs": 857.0,
+        "sharpe": 1.342
+      },
+      "slip_stats": {
+        "trades": 27,
+        "gross_pnl_rs": 1991.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 857.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 73.7,
+        "avg_net_per_trade_rs": 31.7,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 31.7,
+        "profit_factor": 1.19,
+        "max_drawdown_rs": 1054.0,
+        "sharpe": 0.541,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 8,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    }
+  ],
+  "round2": [
+    {
+      "label": "r2_atr1.25",
+      "config": {
+        "ATR_STOP_MULT": 1.25,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 26,
+        "gross_pnl_rs": 3530.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 2438.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 135.8,
+        "avg_net_per_trade_rs": 93.8,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 93.8,
+        "profit_factor": 1.65,
+        "max_drawdown_rs": 789.0,
+        "sharpe": 1.49
+      },
+      "slip_stats": {
+        "trades": 26,
+        "gross_pnl_rs": 2260.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 1168.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 86.9,
+        "avg_net_per_trade_rs": 44.9,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 44.9,
+        "profit_factor": 1.28,
+        "max_drawdown_rs": 982.0,
+        "sharpe": 0.724,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 8,
+        "EOD": 6,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r2_atr1.5",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 26,
+        "gross_pnl_rs": 3408.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 2316.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 131.1,
+        "avg_net_per_trade_rs": 89.1,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 89.1,
+        "profit_factor": 1.6,
+        "max_drawdown_rs": 785.0,
+        "sharpe": 1.432
+      },
+      "slip_stats": {
+        "trades": 26,
+        "gross_pnl_rs": 2138.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 1046.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 82.2,
+        "avg_net_per_trade_rs": 40.2,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 40.2,
+        "profit_factor": 1.24,
+        "max_drawdown_rs": 866.0,
+        "sharpe": 0.663,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 7,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r2_atr1.75",
+      "config": {
+        "ATR_STOP_MULT": 1.75,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 26,
+        "gross_pnl_rs": 2932.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 1840.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 112.8,
+        "avg_net_per_trade_rs": 70.8,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 70.8,
+        "profit_factor": 1.42,
+        "max_drawdown_rs": 1143.0,
+        "sharpe": 1.039
+      },
+      "slip_stats": {
+        "trades": 26,
+        "gross_pnl_rs": 1661.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 569.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 63.9,
+        "avg_net_per_trade_rs": 21.9,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 21.9,
+        "profit_factor": 1.12,
+        "max_drawdown_rs": 1208.0,
+        "sharpe": 0.326,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 7,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r2_atr2.0",
+      "config": {
+        "ATR_STOP_MULT": 2.0,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 26,
+        "gross_pnl_rs": 2678.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 1586.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 103.0,
+        "avg_net_per_trade_rs": 61.0,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 61.0,
+        "profit_factor": 1.34,
+        "max_drawdown_rs": 1183.0,
+        "sharpe": 0.883
+      },
+      "slip_stats": {
+        "trades": 26,
+        "gross_pnl_rs": 1408.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 316.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 54.1,
+        "avg_net_per_trade_rs": 12.1,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 12.1,
+        "profit_factor": 1.06,
+        "max_drawdown_rs": 1327.0,
+        "sharpe": 0.178,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 7,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r2_surge0",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "VOLUME_SURGE_BLOCK_MULT": 0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 26,
+        "gross_pnl_rs": 3408.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 2316.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 131.1,
+        "avg_net_per_trade_rs": 89.1,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 89.1,
+        "profit_factor": 1.6,
+        "max_drawdown_rs": 785.0,
+        "sharpe": 1.432
+      },
+      "slip_stats": {
+        "trades": 26,
+        "gross_pnl_rs": 2138.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 1046.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 82.2,
+        "avg_net_per_trade_rs": 40.2,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 40.2,
+        "profit_factor": 1.24,
+        "max_drawdown_rs": 866.0,
+        "sharpe": 0.663,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 7,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r2_surge2.0",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "VOLUME_SURGE_BLOCK_MULT": 2.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 26,
+        "gross_pnl_rs": 3408.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 2316.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 131.1,
+        "avg_net_per_trade_rs": 89.1,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 89.1,
+        "profit_factor": 1.6,
+        "max_drawdown_rs": 785.0,
+        "sharpe": 1.432
+      },
+      "slip_stats": {
+        "trades": 26,
+        "gross_pnl_rs": 2138.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 1046.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 82.2,
+        "avg_net_per_trade_rs": 40.2,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 40.2,
+        "profit_factor": 1.24,
+        "max_drawdown_rs": 866.0,
+        "sharpe": 0.663,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 7,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r2_ob80",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 26,
+        "gross_pnl_rs": 3408.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 2316.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 131.1,
+        "avg_net_per_trade_rs": 89.1,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 89.1,
+        "profit_factor": 1.6,
+        "max_drawdown_rs": 785.0,
+        "sharpe": 1.432
+      },
+      "slip_stats": {
+        "trades": 26,
+        "gross_pnl_rs": 2138.0,
+        "total_costs_rs": 1092.0,
+        "net_pnl_rs": 1046.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 82.2,
+        "avg_net_per_trade_rs": 40.2,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 65.4,
+        "expectancy_rs": 40.2,
+        "profit_factor": 1.24,
+        "max_drawdown_rs": 866.0,
+        "sharpe": 0.663,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 7,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    },
+    {
+      "label": "r2_ob81",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 81.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 19,
+        "gross_pnl_rs": 923.0,
+        "total_costs_rs": 798.0,
+        "net_pnl_rs": 125.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 48.6,
+        "avg_net_per_trade_rs": 6.6,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 57.9,
+        "expectancy_rs": 6.6,
+        "profit_factor": 1.03,
+        "max_drawdown_rs": 1123.0,
+        "sharpe": 0.084
+      },
+      "slip_stats": {
+        "trades": 19,
+        "gross_pnl_rs": -5.0,
+        "total_costs_rs": 798.0,
+        "net_pnl_rs": -803.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -0.3,
+        "avg_net_per_trade_rs": -42.3,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 57.9,
+        "expectancy_rs": -42.3,
+        "profit_factor": 0.81,
+        "max_drawdown_rs": 1222.0,
+        "sharpe": -0.539,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 5,
+        "RSI exit": 7
+      },
+      "edge_pass": false
+    },
+    {
+      "label": "r2_ob82",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 82.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 12,
+        "gross_pnl_rs": 534.0,
+        "total_costs_rs": 504.0,
+        "net_pnl_rs": 30.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 44.5,
+        "avg_net_per_trade_rs": 2.5,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 58.3,
+        "expectancy_rs": 2.5,
+        "profit_factor": 1.01,
+        "max_drawdown_rs": 746.0,
+        "sharpe": 0.029
+      },
+      "slip_stats": {
+        "trades": 12,
+        "gross_pnl_rs": -47.0,
+        "total_costs_rs": 504.0,
+        "net_pnl_rs": -551.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -4.0,
+        "avg_net_per_trade_rs": -46.0,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 58.3,
+        "expectancy_rs": -46.0,
+        "profit_factor": 0.82,
+        "max_drawdown_rs": 796.0,
+        "sharpe": -0.543,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 5,
+        "RSI exit": 5,
+        "EOD": 2
+      },
+      "edge_pass": false
+    },
+    {
+      "label": "r2_ob83",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 83.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 9,
+        "gross_pnl_rs": 567.0,
+        "total_costs_rs": 378.0,
+        "net_pnl_rs": 189.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 63.0,
+        "avg_net_per_trade_rs": 21.0,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 55.6,
+        "expectancy_rs": 21.0,
+        "profit_factor": 1.09,
+        "max_drawdown_rs": 9.0,
+        "sharpe": 0.271
+      },
+      "slip_stats": {
+        "trades": 9,
+        "gross_pnl_rs": 133.0,
+        "total_costs_rs": 378.0,
+        "net_pnl_rs": -245.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 14.8,
+        "avg_net_per_trade_rs": -27.2,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 55.6,
+        "expectancy_rs": -27.2,
+        "profit_factor": 0.89,
+        "max_drawdown_rs": 105.0,
+        "sharpe": -0.355,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 4,
+        "RSI exit": 4,
+        "EOD": 1
+      },
+      "edge_pass": false
+    },
+    {
+      "label": "r2_ob84",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 84.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 7,
+        "gross_pnl_rs": 750.0,
+        "total_costs_rs": 294.0,
+        "net_pnl_rs": 456.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 107.2,
+        "avg_net_per_trade_rs": 65.2,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 57.1,
+        "expectancy_rs": 65.2,
+        "profit_factor": 1.25,
+        "max_drawdown_rs": 9.0,
+        "sharpe": 0.582
+      },
+      "slip_stats": {
+        "trades": 7,
+        "gross_pnl_rs": 414.0,
+        "total_costs_rs": 294.0,
+        "net_pnl_rs": 120.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 59.1,
+        "avg_net_per_trade_rs": 17.1,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 57.1,
+        "expectancy_rs": 17.1,
+        "profit_factor": 1.06,
+        "max_drawdown_rs": 105.0,
+        "sharpe": 0.156,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 3,
+        "RSI exit": 3,
+        "EOD": 1
+      },
+      "edge_pass": false
+    },
+    {
+      "label": "r2_live_combo",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "VOLUME_SURGE_BLOCK_MULT": 2.0,
+        "RSI_MOMENTUM_TRAP_RSI": 86.0,
+        "RSI_MOMENTUM_TRAP_VOLR": 1.7,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0,
+        "momentum_trap_rsi": 86.0,
+        "momentum_trap_vol_ratio": 1.7
+      },
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 3310.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 2176.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 122.6,
+        "avg_net_per_trade_rs": 80.6,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 80.6,
+        "profit_factor": 1.54,
+        "max_drawdown_rs": 857.0,
+        "sharpe": 1.342
+      },
+      "slip_stats": {
+        "trades": 27,
+        "gross_pnl_rs": 1991.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 857.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 73.7,
+        "avg_net_per_trade_rs": 31.7,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 31.7,
+        "profit_factor": 1.19,
+        "max_drawdown_rs": 1054.0,
+        "sharpe": 0.541,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 7,
+        "EOD": 8,
+        "RSI exit": 12
+      },
+      "edge_pass": true
+    }
+  ],
+  "round3_universe": [
+    {
+      "label": "r3_nifty50_winner",
+      "config": {
+        "ATR_STOP_MULT": 1.25,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 13,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 48,
+        "gross_pnl_rs": 1788.0,
+        "total_costs_rs": 2016.0,
+        "net_pnl_rs": -228.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 37.2,
+        "avg_net_per_trade_rs": -4.8,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 52.1,
+        "expectancy_rs": -4.8,
+        "profit_factor": 0.98,
+        "max_drawdown_rs": 1965.0,
+        "sharpe": -0.09
+      },
+      "slip_stats": {
+        "trades": 48,
+        "gross_pnl_rs": -538.0,
+        "total_costs_rs": 2016.0,
+        "net_pnl_rs": -2554.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -11.2,
+        "avg_net_per_trade_rs": -53.2,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 52.1,
+        "expectancy_rs": -53.2,
+        "profit_factor": 0.76,
+        "max_drawdown_rs": 3203.0,
+        "sharpe": -0.989,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 20,
+        "EOD": 10,
+        "RSI exit": 18
+      },
+      "edge_pass": false
+    },
+    {
+      "label": "r3_nifty50_baseline",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "RSI_OVERBOUGHT": 80.0,
+        "RSI_EXIT": 50.0,
+        "EXCLUDED_SYMBOLS": [
+          "BAJFINANCE",
+          "ONGC",
+          "SBIN"
+        ],
+        "TRAILING_STOP_ENABLED": false,
+        "PIVOT_FILTER_ENABLED": true,
+        "ENTRY_CUTOFF_TIME": "14:00"
+      },
+      "filter": {
+        "max_entry_hour": 14,
+        "min_rsi": 80.0
+      },
+      "stats": {
+        "trades": 48,
+        "gross_pnl_rs": 1370.0,
+        "total_costs_rs": 2016.0,
+        "net_pnl_rs": -646.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 28.5,
+        "avg_net_per_trade_rs": -13.5,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 52.1,
+        "expectancy_rs": -13.5,
+        "profit_factor": 0.93,
+        "max_drawdown_rs": 1724.0,
+        "sharpe": -0.26
+      },
+      "slip_stats": {
+        "trades": 48,
+        "gross_pnl_rs": -955.0,
+        "total_costs_rs": 2016.0,
+        "net_pnl_rs": -2971.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -19.9,
+        "avg_net_per_trade_rs": -61.9,
+        "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+        "win_rate_pct": 52.1,
+        "expectancy_rs": -61.9,
+        "profit_factor": 0.73,
+        "max_drawdown_rs": 3619.0,
+        "sharpe": -1.192,
+        "slippage_pct_per_leg": 0.0005
+      },
+      "exits": {
+        "ATR stop": 19,
+        "EOD": 11,
+        "RSI exit": 18
+      },
+      "edge_pass": false
+    }
+  ],
+  "edge_found": true
+}

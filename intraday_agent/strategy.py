@@ -1199,6 +1199,17 @@ class BaseStrategy(Strategy):
             return ext_pct >= Config.VWAP_MR_MIN_EXTENSION_PCT
         return close < vwap
 
+    def momentum_trap_blocks(self, result: ScreenResult) -> bool:
+        """True when extreme RSI + high volume suggests trend continuation (not MR)."""
+        rsi_lim = Config.RSI_MOMENTUM_TRAP_RSI
+        vol_lim = Config.RSI_MOMENTUM_TRAP_VOLR
+        if rsi_lim <= 0 or vol_lim <= 0:
+            return False
+        if result.volume_ma is None or result.volume_ma <= 0:
+            return False
+        vol_r = result.volume / result.volume_ma
+        return result.rsi > rsi_lim and vol_r > vol_lim
+
     def volume_surge_blocks(self, result: ScreenResult) -> bool:
         """True when entry should be skipped due to extreme volume vs MA."""
         mult = Config.VOLUME_SURGE_BLOCK_MULT
@@ -1261,6 +1272,57 @@ class BaseStrategy(Strategy):
         if pnl_pct >= Config.TARGET_PCT:
             return f"target ({pnl_pct:.2f}%)"
         return None
+
+    @staticmethod
+    def bars_held_since_entry(
+        df: pd.DataFrame | None,
+        entry_time: datetime | None,
+    ) -> int | None:
+        """Completed bars since entry on the same IST session (entry bar = 0)."""
+        if df is None or df.empty or entry_time is None:
+            return None
+        entry_ist = to_ist(entry_time)
+        entry_date = entry_ist.date()
+        held = 0
+        seen_entry = False
+        for dt in df["datetime"]:
+            if hasattr(dt, "to_pydatetime"):
+                dt = dt.to_pydatetime()
+            bar_ist = to_ist(dt)
+            if bar_ist.date() != entry_date:
+                continue
+            if not seen_entry:
+                if bar_ist >= entry_ist:
+                    seen_entry = True
+                continue
+            held += 1
+        return held if seen_entry else 0
+
+    def resolve_bars_held(
+        self,
+        df: pd.DataFrame | None,
+        *,
+        bars_held: int | None,
+        entry_time: datetime | None,
+    ) -> int | None:
+        if bars_held is not None:
+            return bars_held
+        return self.bars_held_since_entry(df, entry_time)
+
+    def time_stop_hit(
+        self,
+        side: str,
+        entry: float,
+        price: float,
+        bars_held: int | None,
+    ) -> str | None:
+        n = Config.TIME_STOP_BARS
+        if n <= 0 or bars_held is None or bars_held < n:
+            return None
+        pnl = _pnl_pct(side, entry, price)
+        if pnl > 0:
+            return None
+        return f"time stop ({bars_held} bars, {pnl:.2f}%)"
 
     def _trailing_active(
         self, side: str, entry: float, extreme: float, entry_atr: float | None,
@@ -1335,6 +1397,9 @@ class BaseStrategy(Strategy):
         price: float,
         entry_atr: float | None = None,
         trail_extreme: float | None = None,
+        *,
+        bars_held: int | None = None,
+        entry_time: datetime | None = None,
     ) -> str | None:
         trailing_active = False
         if Config.TRAILING_STOP_ENABLED and trail_extreme is not None:
@@ -1352,7 +1417,8 @@ class BaseStrategy(Strategy):
             return "RSI mid-line exit"
         if self.vwap_breakdown(df, side):
             return "VWAP breakdown"
-        return None
+        held = self.resolve_bars_held(df, bars_held=bars_held, entry_time=entry_time)
+        return self.time_stop_hit(side, entry, price, held)
 
     def analyze(self, df: pd.DataFrame, symbol: str) -> ScreenResult | None:
         raise NotImplementedError
@@ -1455,9 +1521,58 @@ class RsiVolumeMeanReversionStrategy(BaseStrategy):
         signal = self._gate_pivot_entry(signal, base["close"], df)
         if signal == Signal.SELL:
             tmp = ScreenResult(signal=signal, **base)
-            if self.volume_surge_blocks(tmp) or self.circuit_blocks_short(df, base["close"]):
+            if (
+                self.volume_surge_blocks(tmp)
+                or self.momentum_trap_blocks(tmp)
+                or self.circuit_blocks_short(df, base["close"])
+            ):
                 signal = Signal.NONE
         return ScreenResult(signal=signal, **base)
+
+    def exit_reason(
+        self,
+        df: pd.DataFrame,
+        side: str,
+        entry: float,
+        price: float,
+        entry_atr: float | None = None,
+        trail_extreme: float | None = None,
+        *,
+        bars_held: int | None = None,
+        entry_time: datetime | None = None,
+    ) -> str | None:
+        """Mean-reversion exits: RSI anchor first; time stop before ATR when underwater."""
+        if self.exit_signal(df, side):
+            return "RSI mid-line exit"
+        if self.vwap_breakdown(df, side):
+            return "VWAP breakdown"
+
+        trailing_active = False
+        if Config.TRAILING_STOP_ENABLED and trail_extreme is not None:
+            trailing_active = self._trailing_active(side, entry, trail_extreme, entry_atr)
+            reason = self.trailing_stop_hit(side, entry, price, entry_atr, trail_extreme)
+            if reason:
+                return reason
+
+        pnl = _pnl_pct(side, entry, price)
+        if pnl > 0:
+            # Let winners run toward RSI 50 — no ATR stop while in profit
+            if Config.USE_ATR_EXITS and entry_atr and entry_atr > 0:
+                target_dist = entry_atr * Config.ATR_TARGET_MULT
+                if side == "LONG" and price >= entry + target_dist:
+                    return f"ATR target ({pnl:.2f}%)"
+                if side == "SHORT" and price <= entry - target_dist:
+                    return f"ATR target ({pnl:.2f}%)"
+            return None
+
+        held = self.resolve_bars_held(df, bars_held=bars_held, entry_time=entry_time)
+        reason = self.time_stop_hit(side, entry, price, held)
+        if reason:
+            return reason
+
+        return self.stop_target_hit(
+            side, entry, price, entry_atr, trailing_active=trailing_active,
+        )
 
 
 class OpeningRangeBreakoutStrategy(BaseStrategy):
@@ -1500,6 +1615,9 @@ class OpeningRangeBreakoutStrategy(BaseStrategy):
         price: float,
         entry_atr: float | None = None,
         trail_extreme: float | None = None,
+        *,
+        bars_held: int | None = None,
+        entry_time: datetime | None = None,
     ) -> str | None:
         levels = opening_range_levels(df)
         if levels:
@@ -1651,6 +1769,9 @@ class VwapMeanReversionStrategy(BaseStrategy):
         price: float,
         entry_atr: float | None = None,
         trail_extreme: float | None = None,
+        *,
+        bars_held: int | None = None,
+        entry_time: datetime | None = None,
     ) -> str | None:
         vwap = self.current_vwap(df)
         target = self._vwap_target_hit(side, price, vwap)
@@ -1730,6 +1851,9 @@ class OpeningDriveFadeStrategy(BaseStrategy):
         price: float,
         entry_atr: float | None = None,
         trail_extreme: float | None = None,
+        *,
+        bars_held: int | None = None,
+        entry_time: datetime | None = None,
     ) -> str | None:
         cover = self._vwap_cover(side, price, self.current_vwap(df))
         if cover:
@@ -2096,6 +2220,9 @@ class RsiDivergenceStrategy(BaseStrategy):
         price: float,
         entry_atr: float | None = None,
         trail_extreme: float | None = None,
+        *,
+        bars_held: int | None = None,
+        entry_time: datetime | None = None,
     ) -> str | None:
         rsi = self.current_rsi(df)
         if rsi is not None:
@@ -2229,6 +2356,9 @@ class VstAiStrategy(BaseStrategy):
         price: float,
         entry_atr: float | None = None,
         trail_extreme: float | None = None,
+        *,
+        bars_held: int | None = None,
+        entry_time: datetime | None = None,
     ) -> str | None:
         if Config.VST_EXIT_ON_FLIP and df is not None and len(df) >= 2:
             if "vst_label" not in df.columns or "vst_direction" not in df.columns:
@@ -2335,6 +2465,9 @@ class SbpTmStrategy(BaseStrategy):
         price: float,
         entry_atr: float | None = None,
         trail_extreme: float | None = None,
+        *,
+        bars_held: int | None = None,
+        entry_time: datetime | None = None,
     ) -> str | None:
         if Config.SBP_USE_TRAIL_EXIT and trail_extreme is not None and df is not None and len(df):
             bar_low = float(df["low"].iloc[-1])
@@ -2971,6 +3104,9 @@ class QuadaptMLTraderStrategy(BaseStrategy):
         price: float,
         entry_atr: float | None = None,
         trail_extreme: float | None = None,
+        *,
+        bars_held: int | None = None,
+        entry_time: datetime | None = None,
     ) -> str | None:
         trailing_active = False
         if Config.TRAILING_STOP_ENABLED and trail_extreme is not None:

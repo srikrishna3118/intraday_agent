@@ -6,11 +6,11 @@ Guide for AI agents and developers working in this repository.
 
 Autonomous **intraday equity** trading on **Angel One SmartAPI**. Each cycle:
 
-1. Screen **Nifty 50** (`intraday_agent/universe.py`) on **15-min candles**
+1. Screen configured universe (`SCAN_UNIVERSE`: **t2** paper default, or nifty50/100/200) on **15-min candles**
 2. Find RSI extremes with **volume confirmation** (`screener.py` + `strategy.py`)
 3. Apply optional **regime filters** (India VIX, Nifty EMA) via `market_regime.py`
 4. Enter mean-reversion trades as **NSE MIS** (tuned profile: short-only)
-5. Manage exits: ATR stop/target, trailing stop, RSI mid-line, EOD square-off (`agent.py` + `orders.py`)
+5. Manage exits: RSI 50 mean exit, ATR stop (underwater only), optional time stop, EOD square-off (`agent.py` + `orders.py`)
 
 **Paper trading is the default** (`LIVE_TRADING=false`). Never enable live trading unless the user explicitly asks.
 
@@ -22,17 +22,18 @@ intraday_agent/
   agent.py            → Main loop, market hours, square-off, guards
   guard.py            → Anti-overtrading guards
   market_regime.py    → India VIX / Nifty EMA entry gate
-  screener.py         → Nifty 50 scan (rate-limited candle fetches)
-  strategy.py         → RSI + volume + VWAP + ATR + trailing exits
+  screener.py         → Universe scan (rate-limited candle fetches)
+  strategy.py         → RSI + volume + VWAP + ATR + mean-reversion exits
   orders.py           → Paper/live OrderManager, position sizing
   broker.py           → Angel SmartAPI: login, candles, LTP, orders
   instruments.py      → Scrip master cache → symboltoken lookup
   config.py           → All settings from .env
-  universe.py         → Static NIFTY_50 list (edit when index changes)
+  universe.py         → NIFTY_50, T2_SYMBOLS, nifty100/200 lists; SCAN_UNIVERSE routing
   learning/           → Journal, stats, ranker, backtest, walk-forward, meta_label, costs
 tools/
   status.py, e2e_test.py, bootstrap_backtest.py, walk_forward.py, train_meta_label.py
   research_validation.py, report_journal.py, mine_patterns.py, export_journal.py
+  research_phases.py, edge_search.py, time_stop_ablation.py, rerun_nifty200_research.py
 ```
 
 Data flow: `agent` → `screener` → `AdaptiveRanker` (optional) → `MetaLabelFilter` (optional) → `orders` → `broker.place_order`. On close, `orders` writes to `TradeJournal` (including `entry_features` when logged at entry).
@@ -52,6 +53,9 @@ python tools/train_meta_label.py --source backtest,paper --min-samples 80 --eval
 python tools/research_validation.py --meta-label --skip-rolling --skip-sizing --source yahoo --tier t1
 python tools/candle_cache_status.py --bundle t2_180d
 python tools/fetch_history.py --bundle t2_180d --source angel
+python tools/edge_search.py --tier t2 --rounds 2 --universe-test --capital 50000
+python tools/time_stop_ablation.py --capital 50000
+python tools/research_phases.py --phase 4 --tier t200
 python tools/report_journal.py --source backtest
 python tools/mine_patterns.py --source backtest
 ```
@@ -97,7 +101,7 @@ Market hours: **09:15–15:30 IST**, weekdays. Square-off default: **15:15 IST**
 | Task | Where to change |
 |------|-----------------|
 | Adjust RSI/volume entry rules | `strategy.py`, `.env.example` |
-| Change watchlist | `universe.py` |
+| Change watchlist | `universe.py`, `SCAN_UNIVERSE` in `.env` |
 | Position sizing / paper vs live | `orders.py`, `config.py` |
 | Broker API / candles | `broker.py` |
 | New exit rule | `agent.py` `manage_positions()` |

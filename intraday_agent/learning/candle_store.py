@@ -168,6 +168,10 @@ def get_or_fetch(
         chunk_end = min(cursor + timedelta(days=chunk_days), end)
         if sleep_sec > 0 and cursor > fetch_start:
             time.sleep(sleep_sec)
+        while broker.is_candle_paused():
+            wait = min(5.0, broker.candle_pause_remaining() + 0.5)
+            if wait > 0:
+                time.sleep(wait)
         logger.info("Fetching %s candles %s → %s", symbol, cursor.date(), chunk_end.date())
         chunk = _fetch_from_broker(broker, symbol, cursor, chunk_end, interval)
         if chunk is not None and not chunk.empty:

@@ -1,6 +1,6 @@
 # Paper Trial Log — Sprint 4 mean-exit stack
 
-**Stack:** rsi_mr short-only · RSI>80 · hour<14 · denylist · pivot proximity · ATR stop 1.5 · **mean exit (RSI 50, no ATR target, trailing off)**  
+# Sprint 4 mean-exit stack: RSI>80, cutoff 14:00, denylist, pivot proximity, **mean exit (RSI 50, no trailing, ATR stop only when losing)**  
 **Sim reference (180d T2, Sprint 4):** 17 trades · gross ₹1,061 · net **+₹347** · Sharpe **1.024** · slippage stress **+₹113**  
 **Expectancy hint:** ~₹20/trade net before paper drift (~1 trade / 10.5 days on T2)
 
@@ -22,7 +22,7 @@ Copy a row per session below. After **5–10 sessions**, compare total paper net
 | 2026-06-22 | Mon | ~10 | 0 | 0 | ₹0 | Started 09:27; **power cut ~10:28** — old stack (ATR target 3.5). No entries. |
 | 2026-06-19 | Thu | — | 3 | 3 | **+₹46** | SHORT NTPC +₹36 (2m trailing), BHARTIARTL +₹13 (2m trailing), ADANIENT −₹4 (2m trailing). DIVISLAB +₹31 manual exit. RSI 77–80, VolR 1.2–1.7. All AM entries. |
 | 2026-06-23 | Mon | — | 3 | 3 | **−₹62** | SHORT DIVISLAB +₹4 (2m trailing), APOLLOHOSP +₹19 (87m trailing), CIPLA −₹84 (ATR stop, RSI 88.2, VolR 1.9 — trend continuation not reversal). |
-| 2026-07-06 | Mon | ~full session | 2 | 2 | **+₹62** | Agent 06:18→14:00. SHORT BAJAJ-AUTO +₹27 (137m trailing), EICHERMOT +₹35 (157m trailing). Longer holds = best P&L. Angel candle API rate-limit pauses AM. |
+| 2026-07-06 | Mon | ~full session | 2 | 2 | **+₹62** | Trailing stop exits at +0.25% — **old `.env`**. Fixed 2026-07-10: RSI-first, trailing off, ATR stop only underwater. |
 | | | | | | | |
 | | | | | | | |
 

@@ -27,6 +27,7 @@ from intraday_agent.learning.research_data import (
 from intraday_agent.learning.walk_forward import unique_trading_dates
 from intraday_agent.logging_setup import setup_logger
 from intraday_agent.strategy import BaseStrategy, get_strategy, list_strategies
+from intraday_agent.universe import symbols_for_tier
 
 logger = logging.getLogger(__name__)
 
@@ -258,7 +259,7 @@ def config_override(**overrides: Any) -> Iterator[None]:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Four-track strategy portfolio bake-off")
     parser.add_argument("--days", type=int, default=180)
-    parser.add_argument("--tier", choices=("t1", "t2"), default="t2")
+    parser.add_argument("--tier", choices=("t1", "t2", "t200", "t250"), default="t2")
     parser.add_argument("--source", type=str, default="", help="cache | angel | yahoo")
     parser.add_argument(
         "--candidates",
@@ -373,7 +374,7 @@ def rolling_walk_forward(
 
 
 def _resolve_symbols(tier: str) -> list[str]:
-    return T2_SYMBOLS if tier == "t2" else T1_SYMBOLS
+    return symbols_for_tier(tier)
 
 
 def evaluate_gates(stats: dict[str, Any], rolling: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -494,6 +495,7 @@ def main() -> int:
 
     report: dict[str, Any] = {
         "days": args.days,
+        "tier": args.tier,
         "data_source": source,
         "symbol_count": len(symbol_dfs),
         "candidates": {},

@@ -1,9 +1,10 @@
 # Adversarial Research Roadmap — Status & Pending Work
 
-**Last updated:** 2026-07-05  
+**Last updated:** 2026-07-10  
 **Plan reference:** Adversarial Research Roadmap (Phases 0–6)  
 **Paper host:** Desktop (Oracle cloud deferred)
 
+> **Master findings & execution plan:** [FINDINGS_AND_NEXT_STEPS.md](FINDINGS_AND_NEXT_STEPS.md)  
 > Narrative and config: [RESEARCH_HANDBOOK.md](RESEARCH_HANDBOOK.md). Implementation registry: [IMPLEMENTATIONS_AND_NEXT_RESEARCH.md](IMPLEMENTATIONS_AND_NEXT_RESEARCH.md). Paper sessions: [paper_trial_log.md](paper_trial_log.md).
 
 ---
@@ -13,10 +14,9 @@
 | Area | Status |
 |------|--------|
 | Sim / code (Phases 0, 2, 3, 6) | **Done** |
-| Paper validation (Phase 1) | **Pending** — 1/5–10 weekdays logged |
-| Statistical sample (≥150 trades) | **Pending** — sim has 17–24 trades |
-| Live infra (Phase 4) | **Stubs only** — gated |
-| 5m ablation (Phase 5) | **Deferred** |
+| T200 / T250 full-universe research | **Done** — net negative |
+| Edge search (T2, ₹50k) | **Done** — +₹2,438 net; see [EDGE_VALIDATED.md](EDGE_VALIDATED.md) |
+| Paper validation (P3) | **Next** — run agent on market days; ≥15 sessions |
 | Live trading | **Off** — user approval required |
 
 ---
@@ -28,7 +28,7 @@
 | **0** | Sprint 4 exits + commit + docs | `PHASE4_FINDINGS.md` + code committed | ✅ **Done** |
 | **1** | Paper journal 5–10 market days | ≥5 weekdays in `paper_trial_log.md` | ⏳ **In progress** (1 day, old stack) |
 | **2** | Quadapt bake-off | `quadapt_ml_bakeoff_verdict.md` PASS or FAIL | ✅ **Done** — FAIL, archived |
-| **3** | Sprint 5 robustness + circuit guard | ≥150 trades, net > 0 after slippage | 🟡 **Partial** — friction PASS, sample FAIL |
+| **3** | Sprint 5 robustness + circuit guard | ≥150 trades, net > 0 after slippage | 🟡 **Partial** — T200: surge block helps; net still negative |
 | **4** | Telegram + WebSocket + deploy | Infra ready after paper or 150+ sim trades | 🟡 **Stubs only** |
 | **5** | 5m ablation (optional) | Only if Phase 3 stalls on n | ⏸️ **Deferred** |
 | **6** | `RESEARCH_HANDBOOK.md` + ledger sync | Handbook + no stale contradictions | ✅ **Done** |
@@ -112,13 +112,17 @@ TRAILING_STOP_ENABLED=true
 
 ---
 
-### P1 — Statistical sample (research)
+### P1 — Research (revised — see [FINDINGS_AND_NEXT_STEPS.md](FINDINGS_AND_NEXT_STEPS.md))
 
-| Task | Why | Command / file |
-|------|-----|----------------|
-| Prefetch full Nifty 100 candles | Sprint 5 used 49/100 symbols | `python tools/fetch_history.py` (extend bundle or symbols) |
-| Re-run Sprint 5 Nifty 100 | Target ≥150 trades, net &gt; 0 | `python tools/research_phases.py --phase 5` |
-| ATR stop leak | −₹382 on 2 stops in Sprint 4 | More exit work if paper confirms sim |
+| Task | Why | Status |
+|------|-----|--------|
+| **P0a** Verify trailing off in paper logs | Jun sessions used old stack | Pending next session |
+| **P0b** Position sizing ≥₹50k notional | Cost drag (−₹301 on 9 trades) | Pending sim + `.env` |
+| **P0c** Sim ↔ live alignment | Paper trades faster than sim | Pending |
+| **P1** Time stop ablation (T2) | ATR stop −₹9k decomposition | **Done** — 4–5 bars hurts; keep `TIME_STOP_BARS=0` |
+| **P2** RSI/VolR + surge block (T2) | CIPLA pattern | **Done** — ATR 1.25 + 13:00 cutoff wins |
+| ~~Prefetch Nifty 100~~ | ~~≥150 trades via expansion~~ | **Deferred** — T200 negative; use T2 paper |
+| ~~Re-run Sprint 5 Nifty 100~~ | ~~Statistical sample~~ | **Deferred** until T2 paper net-positive |
 
 ---
 
@@ -143,8 +147,8 @@ TRAILING_STOP_ENABLED=true
 | `quadapt_ml` in paper | Bake-off FAIL |
 | `REGIME_ADAPTIVE=true` | ORB −₹42k on 180d T2 |
 | `CANDLE_INTERVAL=FIVE_MINUTE` | Phase 5 optional; not started |
-| New entry strategies | Until rsi_mr net-positive on ≥150 trades |
-| `RISK_PCT > 0` | Until backtested — sizing is not alpha |
+| New entry strategies | Until rsi_mr net-positive on T2 paper (≥15 sessions) |
+| `RISK_PCT > 0` | **P0b** — test sizing; no longer blocked once sim validates notional |
 | Meta-label expansion | Until rsi_mr net-positive |
 | TradingView webhooks | Out of scope |
 
@@ -156,8 +160,8 @@ TRAILING_STOP_ENABLED=true
 2. `LIVE_TRADING=false` until circuit guard + alerts + user approval
 3. No Quadapt in paper
 4. No 5m on production stack without Phase 5 gate
-5. No new entry strategies while ATR stop leak unresolved on rsi_mr
-6. `RISK_PCT=0` until backtested
+5. No new entry strategies while ATR stop leak unresolved on rsi_mr — **P1 time-stop research scheduled**
+6. `RISK_PCT` — enable in P0b after sim validates ₹50k+ notional
 
 ---
 

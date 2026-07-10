@@ -173,6 +173,7 @@ def simulate_portfolio(
                 close,
                 position.get("entry_atr"),
                 trail_extreme=extreme,
+                bars_held=bar_i - position["entry_bar_i"],
             )
             if reason is None and _session_rolled(position["entry_time"], bar_dt):
                 reason = "EOD square-off"
@@ -268,6 +269,7 @@ def simulate_portfolio(
                             "side": side,
                             "entry_price": close,
                             "entry_time": _to_datetime(bar_dt),
+                            "entry_bar_i": bar_i,
                             "entry_rsi": result.rsi,
                             "volume_ratio": vol_ratio,
                             "quantity": _compute_quantity(close),

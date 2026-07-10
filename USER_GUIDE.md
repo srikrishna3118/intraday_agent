@@ -420,9 +420,19 @@ NIFTY_REGIME_ENABLED=false
 ESTIMATED_COST_PER_TRADE=42
 ```
 
-### Watchlist
+### Watchlist and universe maintenance
 
-Symbols are defined in `intraday_agent/universe.py` (`NIFTY_50` list). Update this file when index constituents change.
+Symbols live in `intraday_agent/universe.py`. The agent uses `SCAN_UNIVERSE` from `.env`:
+
+| `SCAN_UNIVERSE` | List used | When to update |
+|-----------------|-----------|----------------|
+| **t2** (paper default) | `T2_SYMBOLS` — 30 fixed liquid names | Ad-hoc: delist/rename, Angel token failures, or deliberate research refresh |
+| nifty50 | `NIFTY_50` | Semi-annual (NSE rebalances ~Mar/Sep) |
+| nifty100 / nifty200 | Composed lists | Same as index rebalance cycles |
+
+**T2 is not auto-synced to the Nifty 50 index** — it is the sim-validated research subset (+₹2,438 net / 180d). Expanding to full Nifty 50 hurt sim performance; keep `t2` until paper P3 passes.
+
+After any symbol edit: verify `instruments.resolve()` and prefetch cache for new names (`tools/fetch_history.py --bundle t2_180d`).
 
 ---
 

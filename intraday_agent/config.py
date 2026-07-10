@@ -220,6 +220,8 @@ class Config:
     ATR_PERIOD = int(os.getenv("ATR_PERIOD", "14"))
     ATR_STOP_MULT = float(os.getenv("ATR_STOP_MULT", "1.5"))
     ATR_TARGET_MULT = float(os.getenv("ATR_TARGET_MULT", "3.0"))
+    # Exit after N completed bars if not in profit and RSI exit has not fired (0 = disabled)
+    TIME_STOP_BARS = int(os.getenv("TIME_STOP_BARS", "0"))
     TRAILING_STOP_ENABLED = os.getenv("TRAILING_STOP_ENABLED", "false").lower() in (
         "1", "true", "yes", "y",
     )
@@ -234,14 +236,17 @@ class Config:
     VWAP_MR_MIN_EXTENSION_PCT = float(os.getenv("VWAP_MR_MIN_EXTENSION_PCT", "0.3"))
     # Block entries when bar volume > mult × volume MA (0 = disabled)
     VOLUME_SURGE_BLOCK_MULT = float(os.getenv("VOLUME_SURGE_BLOCK_MULT", "0"))
+    # Block shorts when RSI > N and volume/MA > M (CIPLA momentum-trap pattern; 0 = off)
+    RSI_MOMENTUM_TRAP_RSI = float(os.getenv("RSI_MOMENTUM_TRAP_RSI", "0"))
+    RSI_MOMENTUM_TRAP_VOLR = float(os.getenv("RSI_MOMENTUM_TRAP_VOLR", "0"))
     # Upper circuit proximity guard before short entry
     CIRCUIT_GUARD_ENABLED = os.getenv("CIRCUIT_GUARD_ENABLED", "true").lower() in (
         "1", "true", "yes", "y",
     )
     CIRCUIT_LIMIT_PCT = float(os.getenv("CIRCUIT_LIMIT_PCT", "20"))
     CIRCUIT_MIN_DISTANCE_PCT = float(os.getenv("CIRCUIT_MIN_DISTANCE_PCT", "2.0"))
-    # nifty50 | nifty100
-    SCAN_UNIVERSE = os.getenv("SCAN_UNIVERSE", "nifty50").lower().strip()
+    # nifty50 | nifty100 | t2 (30 liquid) | nifty200 (default) | nifty250 (legacy research)
+    SCAN_UNIVERSE = os.getenv("SCAN_UNIVERSE", "nifty200").lower().strip()
     # Optional Telegram alerts
     ALERTS_ENABLED = os.getenv("ALERTS_ENABLED", "false").lower() in ("1", "true", "yes", "y")
     TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")

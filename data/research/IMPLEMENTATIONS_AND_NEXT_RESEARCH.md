@@ -41,7 +41,7 @@
 | `sbp_tm` | `SbpTmStrategy` | SBP Trend & Momentum + Pine ATR trail | Bake-off FAIL (484 trades, −₹21k net) |
 | `quadapt_ml` | `QuadaptMLTraderStrategy` | MLMA + order blocks + quality engine | Bake-off FAIL (−₹372, 8 trades) — archive |
 
-**Shared infrastructure:** `BaseStrategy.precompute_df()`, portfolio sim EOD IST fix, `AdaptiveRanker`, regime (VIX), guards, journal features, circuit guard, volume surge block, Nifty 100 universe (`SCAN_UNIVERSE`).
+**Shared infrastructure:** `BaseStrategy.precompute_df()`, portfolio sim EOD IST fix, `AdaptiveRanker`, regime (VIX), guards, journal features, circuit guard, volume surge block, **Nifty 200** scan (`SCAN_UNIVERSE=nifty200`).
 
 ### 2.2 Quadapt ML Trader (`quadapt_ml`) — Jul 2026 port
 
@@ -353,6 +353,7 @@ PIVOT_TOUCH_PCT=0.35
 | **Quadapt bake-off** | **`data/research/quadapt_ml_bakeoff_verdict.md`** — FAIL |
 | **Research handbook** | **`data/research/RESEARCH_HANDBOOK.md`** — master doc |
 | **Roadmap status** | **`data/research/ROADMAP_STATUS.md`** — done vs pending checklist |
+| **Nifty 250 research** | **`data/research/NIFTY250_RESEARCH.md`** — t250 interim rerun (51/260 cached) |
 | Loss decomposition | `data/research/loss_decomposition.md` |
 | Filter ablation | `data/research/filter_backtests.md`, `filter_backtests_combined_pivot.md` |
 | Strategy bake-offs | `data/research/strategy_bakeoff_verdict.md`, `rsi_div_*`, `zp_dmi_*`, `vst_ai_*`, `zp_dmi_sd_*` |

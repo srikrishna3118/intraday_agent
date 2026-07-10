@@ -1,0 +1,215 @@
+{
+  "generated_at": "2026-07-10 13:37 UTC",
+  "tier": "t2",
+  "days": 180,
+  "capital_per_trade": 50000.0,
+  "results": [
+    {
+      "label": "P1a_base",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "TRAILING_STOP_ENABLED": false,
+        "TIME_STOP_BARS": 0
+      },
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 3310.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": 2176.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 122.6,
+        "avg_net_per_trade_rs": 80.6,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 63.0,
+        "expectancy_rs": 80.6,
+        "profit_factor": 1.54,
+        "max_drawdown_rs": 857.0,
+        "sharpe": 1.342
+      },
+      "exits": {
+        "ATR stop": {
+          "trades": 7,
+          "net": -3439.6474609375023
+        },
+        "EOD": {
+          "trades": 8,
+          "net": 1166.3957031250038
+        },
+        "RSI exit": {
+          "trades": 12,
+          "net": 5583.400000000006
+        }
+      }
+    },
+    {
+      "label": "P1b_ts4",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "TRAILING_STOP_ENABLED": false,
+        "TIME_STOP_BARS": 4
+      },
+      "stats": {
+        "trades": 28,
+        "gross_pnl_rs": -480.0,
+        "total_costs_rs": 1176.0,
+        "net_pnl_rs": -1656.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -17.1,
+        "avg_net_per_trade_rs": -59.1,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 28.6,
+        "expectancy_rs": -59.1,
+        "profit_factor": 0.67,
+        "max_drawdown_rs": 1693.0,
+        "sharpe": -1.358
+      },
+      "exits": {
+        "ATR stop": {
+          "trades": 4,
+          "net": -1549.497460937494
+        },
+        "time stop": {
+          "trades": 16,
+          "net": -2560.204296874992
+        },
+        "RSI exit": {
+          "trades": 5,
+          "net": 2706.7000000000003
+        },
+        "EOD": {
+          "trades": 3,
+          "net": 923.2000000000028
+        }
+      }
+    },
+    {
+      "label": "P1c_ts5",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "TRAILING_STOP_ENABLED": false,
+        "TIME_STOP_BARS": 5
+      },
+      "stats": {
+        "trades": 28,
+        "gross_pnl_rs": -527.0,
+        "total_costs_rs": 1176.0,
+        "net_pnl_rs": -1703.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -18.8,
+        "avg_net_per_trade_rs": -60.8,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 28.6,
+        "expectancy_rs": -60.8,
+        "profit_factor": 0.66,
+        "max_drawdown_rs": 1529.0,
+        "sharpe": -1.442
+      },
+      "exits": {
+        "ATR stop": {
+          "trades": 5,
+          "net": -2253.497460937494
+        },
+        "time stop": {
+          "trades": 15,
+          "net": -1903.104296874999
+        },
+        "RSI exit": {
+          "trades": 5,
+          "net": 2706.7000000000003
+        },
+        "EOD": {
+          "trades": 3,
+          "net": 923.2000000000028
+        }
+      }
+    },
+    {
+      "label": "P1d_ts6",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "TRAILING_STOP_ENABLED": false,
+        "TIME_STOP_BARS": 6
+      },
+      "stats": {
+        "trades": 27,
+        "gross_pnl_rs": 1044.0,
+        "total_costs_rs": 1134.0,
+        "net_pnl_rs": -90.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": 38.7,
+        "avg_net_per_trade_rs": -3.3,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 37.0,
+        "expectancy_rs": -3.3,
+        "profit_factor": 0.98,
+        "max_drawdown_rs": 971.0,
+        "sharpe": -0.061
+      },
+      "exits": {
+        "ATR stop": {
+          "trades": 5,
+          "net": -2253.497460937494
+        },
+        "time stop": {
+          "trades": 12,
+          "net": -1762.6042968749944
+        },
+        "RSI exit": {
+          "trades": 7,
+          "net": 4136.9000000000015
+        },
+        "EOD": {
+          "trades": 3,
+          "net": 923.2000000000028
+        }
+      }
+    },
+    {
+      "label": "P1e_ts5_surge",
+      "config": {
+        "ATR_STOP_MULT": 1.5,
+        "ATR_TARGET_MULT": 50.0,
+        "TRAILING_STOP_ENABLED": false,
+        "TIME_STOP_BARS": 5,
+        "VOLUME_SURGE_BLOCK_MULT": 2.0
+      },
+      "stats": {
+        "trades": 28,
+        "gross_pnl_rs": -527.0,
+        "total_costs_rs": 1176.0,
+        "net_pnl_rs": -1703.0,
+        "avg_cost_per_trade_rs": 42.0,
+        "avg_gross_per_trade_rs": -18.8,
+        "avg_net_per_trade_rs": -60.8,
+        "cost_model": "flat \u20b942.0/trade",
+        "win_rate_pct": 28.6,
+        "expectancy_rs": -60.8,
+        "profit_factor": 0.66,
+        "max_drawdown_rs": 1529.0,
+        "sharpe": -1.442
+      },
+      "exits": {
+        "ATR stop": {
+          "trades": 5,
+          "net": -2253.497460937494
+        },
+        "time stop": {
+          "trades": 15,
+          "net": -1903.104296874999
+        },
+        "RSI exit": {
+          "trades": 5,
+          "net": 2706.7000000000003
+        },
+        "EOD": {
+          "trades": 3,
+          "net": 923.2000000000028
+        }
+      }
+    }
+  ]
+}

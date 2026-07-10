@@ -1,0 +1,322 @@
+{
+  "generated_at": "2026-07-10 08:41 UTC",
+  "days": 180,
+  "source": "cache",
+  "tier": "t250",
+  "symbol_count": 76,
+  "phase5": {
+    "results": [
+      {
+        "id": "p5_base",
+        "label": "Sprint 4 paper stack (mean RSI exit)",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "ONGC",
+            "BAJFINANCE",
+            "SBIN"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0
+        },
+        "stats": {
+          "trades": 51,
+          "gross_pnl_rs": 2461.0,
+          "total_costs_rs": 2142.0,
+          "net_pnl_rs": 319.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 48.3,
+          "avg_net_per_trade_rs": 6.3,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 56.9,
+          "expectancy_rs": 6.3,
+          "profit_factor": 1.1,
+          "max_drawdown_rs": 917.0,
+          "sharpe": 0.343
+        },
+        "slippage_stats": null,
+        "slippage_applied": false
+      },
+      {
+        "id": "p5_vwap_fade",
+        "label": "Sprint 4 + VWAP MR fade short (above VWAP + extension)",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "ONGC",
+            "BAJFINANCE",
+            "SBIN"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": true,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0,
+          "VWAP_MR_FADE_SHORT": true,
+          "VWAP_MR_MIN_EXTENSION_PCT": 0.3
+        },
+        "stats": {
+          "trades": 48,
+          "gross_pnl_rs": 2760.0,
+          "total_costs_rs": 2016.0,
+          "net_pnl_rs": 744.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 57.5,
+          "avg_net_per_trade_rs": 15.5,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 58.3,
+          "expectancy_rs": 15.5,
+          "profit_factor": 1.29,
+          "max_drawdown_rs": 851.0,
+          "sharpe": 0.845
+        },
+        "slippage_stats": null,
+        "slippage_applied": false
+      },
+      {
+        "id": "p5_vwap_exit",
+        "label": "Sprint 4 + VWAP breakdown exit",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "ONGC",
+            "BAJFINANCE",
+            "SBIN"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": true,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0
+        },
+        "stats": {
+          "trades": 58,
+          "gross_pnl_rs": 160.0,
+          "total_costs_rs": 2436.0,
+          "net_pnl_rs": -2276.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 2.8,
+          "avg_net_per_trade_rs": -39.2,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 13.8,
+          "expectancy_rs": -39.2,
+          "profit_factor": 0.18,
+          "max_drawdown_rs": 2245.0,
+          "sharpe": -4.032
+        },
+        "slippage_stats": null,
+        "slippage_applied": false
+      },
+      {
+        "id": "p5_vol_surge",
+        "label": "Sprint 4 + volume surge block (2.0\u00d7 MA)",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "ONGC",
+            "BAJFINANCE",
+            "SBIN"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0,
+          "VOLUME_SURGE_BLOCK_MULT": 2.0
+        },
+        "stats": {
+          "trades": 51,
+          "gross_pnl_rs": 2569.0,
+          "total_costs_rs": 2142.0,
+          "net_pnl_rs": 427.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 50.4,
+          "avg_net_per_trade_rs": 8.4,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 56.9,
+          "expectancy_rs": 8.4,
+          "profit_factor": 1.14,
+          "max_drawdown_rs": 917.0,
+          "sharpe": 0.462
+        },
+        "slippage_stats": null,
+        "slippage_applied": false
+      },
+      {
+        "id": "p5_no_denylist",
+        "label": "Sprint 4, EXCLUDED_SYMBOLS cleared",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0
+        },
+        "stats": {
+          "trades": 57,
+          "gross_pnl_rs": 2938.0,
+          "total_costs_rs": 2394.0,
+          "net_pnl_rs": 544.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 51.5,
+          "avg_net_per_trade_rs": 9.5,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 57.9,
+          "expectancy_rs": 9.5,
+          "profit_factor": 1.17,
+          "max_drawdown_rs": 683.0,
+          "sharpe": 0.62
+        },
+        "slippage_stats": null,
+        "slippage_applied": false
+      },
+      {
+        "id": "p5_base_slip",
+        "label": "Sprint 4 + 0.05% slippage per leg",
+        "config": {
+          "PIVOT_FILTER_ENABLED": true,
+          "PIVOT_FILTER_MODE": "proximity",
+          "PIVOT_TOUCH_PCT": 0.35,
+          "RSI_OVERBOUGHT": 80.0,
+          "ENTRY_CUTOFF_TIME": "14:00",
+          "EXCLUDED_SYMBOLS": [
+            "ONGC",
+            "BAJFINANCE",
+            "SBIN"
+          ],
+          "ALLOW_LONG": false,
+          "ALLOW_SHORT": true,
+          "VWAP_FILTER_ENABLED": false,
+          "VWAP_EXIT_ENABLED": false,
+          "ATR_STOP_MULT": 1.5,
+          "ATR_TARGET_MULT": 50.0,
+          "USE_ATR_EXITS": true,
+          "TRAILING_STOP_ENABLED": false,
+          "RSI_EXIT": 50.0
+        },
+        "stats": {
+          "trades": 50,
+          "gross_pnl_rs": 2711.0,
+          "total_costs_rs": 2100.0,
+          "net_pnl_rs": 611.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 54.2,
+          "avg_net_per_trade_rs": 12.2,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 58.0,
+          "expectancy_rs": 12.2,
+          "profit_factor": 1.22,
+          "max_drawdown_rs": 917.0,
+          "sharpe": 0.674
+        },
+        "slippage_stats": {
+          "trades": 50,
+          "gross_pnl_rs": 2052.0,
+          "total_costs_rs": 2100.0,
+          "net_pnl_rs": -48.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 41.0,
+          "avg_net_per_trade_rs": -1.0,
+          "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+          "win_rate_pct": 56.0,
+          "expectancy_rs": -1.0,
+          "profit_factor": 0.98,
+          "max_drawdown_rs": 1084.0,
+          "sharpe": -0.053,
+          "slippage_pct_per_leg": 0.0005
+        },
+        "slippage_applied": true
+      },
+      {
+        "id": "p5_nifty250",
+        "label": "Nifty 250 (76 symbols cached), no denylist",
+        "stats": {
+          "trades": 56,
+          "gross_pnl_rs": 3080.0,
+          "total_costs_rs": 2352.0,
+          "net_pnl_rs": 728.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 55.0,
+          "avg_net_per_trade_rs": 13.0,
+          "cost_model": "flat \u20b942.0/trade",
+          "win_rate_pct": 58.9,
+          "expectancy_rs": 13.0,
+          "profit_factor": 1.24,
+          "max_drawdown_rs": 683.0,
+          "sharpe": 0.849
+        },
+        "slippage_stats": {
+          "trades": 56,
+          "gross_pnl_rs": 2337.0,
+          "total_costs_rs": 2352.0,
+          "net_pnl_rs": -15.0,
+          "avg_cost_per_trade_rs": 42.0,
+          "avg_gross_per_trade_rs": 41.7,
+          "avg_net_per_trade_rs": -0.3,
+          "cost_model": "flat \u20b942.0/trade + slippage 0.05%/leg",
+          "win_rate_pct": 57.1,
+          "expectancy_rs": -0.3,
+          "profit_factor": 1.0,
+          "max_drawdown_rs": 850.0,
+          "sharpe": -0.017,
+          "slippage_pct_per_leg": 0.0005
+        },
+        "symbol_count": 76
+      }
+    ],
+    "gates": {
+      "min_trades_15": true,
+      "sample_150": false,
+      "slippage_net_positive": false,
+      "pass_all": false
+    },
+    "gate_passed": false,
+    "decision": "PARTIAL \u2014 continue tuning VWAP/volume gates; see variant table."
+  },
+  "decision": "PARTIAL \u2014 continue tuning VWAP/volume gates; see variant table."
+}

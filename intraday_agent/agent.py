@@ -106,6 +106,7 @@ class IntradayAgent:
                 ltp,
                 pos.entry_atr,
                 trail_extreme=extreme,
+                entry_time=pos.entry_time,
             )
 
             if reason:

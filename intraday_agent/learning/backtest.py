@@ -138,6 +138,7 @@ def simulate_symbol(
                 close,
                 position.get("entry_atr"),
                 trail_extreme=extreme,
+                bars_held=i - position["entry_bar_i"],
             )
             if reason is None and i == len(df) - 1:
                 reason = "window end square-off"
@@ -209,6 +210,7 @@ def simulate_symbol(
             "side": side,
             "entry_price": close,
             "entry_time": bar_dt.to_pydatetime() if hasattr(bar_dt, "to_pydatetime") else bar_dt,
+            "entry_bar_i": i,
             "entry_rsi": result.rsi,
             "volume_ratio": vol_ratio,
             "quantity": _compute_quantity(close),

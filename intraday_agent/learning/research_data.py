@@ -136,6 +136,8 @@ def prefetch_for_research(
     source: ResearchSource,
     broker: AngelBroker | None = None,
     interval: str | None = None,
+    *,
+    sleep_sec: float | None = None,
 ) -> dict[str, tuple[datetime | None, datetime | None, int]]:
     interval = interval or Config.CANDLE_INTERVAL
     if source == "yahoo":
@@ -143,7 +145,7 @@ def prefetch_for_research(
     elif source == "angel":
         if broker is None:
             raise ValueError("Angel broker required for prefetch source=angel")
-        prefetch_symbols(broker, symbols, days, interval=interval)
+        prefetch_symbols(broker, symbols, days, interval=interval, sleep_sec=sleep_sec)
     else:
         raise ValueError("prefetch does not apply to source=cache")
 

@@ -19,6 +19,9 @@ SCRIP_MASTER_URLS = (
     "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json",
 )
 
+# NSE symbols without -EQ series; index under base name for Angel lookup.
+BE_SERIES_SYMBOLS = frozenset({"GUJENERGY"})
+
 
 class InstrumentRegistry:
     """Resolve NSE equity symbols to Angel tradingsymbol + token."""
@@ -86,10 +89,16 @@ class InstrumentRegistry:
                 continue
 
             tradingsymbol = row.get("symbol", "")
-            if not tradingsymbol.endswith("-EQ"):
+            if tradingsymbol.endswith("-EQ"):
+                series_suffix = "-EQ"
+            elif tradingsymbol.endswith("-BE") and tradingsymbol.replace("-BE", "").upper() in BE_SERIES_SYMBOLS:
+                series_suffix = "-BE"
+            else:
                 continue
 
-            base = tradingsymbol.replace("-EQ", "").upper()
+            base = tradingsymbol.replace(series_suffix, "").upper()
+            if base in self._by_symbol and series_suffix == "-BE":
+                continue  # prefer -EQ when both exist
             entry = {
                 "tradingsymbol": tradingsymbol,
                 "symboltoken": str(row.get("token", "")),

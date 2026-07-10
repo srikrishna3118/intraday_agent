@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import os
 import sys
@@ -11,7 +12,7 @@ import sys
 from intraday_agent.broker import AngelBroker
 from intraday_agent.config import Config
 from intraday_agent.instruments import get_registry
-from intraday_agent.learning.candle_store import export_manifest
+from intraday_agent.learning.candle_store import coverage, export_manifest
 from intraday_agent.learning.research_data import (
     needs_angel_login,
     normalize_source,
@@ -19,7 +20,7 @@ from intraday_agent.learning.research_data import (
     source_label,
 )
 from intraday_agent.logging_setup import setup_logger
-from intraday_agent.universe import NIFTY_50
+from intraday_agent.universe import NIFTY_50, nifty200_symbols, nifty250_symbols
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +75,27 @@ def parse_args() -> argparse.Namespace:
         help="Prefetch all Nifty 50 symbols",
     )
     parser.add_argument(
+        "--all-nifty200",
+        action="store_true",
+        help="Prefetch Nifty 200 universe (100+100)",
+    )
+    parser.add_argument(
+        "--all-nifty250",
+        action="store_true",
+        help="Prefetch legacy Nifty 250 universe (~260 symbols)",
+    )
+    parser.add_argument(
+        "--only-missing",
+        action="store_true",
+        help="With --bundle: fetch only symbols with thin/missing cache (<500 bars)",
+    )
+    parser.add_argument(
+        "--delay",
+        type=float,
+        default=0.0,
+        help="Seconds between symbol fetches (rate-limit friendly; default: SCREENER_DELAY_SEC)",
+    )
+    parser.add_argument(
         "--no-manifest",
         action="store_true",
         help="Skip writing data/research/candle_cache manifest",
@@ -114,6 +136,10 @@ def main() -> int:
         symbols.extend(s.strip().upper() for s in args.symbols.split(",") if s.strip())
     elif args.all_nifty:
         symbols.extend(NIFTY_50)
+    elif args.all_nifty200:
+        symbols.extend(nifty200_symbols())
+    elif args.all_nifty250:
+        symbols.extend(nifty250_symbols())
     elif not symbols:
         symbols.extend(s.strip().upper() for s in DEFAULT_SYMBOLS.split(",") if s.strip())
 
@@ -126,6 +152,17 @@ def main() -> int:
             seen.add(key)
             unique.append(key)
     symbols = unique
+
+    if args.only_missing and symbols:
+        interval_key = interval
+        data_src = "yahoo" if source == "yahoo" else "angel"
+        missing: list[str] = []
+        for s in symbols:
+            cov = coverage(s, interval_key, data_source=data_src)
+            if cov[2] < 500:
+                missing.append(s)
+        logger.info("Only-missing filter: %d / %d symbols need fetch", len(missing), len(symbols))
+        symbols = missing
 
     broker = None
     if needs_angel_login(source):
@@ -142,7 +179,14 @@ def main() -> int:
         store_note,
     )
 
-    summary = prefetch_for_research(symbols, days, source, broker=broker, interval=interval)
+    summary = prefetch_for_research(
+        symbols,
+        days,
+        source,
+        broker=broker,
+        interval=interval,
+        sleep_sec=args.delay if args.delay > 0 else None,
+    )
 
     print(f"\n=== Candle store coverage ({source_label(source)}) ===")
     for key in symbols:

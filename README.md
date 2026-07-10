@@ -1,8 +1,8 @@
 # Intraday RSI+Volume Agent (Angel One)
 
-Autonomous intraday equity trading agent for **Angel One SmartAPI**. Each cycle it screens the **Nifty 50** on 15-minute candles for RSI extremes confirmed by volume, applies optional **market regime** filters, and trades **NSE intraday MIS** setups.
+Autonomous intraday equity trading agent for **Angel One SmartAPI**. Each cycle it screens a configurable universe (paper default: **T2** — 30 liquid names) on 15-minute candles for RSI extremes confirmed by volume, applies optional **market regime** filters, and trades **NSE intraday MIS** setups.
 
-**Current tuned profile (after backtesting):** short-only mean reversion, ATR exits, ATR trailing stop, India VIX gate. See [Backtesting learnings](#backtesting-learnings) below.
+**Current paper profile (Jul 2026 edge search):** short-only mean reversion, RSI 50 mean exit, ATR stop 1.25× (underwater only), no trailing, entries before 13:00 IST, ₹50k/trade on **T2** universe. See [EDGE_VALIDATED.md](data/research/EDGE_VALIDATED.md).
 
 **Paper trading is the default.** Set `LIVE_TRADING=true` only after paper validation and walk-forward checks.
 
@@ -17,14 +17,15 @@ For AI agents and contributors, see [AGENTS.md](AGENTS.md). Cursor rules live in
 | **Entry (short)** | RSI > `RSI_OVERBOUGHT` + volume in band (`VOLUME_MA_MULT`–`VOLUME_MA_MAX_MULT` × SMA) + before `ENTRY_CUTOFF_TIME` |
 | **Entry (long)** | Disabled by default (`ALLOW_LONG=false`) — backtests showed longs were net-negative after costs |
 | **Regime** | Skip shorts when India VIX > `VIX_MAX` (default 18). Optional Nifty < EMA filter (`NIFTY_REGIME_ENABLED`) |
-| **Exit** | ATR stop/target (`USE_ATR_EXITS`), ATR **trailing stop**, RSI mid-line, EOD square-off |
+| **Exit** | RSI 50 mean exit (`RSI_EXIT=50`, `ATR_TARGET_MULT=50`), ATR stop when underwater (`ATR_STOP_MULT=1.25`), EOD square-off. Trailing **off** on MR stack. |
+| **Universe** | `SCAN_UNIVERSE=t2` (30 liquid names — sim-validated). Full Nifty 50/200 dilutes edge in research. |
 | **Risk** | `TradeGuard` daily caps, cooldowns, daily loss/profit halts |
 
 Optional filters (off in tuned profile): session VWAP entry filter (`VWAP_FILTER_ENABLED`), VWAP breakdown exit (`VWAP_EXIT_ENABLED` — backtests showed this hurt net P&L).
 
 This is a **research-tuned scaffold**, not a guaranteed edge. Always validate with **net P&L** (after costs) and **walk-forward OOS** before live trading.
 
-**Research verdict (Jul 2026):** Sprint 4 mean-exit stack simulates **+₹347 net on 17 trades** (180d T2) — tentative edge, not yet paper-validated. Full methodology, scorecard, and config: **[data/research/RESEARCH_HANDBOOK.md](data/research/RESEARCH_HANDBOOK.md)**. **What's done vs pending:** [data/research/ROADMAP_STATUS.md](data/research/ROADMAP_STATUS.md).
+**Research verdict (Jul 2026):** Iterative edge search on T2 (180d, ₹50k) → **+₹2,438 net / Sharpe 1.49 / 26 trades** (slippage stress +₹1,168). Full Nifty 50 with same stack: −₹228. Master doc: **[FINDINGS_AND_NEXT_STEPS.md](data/research/FINDINGS_AND_NEXT_STEPS.md)**. Validated stack: **[EDGE_VALIDATED.md](data/research/EDGE_VALIDATED.md)**. Status: **[ROADMAP_STATUS.md](data/research/ROADMAP_STATUS.md)**.
 
 ## Prerequisites
 
@@ -202,7 +203,7 @@ python tools/bootstrap_backtest.py --symbols RELIANCE,SBIN --days 60
 
 For the optional meta-label filter workflow (bootstrap → train → evaluate), see [USER_GUIDE.md §11d](USER_GUIDE.md#11d-meta-label-trade-filter).
 
-Edit `intraday_agent/universe.py` when Nifty 50 constituents change.
+Edit `intraday_agent/universe.py` when index constituents change (Nifty 50 / 100 / 200 lists) or when a symbol **renames or delists**. The **T2** list (`T2_SYMBOLS`) is a fixed research subset — update only on resolution failures or deliberate research refresh, not every NSE rebalance. See module docstring in `universe.py`.
 
 ## Disclaimer
 

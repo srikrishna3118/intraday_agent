@@ -1,0 +1,1041 @@
+{
+  "bundle": "t250_180d",
+  "data_source": "angel",
+  "interval": "FIFTEEN_MINUTE",
+  "days_requested": 180,
+  "store_dir": "data/candles",
+  "exported_at": "2026-07-10T14:01:28",
+  "symbol_count": 206,
+  "symbols": {
+    "BAJAJ-AUTO": {
+      "bars": 3384,
+      "from": "2026-01-12",
+      "to": "2026-07-10"
+    },
+    "BAJAJFINSV": {
+      "bars": 2906,
+      "from": "2026-01-12",
+      "to": "2026-07-10"
+    },
+    "BPCL": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "BRITANNIA": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "CIPLA": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "DIVISLAB": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "DRREDDY": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "EICHERMOT": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "GRASIM": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "HDFCLIFE": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "HEROMOTOCO": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "HINDALCO": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "NESTLEIND": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "SBILIFE": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "TMPV": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "UPL": {
+      "bars": 412,
+      "from": "2026-06-15",
+      "to": "2026-07-10"
+    },
+    "ABB": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "AMBUJACEM": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "BANKBARODA": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "BEL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "BERGEPAINT": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "BOSCHLTD": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CANBK": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CHOLAFIN": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "COLPAL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "DABUR": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "DLF": {
+      "bars": 525,
+      "from": "2026-06-10",
+      "to": "2026-07-10"
+    },
+    "GAIL": {
+      "bars": 3019,
+      "from": "2026-01-12",
+      "to": "2026-07-10"
+    },
+    "GODREJCP": {
+      "bars": 2494,
+      "from": "2026-01-12",
+      "to": "2026-06-10"
+    },
+    "INDHOTEL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "IOC": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "IRFC": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "JINDALSTEL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "LICI": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "LTIM": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "LUPIN": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "MOTHERSON": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "MUTHOOTFIN": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "NAUKRI": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "NMDC": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "PERSISTENT": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "PETRONET": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "PIDILITIND": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "PNB": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "RECLTD": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SHRIRAMFIN": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SIEMENS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SRF": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TATAPOWER": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TORNTPHARM": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TRENT": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TVSMOTOR": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "UNITDSPR": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "VBL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "VEDL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ZOMATO": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ADANIENSOL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "HAL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "JIOFIN": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "MAXHEALTH": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "NHPC": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SUZLON": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ABCAPITAL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ABFRL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "AIAENG": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "AJANTPHARM": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ALKEM": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "APOLLOTYRE": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "APLAPOLLO": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ASHOKLEY": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ASTRAL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ATGL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "AUBANK": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "AUROPHARMA": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "BALKRISIND": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "BANDHANBNK": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "BATAINDIA": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "BHARATFORG": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "BLUEDART": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CAMS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CANFINHOME": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CDSL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CESC": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CGPOWER": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "COFORGE": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CONCOR": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CROMPTON": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CUB": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CYIENT": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "DALBHARAT": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "DEEPAKFERT": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "DEEPAKNTR": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "DIXON": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ELGIEQUIP": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "EMAMILTD": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ENGINERSIN": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ESCORTS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "EXIDEIND": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "FEDERALBNK": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "FLUOROCHEM": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "FORTIS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "GLENMARK": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "GNFC": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "GODREJPROP": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "GRINDWELL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "GUJGASLTD": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "HFCL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "HINDPETRO": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "HONAUT": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "IDFCFIRSTB": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "IEX": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "INDIAMART": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "IPCALAB": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "IRCTC": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ISEC": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "JUBILINDS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "KAJARIACER": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "KALPATPOWR": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "KANSAINER": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "KEC": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "KPITTECH": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "LALPATHLAB": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "LAURUSLABS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "LTTS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "METROPOLIS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "MFSL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "MPHASIS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "NATCOPHARM": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "OBEROIRLTY": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "OFSS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "PAGEIND": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "PGHH": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "PHOENIXLTD": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "PIIND": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "POLYCAB": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "PRESTIGE": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "RADICO": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "RAMCOCEM": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "RBLBANK": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "RELAXO": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ROUTE": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SAFARI": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SCHAEFFLER": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SUPREMEIND": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SUNTV": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SYNGENE": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TANLA": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TATACHEM": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TATACOMM": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TIINDIA": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TORNTPOWER": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TRIDENT": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TTKPRESTIG": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TVSHLTD": {
+      "bars": 523,
+      "from": "2026-06-10",
+      "to": "2026-07-10"
+    },
+    "UBL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "UTIAMC": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "VGUARD": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "VOLTAS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "WHIRLPOOL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ZYDUSLIFE": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "BIKAJI": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CAMPUS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "DELHIVERY": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ELECON": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "FINEORG": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "HAPPSTMNDS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "HBLPOWER": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "HINDZINC": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "JBCHEPHARM": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "KALYANKJIL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "KNRCON": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "LATENTVIEW": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "MEDANTA": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "NUVOCO": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "OLECTRA": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "POONAWALLA": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "RAJESHEXPO": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SAPPHIRE": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SENCO": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SIGNATURE": {
+      "bars": 3018,
+      "from": "2026-01-12",
+      "to": "2026-07-10"
+    },
+    "STARHEALTH": {
+      "bars": 2494,
+      "from": "2026-01-12",
+      "to": "2026-06-10"
+    },
+    "SWIGGY": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TEAMLEASE": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TRITURBINE": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "VAIBHAVGBL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "VCIRCLE": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "VIJAYABANK": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "YATHARTH": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "JYOTICNC": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "GESHIP": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "NSLNISP": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "RAILVIKAS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "RITES": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SUVENPHAR": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TCNSBRANDS": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TEJASNET": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "UTINIFTETF": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "WABAG": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "ZEEL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TATAELXSI": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "CENTURYTEX": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "PNBHOUSING": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "RRKABEL": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "SAMMAANCAP": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "TBOTEK": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    },
+    "UCOBANK": {
+      "bars": 0,
+      "from": null,
+      "to": null
+    }
+  }
+}
