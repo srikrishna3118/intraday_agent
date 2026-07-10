@@ -21,6 +21,8 @@
 
 **Direction:** Paper-validate Sprint 4 stack (5–10 sessions). Do not promote Quadapt or enable `REGIME_ADAPTIVE` until gates pass.
 
+> **Status checklist:** [ROADMAP_STATUS.md](ROADMAP_STATUS.md) — completed phases, pending P0–P3, guardrails.
+
 ---
 
 ## 2. Strategy implementations (`STRATEGY_REGISTRY`)
@@ -350,6 +352,7 @@ PIVOT_TOUCH_PCT=0.35
 | **Sprint 5 (complete)** | **`data/research/PHASE5_FINDINGS.md`**, `phase5_findings.json` |
 | **Quadapt bake-off** | **`data/research/quadapt_ml_bakeoff_verdict.md`** — FAIL |
 | **Research handbook** | **`data/research/RESEARCH_HANDBOOK.md`** — master doc |
+| **Roadmap status** | **`data/research/ROADMAP_STATUS.md`** — done vs pending checklist |
 | Loss decomposition | `data/research/loss_decomposition.md` |
 | Filter ablation | `data/research/filter_backtests.md`, `filter_backtests_combined_pivot.md` |
 | Strategy bake-offs | `data/research/strategy_bakeoff_verdict.md`, `rsi_div_*`, `zp_dmi_*`, `vst_ai_*`, `zp_dmi_sd_*` |

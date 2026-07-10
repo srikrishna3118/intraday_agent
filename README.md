@@ -24,7 +24,7 @@ Optional filters (off in tuned profile): session VWAP entry filter (`VWAP_FILTER
 
 This is a **research-tuned scaffold**, not a guaranteed edge. Always validate with **net P&L** (after costs) and **walk-forward OOS** before live trading.
 
-**Research verdict (Jul 2026):** Sprint 4 mean-exit stack simulates **+₹347 net on 17 trades** (180d T2) — tentative edge, not yet paper-validated. Full methodology, scorecard, and config: **[data/research/RESEARCH_HANDBOOK.md](data/research/RESEARCH_HANDBOOK.md)**.
+**Research verdict (Jul 2026):** Sprint 4 mean-exit stack simulates **+₹347 net on 17 trades** (180d T2) — tentative edge, not yet paper-validated. Full methodology, scorecard, and config: **[data/research/RESEARCH_HANDBOOK.md](data/research/RESEARCH_HANDBOOK.md)**. **What's done vs pending:** [data/research/ROADMAP_STATUS.md](data/research/ROADMAP_STATUS.md).
 
 ## Prerequisites
 

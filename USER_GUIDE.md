@@ -1070,7 +1070,8 @@ Outputs: `data/research/loss_decomposition.json`, `loss_decomposition.md`.
 
 ## 11g. Refinement roadmap (Tiers 1–4)
 
-> **Master research doc:** [data/research/RESEARCH_HANDBOOK.md](data/research/RESEARCH_HANDBOOK.md) — Sprint 4/5 findings, paper stack config, strategy scorecard.
+> **Master research doc:** [data/research/RESEARCH_HANDBOOK.md](data/research/RESEARCH_HANDBOOK.md) — Sprint 4/5 findings, paper stack config, strategy scorecard.  
+> **Status & pending:** [data/research/ROADMAP_STATUS.md](data/research/ROADMAP_STATUS.md).
 
 After loss decomposition and filter ablations, work proceeds in order — **do not skip tiers**.
 

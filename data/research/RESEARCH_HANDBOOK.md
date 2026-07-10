@@ -5,7 +5,7 @@
 **Final paper stack:** `rsi_mr` Sprint 4 mean-exit (config A below)  
 **Live trading:** OFF (`LIVE_TRADING=false`)
 
-> Master research document. Operations: [USER_GUIDE.md](../../USER_GUIDE.md). Code map: [AGENTS.md](../../AGENTS.md). Living implementation ledger: [IMPLEMENTATIONS_AND_NEXT_RESEARCH.md](IMPLEMENTATIONS_AND_NEXT_RESEARCH.md).
+> Master research document. Operations: [USER_GUIDE.md](../../USER_GUIDE.md). Code map: [AGENTS.md](../../AGENTS.md). Living implementation ledger: [IMPLEMENTATIONS_AND_NEXT_RESEARCH.md](IMPLEMENTATIONS_AND_NEXT_RESEARCH.md). **Pending work:** [ROADMAP_STATUS.md](ROADMAP_STATUS.md).
 
 ---
 
@@ -222,6 +222,7 @@ python tools/status.py
 | `quadapt_bakeoff.json` | Quadapt bake-off numbers |
 | `strategy_bakeoff_verdict.md` | Full strategy registry bake-off |
 | `paper_trial_log.md` | Live paper session log |
+| `ROADMAP_STATUS.md` | Roadmap phase completion + pending P0–P3 checklist |
 | `IMPLEMENTATIONS_AND_NEXT_RESEARCH.md` | Implementation ledger |
 | `INTRADAY_TRADING_ARCHITECTURE_INDIA.md` | India intraday architecture checklist |
 | `GEMINI_CRITIQUE_AND_SPRINT4.md` | Sprint 4 rationale |
