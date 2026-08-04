@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import time
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, Mapping
 
 import pandas as pd
 import pyotp
@@ -269,6 +269,31 @@ class AngelBroker:
             return None
         return self.get_candles(inst["symboltoken"], **kwargs)
 
+    def get_candles_for_instrument(
+        self,
+        instrument: Mapping[str, Any],
+        **kwargs,
+    ) -> pd.DataFrame | None:
+        symboltoken = instrument.get("symboltoken")
+        if not symboltoken:
+            logger.warning("Instrument missing symboltoken: %s", instrument)
+            return None
+        exchange = str(instrument.get("exchange") or Config.EXCHANGE_NSE)
+        return self.get_candles(str(symboltoken), exchange=exchange, **kwargs)
+
+    def get_candles_history_for_instrument(
+        self,
+        instrument: Mapping[str, Any],
+        days: int,
+        **kwargs,
+    ) -> pd.DataFrame | None:
+        symboltoken = instrument.get("symboltoken")
+        if not symboltoken:
+            logger.warning("Instrument missing symboltoken: %s", instrument)
+            return None
+        exchange = str(instrument.get("exchange") or Config.EXCHANGE_NSE)
+        return self.get_candles_history(str(symboltoken), days, exchange=exchange, **kwargs)
+
     def get_index_candles(self, index_key: str, **kwargs) -> pd.DataFrame | None:
         """Fetch OHLCV for NSE index symbols (NIFTY, INDIAVIX)."""
         from intraday_agent.market_regime import INDEX_INSTRUMENTS
@@ -326,6 +351,15 @@ class AngelBroker:
         if not inst:
             return None
         return self.get_ltp(inst["tradingsymbol"], inst["symboltoken"])
+
+    def get_ltp_for_instrument(self, instrument: Mapping[str, Any]) -> float | None:
+        tradingsymbol = instrument.get("tradingsymbol")
+        symboltoken = instrument.get("symboltoken")
+        if not tradingsymbol or not symboltoken:
+            logger.warning("Instrument missing tradingsymbol/symboltoken: %s", instrument)
+            return None
+        exchange = str(instrument.get("exchange") or Config.EXCHANGE_NSE)
+        return self.get_ltp(str(tradingsymbol), str(symboltoken), exchange=exchange)
 
     def place_order(
         self,

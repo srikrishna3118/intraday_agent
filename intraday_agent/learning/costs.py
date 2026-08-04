@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from typing import Any
 
 import pandas as pd
@@ -9,13 +10,18 @@ import pandas as pd
 from intraday_agent.config import Config
 
 
-def trade_cost(entry_price: float | None = None, quantity: int | None = None) -> float:
+def trade_cost(
+    entry_price: float | None = None,
+    quantity: int | None = None,
+    *,
+    units: int = 1,
+) -> float:
     """Estimated all-in cost for one completed trade (entry + exit).
 
     Uses flat ``ESTIMATED_COST_PER_TRADE`` when > 0, else Angel MIS formula.
     """
     if Config.ESTIMATED_COST_PER_TRADE > 0:
-        return Config.ESTIMATED_COST_PER_TRADE
+        return Config.ESTIMATED_COST_PER_TRADE * max(1, int(units))
 
     notional = max(0.0, float(entry_price or 0) * float(quantity or 0))
     if notional <= 0:
@@ -33,16 +39,44 @@ def trade_cost(entry_price: float | None = None, quantity: int | None = None) ->
     return round(subtotal + gst, 2)
 
 
+def _parse_legs_json(raw: Any) -> list[dict[str, Any]]:
+    if not raw:
+        return []
+    if isinstance(raw, list):
+        return [leg for leg in raw if isinstance(leg, dict)]
+    try:
+        parsed = json.loads(str(raw))
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return []
+    if not isinstance(parsed, list):
+        return []
+    return [leg for leg in parsed if isinstance(leg, dict)]
+
+
+def trade_cost_for_row(row: dict[str, Any] | Any) -> float:
+    """Estimated round-trip cost for a journal row.
+
+    Multi-leg F&O trades use ``legs_json`` and sum one round-trip estimate per
+    leg, which keeps flat-cost and formula-cost modes from undercounting a
+    2-leg or 4-leg structure as a single stock trade.
+    """
+    get = row.get if isinstance(row, dict) else getattr
+    legs = _parse_legs_json(get("legs_json") if isinstance(row, dict) else get(row, "legs_json", None))
+    if legs:
+        total = 0.0
+        for leg in legs:
+            total += trade_cost(leg.get("entry_price"), leg.get("quantity"), units=1)
+        return round(total, 2)
+
+    if isinstance(row, dict):
+        return trade_cost(row.get("entry_price"), row.get("quantity"), units=1)
+    return trade_cost(get(row, "entry_price", None), get(row, "quantity", None), units=1)
+
+
 def apply_costs(df: pd.DataFrame) -> pd.DataFrame:
     """Add trade_cost_rs and net_pnl_amount columns."""
     out = df.copy()
-    if "entry_price" in out.columns and "quantity" in out.columns:
-        out["trade_cost_rs"] = out.apply(
-            lambda r: trade_cost(r.get("entry_price"), r.get("quantity")),
-            axis=1,
-        )
-    else:
-        out["trade_cost_rs"] = trade_cost()
+    out["trade_cost_rs"] = out.apply(trade_cost_for_row, axis=1)
     out["net_pnl_amount"] = out["pnl_amount"] - out["trade_cost_rs"]
     return out
 
@@ -75,7 +109,7 @@ def summarize_pnl(rows: list[dict[str, Any]] | pd.DataFrame) -> dict[str, Any]:
         "avg_gross_per_trade_rs": round(gross / n, 1) if n else 0,
         "avg_net_per_trade_rs": round(net / n, 1) if n else 0,
         "cost_model": (
-            f"flat ₹{Config.ESTIMATED_COST_PER_TRADE}/trade"
+            f"flat ₹{Config.ESTIMATED_COST_PER_TRADE}/round-trip leg (MULTI rows sum legs)"
             if Config.ESTIMATED_COST_PER_TRADE > 0
             else "angel_mis_formula"
         ),

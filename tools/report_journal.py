@@ -25,7 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--source",
         default="",
-        help="Filter by source: backtest, paper, live (default: all)",
+        help="Filter by source: backtest, paper, live, paper_fno, live_fno (default: all)",
     )
     parser.add_argument(
         "--output",
@@ -70,6 +70,8 @@ def compute_summary(df: pd.DataFrame) -> dict:
     wins = int(df["win"].sum())
     total = len(df)
     pnl = summarize_pnl(df)
+    margin_series = pd.to_numeric(df.get("estimated_margin_required"), errors="coerce")
+    margin_series = margin_series.fillna(0) if margin_series is not None else pd.Series(dtype=float)
     return {
         "trades": total,
         "wins": wins,
@@ -87,9 +89,59 @@ def compute_summary(df: pd.DataFrame) -> dict:
         "worst_trade_rs": round(float(df["pnl_amount"].min()), 0),
         "long_trades": int((df["side"] == "LONG").sum()),
         "short_trades": int((df["side"] == "SHORT").sum()),
+        "multi_trades": int((df["side"] == "MULTI").sum()),
+        "avg_est_margin_rs": round(float(margin_series[margin_series > 0].mean()), 0)
+        if not margin_series.empty and (margin_series > 0).any() else 0,
+        "max_est_margin_rs": round(float(margin_series.max()), 0) if not margin_series.empty else 0,
         "period_start": str(df["exit_time"].min()),
         "period_end": str(df["exit_time"].max()),
     }
+
+
+def summarize_by_strategy(df: pd.DataFrame) -> list[str]:
+    if "strategy_name" not in df.columns:
+        return []
+    subset = df[df["strategy_name"].notna() & (df["strategy_name"] != "")]
+    if subset.empty:
+        return []
+    grouped = (
+        subset.groupby("strategy_name")
+        .agg(
+            trades=("pnl_pct", "count"),
+            win_rate=("win", "mean"),
+            net_pnl=("net_pnl_amount", "sum"),
+        )
+        .sort_values("trades", ascending=False)
+    )
+    lines: list[str] = []
+    for strategy_name, row in grouped.head(5).iterrows():
+        lines.append(
+            f"  {strategy_name}: {int(row['trades'])} trades, {row['win_rate'] * 100:.0f}% win, ₹{row['net_pnl']:,.0f} net"
+        )
+    return lines
+
+
+def summarize_by_entry_slot(df: pd.DataFrame) -> list[str]:
+    if "entry_time_slot" not in df.columns:
+        return []
+    subset = df[df["entry_time_slot"].notna() & (df["entry_time_slot"] != "")]
+    if subset.empty:
+        return []
+    grouped = (
+        subset.groupby("entry_time_slot")
+        .agg(
+            trades=("pnl_pct", "count"),
+            win_rate=("win", "mean"),
+            net_pnl=("net_pnl_amount", "sum"),
+        )
+        .sort_index()
+    )
+    lines: list[str] = []
+    for entry_slot, row in grouped.head(8).iterrows():
+        lines.append(
+            f"  {entry_slot}: {int(row['trades'])} trades, {row['win_rate'] * 100:.0f}% win, ₹{row['net_pnl']:,.0f} net"
+        )
+    return lines
 
 
 def _save(fig: plt.Figure, path: str) -> None:
@@ -183,7 +235,8 @@ def plot_summary_card(summary: dict, df: pd.DataFrame, out_dir: str, tag: str, s
         f"Net P&L: ₹{summary['net_pnl_rs']:,.0f}  ({summary['cost_model']})",
         f"Avg net/trade: ₹{summary['avg_net_per_trade_rs']:,.1f}  |  Avg gross/trade: {summary['avg_pnl_pct']}%",
         f"Best: ₹{summary['best_trade_rs']:,.0f}  |  Worst: ₹{summary['worst_trade_rs']:,.0f}",
-        f"Long: {summary['long_trades']}  |  Short: {summary['short_trades']}",
+        f"Long: {summary['long_trades']}  |  Short: {summary['short_trades']}  |  Multi: {summary['multi_trades']}",
+        f"Avg est. margin: ₹{summary['avg_est_margin_rs']:,.0f}  |  Max est. margin: ₹{summary['max_est_margin_rs']:,.0f}",
         f"Period: {summary['period_start'][:10]} → {summary['period_end'][:10]}",
         "",
         "Top symbols by trade count:",
@@ -194,6 +247,18 @@ def plot_summary_card(summary: dict, df: pd.DataFrame, out_dir: str, tag: str, s
         wr = 100 * sub["win"].mean()
         pnl = sub["pnl_amount"].sum()
         lines.append(f"  {sym}: {n} trades, {wr:.0f}% win, ₹{pnl:,.0f}")
+
+    strategy_lines = summarize_by_strategy(df)
+    if strategy_lines:
+        lines.append("")
+        lines.append("Top strategies:")
+        lines.extend(strategy_lines)
+
+    slot_lines = summarize_by_entry_slot(df)
+    if slot_lines:
+        lines.append("")
+        lines.append("Entry slots:")
+        lines.extend(slot_lines)
 
     ax.text(
         0.05,

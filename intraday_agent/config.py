@@ -7,6 +7,8 @@ load_dotenv()
 class Config:
     """Configuration for the intraday RSI+volume mean-reversion agent."""
 
+    AGENT_MODE = os.getenv("AGENT_MODE", "equity").lower().strip()
+
     # Angel One SmartAPI
     ANGEL_API_KEY = os.getenv("ANGEL_API_KEY")
     ANGEL_CLIENT_ID = os.getenv("ANGEL_CLIENT_ID")
@@ -20,6 +22,21 @@ class Config:
 
     # Strategy selection: rsi_mr | orb | vwap_pullback | rsi_div | ...
     STRATEGY = os.getenv("STRATEGY", "rsi_mr").lower().strip()
+
+    # F&O research strategy surface (paper-first, separate from equity STRATEGY)
+    FNO_STRATEGY = os.getenv("FNO_STRATEGY", "time_based_straddle").lower().strip()
+    FNO_UNDERLYING = os.getenv("FNO_UNDERLYING", "NIFTY").upper().strip()
+    FNO_WEEKLY_ONLY = os.getenv("FNO_WEEKLY_ONLY", "true").lower() in (
+        "1", "true", "yes", "y",
+    )
+    FNO_LOTS = int(os.getenv("FNO_LOTS", "1"))
+    FNO_HEDGE_WING_POINTS = float(os.getenv("FNO_HEDGE_WING_POINTS", "200"))
+    FNO_ENTRY_TIMES = os.getenv("FNO_ENTRY_TIMES", "09:20")
+    FNO_EXIT_TIME = os.getenv("FNO_EXIT_TIME", "15:10")
+    FNO_LEG_STOP_LOSS_PCT = float(os.getenv("FNO_LEG_STOP_LOSS_PCT", "20"))
+    FNO_COMBINED_STOP_LOSS_PCT = float(os.getenv("FNO_COMBINED_STOP_LOSS_PCT", "0"))
+    FNO_MAX_MARGIN_UTILIZATION_PCT = float(os.getenv("FNO_MAX_MARGIN_UTILIZATION_PCT", "60"))
+    FNO_CHECK_INTERVAL_SEC = int(os.getenv("FNO_CHECK_INTERVAL_SEC", "15"))
 
     # Opening range breakout (STRATEGY=orb)
     ORB_MINUTES = int(os.getenv("ORB_MINUTES", "15"))

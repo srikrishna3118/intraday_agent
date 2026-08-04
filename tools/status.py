@@ -43,6 +43,8 @@ def main() -> int:
     print("\n" + "=" * 60)
     if ok:
         print("Ready. Run: python run_agent.py")
+        print("F&O paper mode: python run_agent.py --mode fno --once")
+        print("F&O smoke test: python tools/fno_smoke_test.py --skip-candles")
         print("Paper mode default — set LIVE_TRADING=true for real orders.")
     else:
         print("Fix the issues above before running.")

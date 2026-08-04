@@ -15,7 +15,11 @@ from intraday_agent.learning.journal import TradeJournal
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Export trade journal to CSV")
-    parser.add_argument("--source", default="", help="Filter: backtest, paper, live")
+    parser.add_argument(
+        "--source",
+        default="",
+        help="Filter: backtest, paper, live, paper_fno, live_fno",
+    )
     parser.add_argument(
         "--output",
         default="",

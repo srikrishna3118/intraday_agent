@@ -50,6 +50,14 @@ _EXTRA_COLUMNS = (
     ("entry_hour", "INTEGER"),
     ("day_of_week", "INTEGER"),
     ("entry_features", "TEXT"),
+    ("strategy_name", "TEXT"),
+    ("underlying", "TEXT"),
+    ("expiry", "TEXT"),
+    ("structure_type", "TEXT"),
+    ("legs_json", "TEXT"),
+    ("net_entry_cashflow", "REAL"),
+    ("entry_time_slot", "TEXT"),
+    ("estimated_margin_required", "REAL"),
 )
 
 
@@ -72,6 +80,14 @@ class TradeRecord:
     entry_hour: int | None = None
     day_of_week: int | None = None
     entry_features: str | None = None
+    strategy_name: str | None = None
+    underlying: str | None = None
+    expiry: str | None = None
+    structure_type: str | None = None
+    legs_json: str | None = None
+    net_entry_cashflow: float | None = None
+    entry_time_slot: str | None = None
+    estimated_margin_required: float | None = None
 
 
 class TradeJournal:
@@ -126,6 +142,14 @@ class TradeJournal:
             entry_hour=trade.entry_hour if trade.entry_hour is not None else entry_ist.hour,
             day_of_week=trade.day_of_week if trade.day_of_week is not None else entry_ist.weekday(),
             entry_features=trade.entry_features,
+            strategy_name=trade.strategy_name,
+            underlying=trade.underlying,
+            expiry=trade.expiry,
+            structure_type=trade.structure_type,
+            legs_json=trade.legs_json,
+            net_entry_cashflow=trade.net_entry_cashflow,
+            entry_time_slot=trade.entry_time_slot,
+            estimated_margin_required=trade.estimated_margin_required,
         )
 
     def record_trade(self, trade: TradeRecord) -> int:
@@ -136,8 +160,10 @@ class TradeJournal:
                 INSERT INTO trades (
                     symbol, side, entry_rsi, volume_ratio, entry_price, exit_price,
                     quantity, entry_time, exit_time, hold_minutes, entry_hour,
-                    day_of_week, exit_reason, pnl_pct, pnl_amount, source, entry_features
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    day_of_week, exit_reason, pnl_pct, pnl_amount, source, entry_features,
+                    strategy_name, underlying, expiry, structure_type, legs_json,
+                    net_entry_cashflow, entry_time_slot, estimated_margin_required
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     trade.symbol.upper(),
@@ -157,6 +183,14 @@ class TradeJournal:
                     trade.pnl_amount,
                     trade.source,
                     trade.entry_features,
+                    trade.strategy_name,
+                    trade.underlying,
+                    trade.expiry,
+                    trade.structure_type,
+                    trade.legs_json,
+                    trade.net_entry_cashflow,
+                    trade.entry_time_slot,
+                    trade.estimated_margin_required,
                 ),
             )
             conn.commit()

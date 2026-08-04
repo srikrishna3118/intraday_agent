@@ -18,7 +18,11 @@ from intraday_agent.learning.entry_features import features_from_json
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Export paper trades with flattened features")
-    parser.add_argument("--source", default="paper", help="Journal source filter (default: paper)")
+    parser.add_argument(
+        "--source",
+        default="paper",
+        help="Journal source filter (default: paper; supports paper_fno)",
+    )
     parser.add_argument("--db", default=Config.TRADE_JOURNAL_PATH)
     parser.add_argument(
         "--output",
@@ -45,6 +49,35 @@ def _flatten_features(raw: str | None) -> dict:
     }
 
 
+def _flatten_legs(raw: str | None) -> dict:
+    if not raw:
+        return {
+            "leg_count": 0,
+            "short_leg_count": 0,
+            "long_leg_count": 0,
+            "leg_symbols": "",
+            "leg_sides": "",
+            "leg_option_types": "",
+            "leg_strikes": "",
+        }
+    try:
+        legs = json.loads(raw)
+    except (TypeError, ValueError, json.JSONDecodeError):
+        legs = []
+    if not isinstance(legs, list):
+        legs = []
+    legs = [leg for leg in legs if isinstance(leg, dict)]
+    return {
+        "leg_count": len(legs),
+        "short_leg_count": sum(1 for leg in legs if str(leg.get("side", "")).upper() == "SHORT"),
+        "long_leg_count": sum(1 for leg in legs if str(leg.get("side", "")).upper() == "LONG"),
+        "leg_symbols": "|".join(str(leg.get("tradingsymbol", "")) for leg in legs),
+        "leg_sides": "|".join(str(leg.get("side", "")) for leg in legs),
+        "leg_option_types": "|".join(str(leg.get("option_type", "")) for leg in legs),
+        "leg_strikes": "|".join(str(leg.get("strike", "")) for leg in legs),
+    }
+
+
 def main() -> int:
     args = parse_args()
     if not os.path.isfile(args.db):
@@ -63,16 +96,24 @@ def main() -> int:
     df = pd.DataFrame(rows)
     df = apply_costs(df)
     extras = df["entry_features"].apply(lambda raw: pd.Series(_flatten_features(raw)))
-    df = pd.concat([df, extras], axis=1)
+    legs = (
+        df["legs_json"].apply(lambda raw: pd.Series(_flatten_legs(raw)))
+        if "legs_json" in df.columns else pd.DataFrame(index=df.index)
+    )
+    df = pd.concat([df, extras, legs], axis=1)
 
     export_cols = [
         "symbol", "side", "entry_time", "exit_time", "hold_minutes", "entry_rsi",
         "volume_ratio", "entry_price", "exit_price", "quantity", "pnl_pct", "pnl_amount",
         "net_pnl_amount", "trade_cost_rs", "exit_reason", "source",
+        "strategy_name", "underlying", "expiry", "structure_type", "entry_time_slot",
+        "net_entry_cashflow", "estimated_margin_required",
+        "leg_count", "short_leg_count", "long_leg_count",
+        "leg_symbols", "leg_sides", "leg_option_types", "leg_strikes",
         "feat_rsi", "feat_volume_ratio", "feat_atr_pct", "feat_vwap_distance",
         "feat_adx", "feat_vix", "feat_minutes_from_open",
         "stack_rsi_ob", "stack_cutoff", "stack_excluded", "stack_atr_stop_mult",
-        "entry_features",
+        "entry_features", "legs_json",
     ]
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
     df[[c for c in export_cols if c in df.columns]].to_csv(args.output, index=False)

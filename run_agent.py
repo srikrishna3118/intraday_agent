@@ -7,6 +7,7 @@ import os
 import sys
 
 from intraday_agent.agent import IntradayAgent
+from intraday_agent.agent_fno import IntradayAgentFnO
 from intraday_agent.config import Config
 from intraday_agent.logging_setup import setup_logger
 
@@ -40,6 +41,12 @@ def main() -> int:
         action="store_true",
         help="Run a single scan/manage cycle then exit",
     )
+    parser.add_argument(
+        "--mode",
+        choices=("equity", "fno"),
+        default=Config.AGENT_MODE,
+        help="Select the agent path to run",
+    )
     args = parser.parse_args()
 
     setup_logger()
@@ -48,7 +55,7 @@ def main() -> int:
     if not args.once:
         _acquire_single_instance()
 
-    agent = IntradayAgent()
+    agent = IntradayAgentFnO() if args.mode == "fno" else IntradayAgent()
 
     if args.once:
         if agent.is_market_open():
