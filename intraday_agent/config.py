@@ -25,18 +25,70 @@ class Config:
 
     # F&O research strategy surface (paper-first, separate from equity STRATEGY)
     FNO_STRATEGY = os.getenv("FNO_STRATEGY", "time_based_straddle").lower().strip()
+    _FNO_STRATEGIES_RAW = os.getenv(
+        "FNO_STRATEGIES",
+        "time_based_straddle,ema920_credit_spread,ema920_option_buy,"
+        "premium_orb_short,expiry_vol_strangle",
+    )
+    FNO_STRATEGIES = tuple(
+        part.strip().lower() for part in _FNO_STRATEGIES_RAW.split(",") if part.strip()
+    ) or (FNO_STRATEGY,)
     FNO_UNDERLYING = os.getenv("FNO_UNDERLYING", "NIFTY").upper().strip()
-    FNO_WEEKLY_ONLY = os.getenv("FNO_WEEKLY_ONLY", "true").lower() in (
+    FNO_WEEKLY_ONLY = os.getenv("FNO_WEEKLY_ONLY", "false").lower() in (
         "1", "true", "yes", "y",
     )
     FNO_LOTS = int(os.getenv("FNO_LOTS", "1"))
     FNO_HEDGE_WING_POINTS = float(os.getenv("FNO_HEDGE_WING_POINTS", "200"))
     FNO_ENTRY_TIMES = os.getenv("FNO_ENTRY_TIMES", "09:20")
     FNO_EXIT_TIME = os.getenv("FNO_EXIT_TIME", "15:10")
+    FNO_ENTRY_CUTOFF = os.getenv("FNO_ENTRY_CUTOFF", "14:30")
     FNO_LEG_STOP_LOSS_PCT = float(os.getenv("FNO_LEG_STOP_LOSS_PCT", "20"))
     FNO_COMBINED_STOP_LOSS_PCT = float(os.getenv("FNO_COMBINED_STOP_LOSS_PCT", "0"))
     FNO_MAX_MARGIN_UTILIZATION_PCT = float(os.getenv("FNO_MAX_MARGIN_UTILIZATION_PCT", "60"))
     FNO_CHECK_INTERVAL_SEC = int(os.getenv("FNO_CHECK_INTERVAL_SEC", "15"))
+    FNO_CAPITAL = float(os.getenv("FNO_CAPITAL", "200000"))
+    FNO_DEFINED_RISK_ONLY = os.getenv("FNO_DEFINED_RISK_ONLY", "true").lower() in (
+        "1", "true", "yes", "y",
+    )
+    FNO_MAX_POSITIONS_PER_STRATEGY = int(os.getenv("FNO_MAX_POSITIONS_PER_STRATEGY", "1"))
+    FNO_MAX_DAILY_LOSS = float(os.getenv("FNO_MAX_DAILY_LOSS", "20000"))
+    FNO_BROKERAGE_PER_ORDER = float(os.getenv("FNO_BROKERAGE_PER_ORDER", "20"))
+    FNO_SLIPPAGE_PCT = float(os.getenv("FNO_SLIPPAGE_PCT", "0.25"))
+    FNO_OPEN_POSITIONS_PATH = os.getenv(
+        "FNO_OPEN_POSITIONS_PATH",
+        os.path.join(os.getenv("DATA_DIR", "data"), "fno_open_positions.json"),
+    )
+
+    # EMA 9:20 arms
+    FNO_EMA_ENTRY_TIME = os.getenv("FNO_EMA_ENTRY_TIME", "09:20")
+    FNO_EMA_FAST = int(os.getenv("FNO_EMA_FAST", "9"))
+    FNO_EMA_SLOW = int(os.getenv("FNO_EMA_SLOW", "21"))
+    FNO_BUY_PREMIUM_TARGET = float(os.getenv("FNO_BUY_PREMIUM_TARGET", "200"))
+    FNO_BUY_STOP_PCT = float(os.getenv("FNO_BUY_STOP_PCT", "20"))
+
+    # Premium-range short
+    FNO_ORB_PICK_TIME = os.getenv("FNO_ORB_PICK_TIME", "09:16")
+    FNO_ORB_PREMIUM_TARGET = float(os.getenv("FNO_ORB_PREMIUM_TARGET", "200"))
+    FNO_ORB_RANGE_END = os.getenv("FNO_ORB_RANGE_END", "11:15")
+
+    # Expiry-day remaining-vol strangle
+    FNO_EXPIRY_ENTRY_TIME = os.getenv("FNO_EXPIRY_ENTRY_TIME", "11:00")
+    FNO_EXPIRY_EXIT_TIME = os.getenv("FNO_EXPIRY_EXIT_TIME", "14:30")
+    FNO_EXPIRY_TAIL_PROB = float(os.getenv("FNO_EXPIRY_TAIL_PROB", "0.10"))
+    FNO_EXPIRY_MIN_DISTANCE_PCT = float(os.getenv("FNO_EXPIRY_MIN_DISTANCE_PCT", "0.4"))
+    FNO_EXPIRY_STOP_PCT = float(os.getenv("FNO_EXPIRY_STOP_PCT", "50"))
+    FNO_EXPIRY_MODEL_PATH = os.getenv(
+        "FNO_EXPIRY_MODEL_PATH",
+        os.path.join(os.getenv("DATA_DIR", "data"), "models", "fno_expiry_vol.json"),
+    )
+
+    # Daily capture / IV snapshots
+    FNO_CAPTURE_ON_EXIT = os.getenv("FNO_CAPTURE_ON_EXIT", "true").lower() in (
+        "1", "true", "yes", "y",
+    )
+    FNO_CAPTURE_STRIKE_BUFFER = float(os.getenv("FNO_CAPTURE_STRIKE_BUFFER", "400"))
+    FNO_IV_SNAPSHOT_MIN = int(os.getenv("FNO_IV_SNAPSHOT_MIN", "15"))
+    FNO_CANDLE_STORE_DIR = os.getenv("FNO_CANDLE_STORE_DIR", "data/candles_fno")
 
     # Opening range breakout (STRATEGY=orb)
     ORB_MINUTES = int(os.getenv("ORB_MINUTES", "15"))

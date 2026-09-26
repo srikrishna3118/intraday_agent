@@ -1,10 +1,13 @@
 # Adversarial Research Roadmap — Status & Pending Work
 
-**Last updated:** 2026-07-10  
+**Last updated:** 2026-09-27  
 **Plan reference:** Adversarial Research Roadmap (Phases 0–6)  
 **Paper host:** Desktop (Oracle cloud deferred)
 
 > **Master findings & execution plan:** [FINDINGS_AND_NEXT_STEPS.md](FINDINGS_AND_NEXT_STEPS.md)  
+> Cookbook vs registry: [COOKBOOK_REEVAL.md](COOKBOOK_REEVAL.md). Validated stack: [EDGE_VALIDATED.md](EDGE_VALIDATED.md).  
+> MR video taxonomy: [MEAN_REVERSION_REFERENCE.md](MEAN_REVERSION_REFERENCE.md).  
+> Paper F&O (intraday, live blocked): [OPTIONS_FNO_ANALYSIS.md](OPTIONS_FNO_ANALYSIS.md).  
 > Narrative and config: [RESEARCH_HANDBOOK.md](RESEARCH_HANDBOOK.md). Implementation registry: [IMPLEMENTATIONS_AND_NEXT_RESEARCH.md](IMPLEMENTATIONS_AND_NEXT_RESEARCH.md). Paper sessions: [paper_trial_log.md](paper_trial_log.md).
 
 ---
@@ -16,7 +19,10 @@
 | Sim / code (Phases 0, 2, 3, 6) | **Done** |
 | T200 / T250 full-universe research | **Done** — net negative |
 | Edge search (T2, ₹50k) | **Done** — +₹2,438 net; see [EDGE_VALIDATED.md](EDGE_VALIDATED.md) |
+| Cookbook strategy reeval | **Done** — EMA/MACD trend flips rejected; see [COOKBOOK_REEVAL.md](COOKBOOK_REEVAL.md) |
+| Ep.17 MR video sync | **Done** — taxonomy refreshed; Type 2–4 deferred; see [MEAN_REVERSION_REFERENCE.md](MEAN_REVERSION_REFERENCE.md) |
 | Paper validation (P3) | **Next** — run agent on market days; ≥15 sessions |
+| Paper F&O (intraday) | **Started** — five arms, Angel-only; live NFO blocked ([OPTIONS_FNO_ANALYSIS.md](OPTIONS_FNO_ANALYSIS.md)) |
 | Live trading | **Off** — user approval required |
 
 ---
@@ -145,6 +151,9 @@ TRAILING_STOP_ENABLED=true
 | Item | Rule |
 |------|------|
 | `quadapt_ml` in paper | Bake-off FAIL |
+| Cookbook EMA / MACD crossovers | Same trend-flip class as ORB/VWAP (−₹42k); do not register for paper |
+| BB squeeze / NR7 as **equity** primary | Type 2 deferred ([MEAN_REVERSION_REFERENCE.md](MEAN_REVERSION_REFERENCE.md)) |
+| Live NFO / naked shorts | Blocked. Paper F&O: [OPTIONS_FNO_ANALYSIS.md](OPTIONS_FNO_ANALYSIS.md) |
 | `REGIME_ADAPTIVE=true` | ORB −₹42k on 180d T2 |
 | `CANDLE_INTERVAL=FIVE_MINUTE` | Phase 5 optional; not started |
 | New entry strategies | Until rsi_mr net-positive on T2 paper (≥15 sessions) |
@@ -160,16 +169,17 @@ TRAILING_STOP_ENABLED=true
 2. `LIVE_TRADING=false` until circuit guard + alerts + user approval
 3. No Quadapt in paper
 4. No 5m on production stack without Phase 5 gate
-5. No new entry strategies while ATR stop leak unresolved on rsi_mr — **P1 time-stop research scheduled**
+5. No new entry strategies (incl. cookbook EMA/MACD) until T2 paper P3 passes — time-stop ablation done (`TIME_STOP_BARS=0`)
 6. `RISK_PCT` — enable in P0b after sim validates ₹50k+ notional
 
 ---
 
 ## Desktop operations notes
 
-- **Power cuts:** Restart `python run_agent.py` when power returns; open paper positions are **in-memory** (not persisted across restarts).
-- **Single host:** Do not run agent on desktop and cloud the same day.
+- **Power cuts:** Restart `python run_agent.py` when power returns. Equity paper positions are **in-memory**. Paper F&O legs persist to `data/fno_open_positions.json` (same-day restore; stale prior-day rows close as `restart_stale`).
+- **Single host:** Do not run agent on desktop and cloud the same day. Use `--mode both` for equity + F&O on one Angel login.
 - **Sparse signals:** ~1 trade / 10 days in sim is normal for the gated stack.
+- **CAS square-off (open):** NSE closing auction since 2026-08-03. Angel equity MIS auto square-off is **15:10**; agent `SQUARE_OFF_TIME` is still **15:15**. Harmless in paper; live would pay Angel auto-square charges. Not changed in this pass. F&O paper exits at 15:10.
 
 ---
 
@@ -177,6 +187,12 @@ TRAILING_STOP_ENABLED=true
 
 | File | Purpose |
 |------|---------|
+| [FINDINGS_AND_NEXT_STEPS.md](FINDINGS_AND_NEXT_STEPS.md) | Master findings + P0–P4 plan |
+| [EDGE_VALIDATED.md](EDGE_VALIDATED.md) | T2 validated paper stack |
+| [COOKBOOK_REEVAL.md](COOKBOOK_REEVAL.md) | Packt cookbook vs registry reeval |
+| [MEAN_REVERSION_REFERENCE.md](MEAN_REVERSION_REFERENCE.md) | Ep.17 MR taxonomy ↔ repo |
+| [OPTIONS_FNO_ANALYSIS.md](OPTIONS_FNO_ANALYSIS.md) | Paper NIFTY F&O analysis + 40-session gates |
+| [fno_paper_trial_log.md](fno_paper_trial_log.md) | F&O paper session log |
 | [RESEARCH_HANDBOOK.md](RESEARCH_HANDBOOK.md) | Master research doc |
 | [paper_trial_log.md](paper_trial_log.md) | Live paper session log |
 | [PHASE4_FINDINGS.md](PHASE4_FINDINGS.md) | Sprint 4 exit ablation |
@@ -190,5 +206,9 @@ TRAILING_STOP_ENABLED=true
 
 | Date | Update |
 |------|--------|
+| 2026-09-27 | Paper F&O track: five intraday arms, Angel-only validation; live NFO still blocked |
+| 2026-08-04 | Ep.17 MR video sync: MEAN_REVERSION_REFERENCE refreshed; Type 2 BB/NR7 deferred |
+| 2026-08-04 | Cookbook reeval: EMA/MACD trend flips rejected; kill-list + links updated |
+| 2026-07-10 | Edge search validated T2 stack; P0–P2 research done; P3 paper next |
 | 2026-07-05 | Roadmap Phases 0–3 sim, 2, 6 complete; Phase 1 paper pending; Oracle deferred; desktop chosen |
 | 2026-06-22 | Paper day 1 — power cut, 0 entries (pre–Sprint 4 stack) |

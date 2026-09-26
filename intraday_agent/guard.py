@@ -25,7 +25,32 @@ class TradeGuard:
     Counters reset automatically at the IST day rollover.
     """
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        *,
+        max_daily_loss: float | None = None,
+        max_daily_profit: float | None = None,
+        max_trades_per_day: int | None = None,
+        max_trades_per_symbol: int | None = None,
+        symbol_cooldown_min: int | None = None,
+        loss_cooldown_min: int | None = None,
+    ) -> None:
+        self.max_daily_loss = Config.MAX_DAILY_LOSS if max_daily_loss is None else max_daily_loss
+        self.max_daily_profit = (
+            Config.MAX_DAILY_PROFIT if max_daily_profit is None else max_daily_profit
+        )
+        self.max_trades_per_day = (
+            Config.MAX_TRADES_PER_DAY if max_trades_per_day is None else max_trades_per_day
+        )
+        self.max_trades_per_symbol = (
+            Config.MAX_TRADES_PER_SYMBOL if max_trades_per_symbol is None else max_trades_per_symbol
+        )
+        self.symbol_cooldown_min = (
+            Config.SYMBOL_COOLDOWN_MIN if symbol_cooldown_min is None else symbol_cooldown_min
+        )
+        self.loss_cooldown_min = (
+            Config.LOSS_COOLDOWN_MIN if loss_cooldown_min is None else loss_cooldown_min
+        )
         self._date = None
         self.entries_today = 0
         self.entries_per_symbol: dict[str, int] = {}
@@ -66,12 +91,12 @@ class TradeGuard:
     def _check_daily_limits(self) -> None:
         if self.halted:
             return
-        if Config.MAX_DAILY_LOSS > 0 and self.realized_pnl <= -Config.MAX_DAILY_LOSS:
+        if self.max_daily_loss > 0 and self.realized_pnl <= -self.max_daily_loss:
             self.halted = True
             self.force_flat = True
             self.halt_reason = f"daily loss limit hit (realized Rs {self.realized_pnl:.0f})"
             logger.warning("Overtrading guard: %s — halting for the day", self.halt_reason)
-        elif Config.MAX_DAILY_PROFIT > 0 and self.realized_pnl >= Config.MAX_DAILY_PROFIT:
+        elif self.max_daily_profit > 0 and self.realized_pnl >= self.max_daily_profit:
             self.halted = True
             self.halt_reason = f"daily profit target reached (realized Rs {self.realized_pnl:.0f})"
             logger.info("Overtrading guard: %s — no new entries today", self.halt_reason)
@@ -82,18 +107,18 @@ class TradeGuard:
         self._check_daily_limits()
         if self.halted:
             return False
-        if Config.MAX_TRADES_PER_DAY > 0 and self.entries_today >= Config.MAX_TRADES_PER_DAY:
+        if self.max_trades_per_day > 0 and self.entries_today >= self.max_trades_per_day:
             logger.info(
-                "Overtrading guard: daily trade cap reached (%d)", Config.MAX_TRADES_PER_DAY
+                "Overtrading guard: daily trade cap reached (%d)", self.max_trades_per_day
             )
             return False
         return True
 
     def remaining_daily_slots(self) -> int | None:
         """Entries left today, or ``None`` if uncapped."""
-        if Config.MAX_TRADES_PER_DAY <= 0:
+        if self.max_trades_per_day <= 0:
             return None
-        return max(0, Config.MAX_TRADES_PER_DAY - self.entries_today)
+        return max(0, self.max_trades_per_day - self.entries_today)
 
     def can_enter(self, symbol: str) -> bool:
         """Per-symbol gate: respects per-symbol cap and cooldowns."""
@@ -101,17 +126,17 @@ class TradeGuard:
         symbol = symbol.upper()
 
         if (
-            Config.MAX_TRADES_PER_SYMBOL > 0
-            and self.entries_per_symbol.get(symbol, 0) >= Config.MAX_TRADES_PER_SYMBOL
+            self.max_trades_per_symbol > 0
+            and self.entries_per_symbol.get(symbol, 0) >= self.max_trades_per_symbol
         ):
             return False
 
         last = self.last_close.get(symbol)
         if last:
             closed_at, was_loss = last
-            cooldown = Config.SYMBOL_COOLDOWN_MIN
-            if was_loss and Config.LOSS_COOLDOWN_MIN > 0:
-                cooldown = max(cooldown, Config.LOSS_COOLDOWN_MIN)
+            cooldown = self.symbol_cooldown_min
+            if was_loss and self.loss_cooldown_min > 0:
+                cooldown = max(cooldown, self.loss_cooldown_min)
             if cooldown > 0 and self._now() - closed_at < timedelta(minutes=cooldown):
                 return False
 
@@ -125,8 +150,8 @@ class TradeGuard:
 
     def status(self) -> str:
         parts = [f"entries={self.entries_today}", f"realized=Rs {self.realized_pnl:.0f}"]
-        if Config.MAX_TRADES_PER_DAY > 0:
-            parts.append(f"cap={Config.MAX_TRADES_PER_DAY}")
+        if self.max_trades_per_day > 0:
+            parts.append(f"cap={self.max_trades_per_day}")
         if self.halted:
             parts.append(f"HALTED ({self.halt_reason})")
         return " | ".join(parts)

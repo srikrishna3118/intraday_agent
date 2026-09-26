@@ -4,7 +4,7 @@ Guide for AI agents and developers working in this repository.
 
 ## Project purpose
 
-Autonomous **intraday equity** trading on **Angel One SmartAPI**. Each cycle:
+Autonomous **intraday** trading on **Angel One SmartAPI**. Default path is equity MIS. A paper-only NIFTY F&O path runs via `--mode fno` or `--mode both`. Equity cycle:
 
 1. Screen configured universe (`SCAN_UNIVERSE`: **t2** paper default, or nifty50/100/200) on **15-min candles**
 2. Find RSI extremes with **volume confirmation** (`screener.py` + `strategy.py`)
@@ -17,16 +17,21 @@ Autonomous **intraday equity** trading on **Angel One SmartAPI**. Each cycle:
 ## Architecture
 
 ```
-run_agent.py          → CLI entry (--once for single cycle)
+run_agent.py          → CLI entry (--once, --mode equity|fno|both)
 intraday_agent/
-  agent.py            → Main loop, market hours, square-off, guards
+  agent.py            → Equity loop, market hours, square-off, guards
+  agent_fno.py        → Paper NIFTY options loop (multi-arm, 15:10 exit)
+  runner.py           → Shared Angel session for --mode both
   guard.py            → Anti-overtrading guards
   market_regime.py    → India VIX / Nifty EMA entry gate
   screener.py         → Universe scan (rate-limited candle fetches)
   strategy.py         → RSI + volume + VWAP + ATR + mean-reversion exits
+  strategy_fno.py     → Intraday F&O arms (iron fly, EMA spread/buy, ORB short, expiry strangle)
   orders.py           → Paper/live OrderManager, position sizing
+  orders_fno.py       → Multi-leg paper F&O (live placement refused)
   broker.py           → Angel SmartAPI: login, candles, LTP, orders
   instruments.py      → Scrip master cache → symboltoken lookup
+  instruments_fno.py  → NFO OPTIDX resolve, nearest expiry, trading_dte
   config.py           → All settings from .env
   universe.py         → NIFTY_50, T2_SYMBOLS, nifty100/200 lists; SCAN_UNIVERSE routing
   learning/           → Journal, stats, ranker, backtest, walk-forward, meta_label, costs
@@ -34,6 +39,7 @@ tools/
   status.py, e2e_test.py, bootstrap_backtest.py, walk_forward.py, train_meta_label.py
   research_validation.py, report_journal.py, mine_patterns.py, export_journal.py
   research_phases.py, edge_search.py, time_stop_ablation.py, rerun_nifty200_research.py
+  fno_smoke_test.py, fno_signal_study.py, capture_fno_candles.py
 ```
 
 Data flow: `agent` → `screener` → `AdaptiveRanker` (optional) → `MetaLabelFilter` (optional) → `orders` → `broker.place_order`. On close, `orders` writes to `TradeJournal` (including `entry_features` when logged at entry).
@@ -45,8 +51,13 @@ Instrument tokens **must** come from `instruments.resolve()` — never pass bare
 ```bash
 python tools/status.py
 python tools/e2e_test.py
-python run_agent.py          # paper loop (default)
+python run_agent.py          # paper equity loop (default)
 python run_agent.py --once   # single scan/manage cycle
+python run_agent.py --mode fno --once
+python run_agent.py --mode both   # equity + paper F&O, one Angel login
+python tools/fno_smoke_test.py
+python tools/fno_signal_study.py
+python tools/capture_fno_candles.py
 python tools/bootstrap_backtest.py --symbols RELIANCE,SBIN,TCS,HDFCBANK,INFY --days 60
 python tools/walk_forward.py --symbols RELIANCE,SBIN,TCS,HDFCBANK,INFY --days 80 --train-days 40 --test-days 20
 python tools/train_meta_label.py --source backtest,paper --min-samples 80 --evaluate --train
@@ -93,7 +104,8 @@ Market hours: **09:15–15:30 IST**, weekdays. Square-off default: **15:15 IST**
 
 - Heavy ML (XGBoost/RL/neural nets) — use lightweight journal stats and optional **logistic meta-label** only (`learning/meta_label.py`)
 - TradingView webhooks / ZP Pine script integration (deferred; use pluggable Strategy if adding later)
-- Options, futures, crypto (Delta), Docker deployment
+- Live NFO order placement, naked shorts, futures, crypto (Delta), Docker deployment
+- Paper NIFTY options are in-repo (`*_fno.py`); see `data/research/OPTIONS_FNO_ANALYSIS.md`. Live F&O stays blocked.
 - NSE website scraping — use Angel `getCandleData` only
 
 ## Common tasks
@@ -112,6 +124,8 @@ Market hours: **09:15–15:30 IST**, weekdays. Square-off default: **15:15 IST**
 | Research ablations | `tools/research_validation.py` (`--meta-label`, `--source yahoo|angel|cache`) |
 | Regime filter (VIX/Nifty) | `market_regime.py`, `REGIME_*`, `VIX_MAX` in config |
 | Net P&L reporting | `learning/costs.py`, `ESTIMATED_COST_PER_TRADE` |
+| Paper F&O arms / exits | `strategy_fno.py`, `orders_fno.py`, `agent_fno.py`, `FNO_*` env |
+| F&O research / paper log | `data/research/OPTIONS_FNO_ANALYSIS.md`, `tools/fno_signal_study.py` |
 
 ## Testing changes
 

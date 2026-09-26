@@ -34,13 +34,16 @@ _REGIME_STRATEGY_MAP: dict[str, str] = {
 
 
 class IntradayAgent:
-    def __init__(self):
+    def __init__(self, broker: AngelBroker | None = None):
         Config.validate()
         get_registry().load()
-        self.broker = AngelBroker()
-        self.broker.login()
-        if Config.STREAM_ENABLED:
-            self.broker.connect_stream()
+        if broker is None:
+            self.broker = AngelBroker()
+            self.broker.login()
+            if Config.STREAM_ENABLED:
+                self.broker.connect_stream()
+        else:
+            self.broker = broker
         self.orders = OrderManager(self.broker)
         self.strategy = get_strategy()
         self.screener = Screener(self.broker, self.strategy)

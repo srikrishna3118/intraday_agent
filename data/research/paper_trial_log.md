@@ -23,6 +23,7 @@ Copy a row per session below. After **5–10 sessions**, compare total paper net
 | 2026-06-19 | Thu | — | 3 | 3 | **+₹46** | SHORT NTPC +₹36 (2m trailing), BHARTIARTL +₹13 (2m trailing), ADANIENT −₹4 (2m trailing). DIVISLAB +₹31 manual exit. RSI 77–80, VolR 1.2–1.7. All AM entries. |
 | 2026-06-23 | Mon | — | 3 | 3 | **−₹62** | SHORT DIVISLAB +₹4 (2m trailing), APOLLOHOSP +₹19 (87m trailing), CIPLA −₹84 (ATR stop, RSI 88.2, VolR 1.9 — trend continuation not reversal). |
 | 2026-07-06 | Mon | ~full session | 2 | 2 | **+₹62** | Trailing stop exits at +0.25% — **old `.env`**. Fixed 2026-07-10: RSI-first, trailing off, ATR stop only underwater. |
+| 2026-08-04 | Tue | ~29 scans | 0 | 0 | ₹0 | **Validated stack** (T2, ATR 1.25, cutoff 13:00, trailing off). 10:07–13:01; idle shutdown — no RSI>80 shorts. Peak RSI ~66 (JSWSTEEL); HDFCBANK oversold-only (longs disabled). |
 | | | | | | | |
 | | | | | | | |
 
@@ -30,7 +31,7 @@ Copy a row per session below. After **5–10 sessions**, compare total paper net
 
 | Metric | Value |
 |--------|-------|
-| Sessions logged | 3 active (+ 1 aborted) |
+| Sessions logged | 4 active (+ 1 aborted); **1 on validated stack (0 trades)** |
 | Total trades | 9 |
 | Win rate | 77.8% (7W / 2L) |
 | Gross P&L | ₹+77 |

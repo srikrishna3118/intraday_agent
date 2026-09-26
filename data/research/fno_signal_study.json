@@ -1,0 +1,192 @@
+{
+  "generated_at": "2026-09-27T00:45:48.007652",
+  "nifty_bars": 55368,
+  "sessions": 743,
+  "coverage": "2023-09-28 09:15:00 \u2192 2026-09-25 15:25:00 (743 sessions)",
+  "ema": {
+    "n": 519,
+    "mean": 0.00011425093782711699,
+    "mean_bps": 1.14250937827117,
+    "bootstrap_95_lb": -0.0003471815035090086,
+    "bootstrap_95_lb_bps": -3.471815035090086,
+    "first_half_mean": -0.0001351203276624418,
+    "second_half_mean": 0.0003626630830647929,
+    "win_rate": 0.5086705202312138,
+    "pass": false,
+    "gates": {
+      "mean_gt_0": true,
+      "bootstrap_lb_gt_0": false,
+      "first_half_gt_0": false,
+      "second_half_gt_0": true
+    },
+    "rows_head": [
+      {
+        "session": "2023-10-03",
+        "ema_state": "bear",
+        "signed_return": 0.0002866759665714601,
+        "raw_return": -0.0002866759665714601,
+        "era": "thursday",
+        "expiry_cycle_day": 2
+      },
+      {
+        "session": "2023-10-04",
+        "ema_state": "bear",
+        "signed_return": -0.0020252251323739333,
+        "raw_return": 0.0020252251323739333,
+        "era": "thursday",
+        "expiry_cycle_day": 1
+      },
+      {
+        "session": "2023-10-05",
+        "ema_state": "bull",
+        "signed_return": 0.00019450871194279766,
+        "raw_return": 0.00019450871194279766,
+        "era": "thursday",
+        "expiry_cycle_day": 0
+      },
+      {
+        "session": "2023-10-06",
+        "ema_state": "bull",
+        "signed_return": 0.0028385905492533184,
+        "raw_return": 0.0028385905492533184,
+        "era": "thursday",
+        "expiry_cycle_day": 4
+      },
+      {
+        "session": "2023-10-09",
+        "ema_state": "bear",
+        "signed_return": -0.00038194844977637956,
+        "raw_return": 0.00038194844977637956,
+        "era": "thursday",
+        "expiry_cycle_day": 3
+      }
+    ],
+    "rows_tail": [
+      {
+        "session": "2026-09-18",
+        "ema_state": "bull",
+        "signed_return": 0.0007889055864375903,
+        "raw_return": 0.0007889055864375903,
+        "era": "tuesday",
+        "expiry_cycle_day": 2
+      },
+      {
+        "session": "2026-09-21",
+        "ema_state": "bull",
+        "signed_return": 0.0018922669357890752,
+        "raw_return": 0.0018922669357890752,
+        "era": "tuesday",
+        "expiry_cycle_day": 1
+      },
+      {
+        "session": "2026-09-23",
+        "ema_state": "bull",
+        "signed_return": 0.0010809032591584298,
+        "raw_return": 0.0010809032591584298,
+        "era": "tuesday",
+        "expiry_cycle_day": 4
+      },
+      {
+        "session": "2026-09-24",
+        "ema_state": "bear",
+        "signed_return": 0.006180307400869646,
+        "raw_return": -0.006180307400869646,
+        "era": "tuesday",
+        "expiry_cycle_day": 3
+      },
+      {
+        "session": "2026-09-25",
+        "ema_state": "bear",
+        "signed_return": -0.0023099292286222887,
+        "raw_return": 0.0023099292286222887,
+        "era": "tuesday",
+        "expiry_cycle_day": 2
+      }
+    ]
+  },
+  "expiry_model": {
+    "n": 149,
+    "oos_n": 100,
+    "oos_r2": 0.27931239786937456,
+    "tail_breach_rate": 0.18,
+    "in_sample_r2": 0.3719712061613881,
+    "pass": false,
+    "gates": {
+      "oos_r2_ge_0.2": true,
+      "tail_breach_le_0.12": false
+    },
+    "by_era": {
+      "thursday": {
+        "n_oos": 48,
+        "oos_r2": 0.1498757785508844,
+        "tail_breach_rate": 0.1875
+      },
+      "tuesday": {
+        "n_oos": 52,
+        "oos_r2": 0.43708089005647044,
+        "tail_breach_rate": 0.17307692307692307
+      },
+      "transition": {
+        "n_oos": 0
+      }
+    },
+    "model": {
+      "intercept": -5.400073690106303,
+      "coef_morning_rv": 0.6126739900566647,
+      "coef_vix": 0.38642292976964465,
+      "resid_scale": 0.7105243687221373,
+      "t_crit": 1.2815515655446004,
+      "in_sample_r2": 0.3719712061613881,
+      "n": 149,
+      "trained_through": "2026-09-22",
+      "min_train": 49
+    },
+    "model_path": "data/models/fno_expiry_vol.json"
+  },
+  "profile": {
+    "range_share_by_time": {
+      "09:20": 0.4205290613619651,
+      "10:00": 0.6000488398928939,
+      "11:15": 0.7387940576715724
+    },
+    "range_share_n": {
+      "09:20": 735,
+      "10:00": 735,
+      "11:15": 736
+    },
+    "gap_vs_rest_of_day": 0.4575003332776528,
+    "gap_vs_rest_n": 734,
+    "vix_vs_rv_by_cycle_day": {
+      "0": {
+        "n": 150,
+        "mean_prior_vix": 14.012266666666667,
+        "mean_9_20_15_10_rv_pct": 0.5230873707027641,
+        "corr_vix_rv": 0.47446011464114074
+      },
+      "1": {
+        "n": 146,
+        "mean_prior_vix": 14.269931506849314,
+        "mean_9_20_15_10_rv_pct": 0.5157822358185844,
+        "corr_vix_rv": 0.6496170264289417
+      },
+      "2": {
+        "n": 152,
+        "mean_prior_vix": 14.13644736842105,
+        "mean_9_20_15_10_rv_pct": 0.533019958561314,
+        "corr_vix_rv": 0.4258807537226679
+      },
+      "3": {
+        "n": 142,
+        "mean_prior_vix": 13.88669014084507,
+        "mean_9_20_15_10_rv_pct": 0.5125868582896316,
+        "corr_vix_rv": 0.5079944512217855
+      },
+      "4": {
+        "n": 146,
+        "mean_prior_vix": 14.04917808219178,
+        "mean_9_20_15_10_rv_pct": 0.5301895745967254,
+        "corr_vix_rv": 0.43134435730495946
+      }
+    }
+  }
+}

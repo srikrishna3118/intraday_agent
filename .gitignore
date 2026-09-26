@@ -11,6 +11,8 @@ build/
 # Runtime data (keep local; may contain paths or session state)
 logs/
 data/candles/
+data/candles_fno/
+data/fno_open_positions.json
 data/instruments.json
 data/trade_journal.db
 data/models/

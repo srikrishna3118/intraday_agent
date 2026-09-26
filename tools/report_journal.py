@@ -8,7 +8,9 @@ import json
 import os
 import sqlite3
 import sys
-from datetime import datetime
+from datetime import datetime, time as dtime
+
+import pytz
 
 import matplotlib
 
@@ -37,7 +39,17 @@ def parse_args() -> argparse.Namespace:
         default=Config.TRADE_JOURNAL_PATH,
         help="Path to trade_journal.db",
     )
+    parser.add_argument(
+        "--since",
+        default="",
+        help="Keep trades with entry_time on or after YYYY-MM-DD (IST)",
+    )
     return parser.parse_args()
+
+
+IST = pytz.timezone("Asia/Kolkata")
+_SESSION_OPEN = dtime(9, 15)
+_SESSION_CLOSE = dtime(15, 30)
 
 
 def load_trades(db_path: str, source: str) -> pd.DataFrame:
@@ -57,13 +69,130 @@ def load_trades(db_path: str, source: str) -> pd.DataFrame:
     if df.empty:
         raise ValueError("No trades in journal for the selected filter")
 
-    df["exit_time"] = pd.to_datetime(df["exit_time"], utc=True, errors="coerce")
-    df["entry_time"] = pd.to_datetime(df["entry_time"], utc=True, errors="coerce")
+    df["exit_time"] = pd.to_datetime(df["exit_time"], errors="coerce")
+    df["entry_time"] = pd.to_datetime(df["entry_time"], errors="coerce")
     df["pnl_amount"] = pd.to_numeric(df["pnl_amount"], errors="coerce").fillna(0)
     df["pnl_pct"] = pd.to_numeric(df["pnl_pct"], errors="coerce").fillna(0)
     df["win"] = df["pnl_pct"] > 0
     df = apply_costs(df)
     return df
+
+
+def _as_ist(series: pd.Series) -> pd.Series:
+    ts = pd.to_datetime(series, errors="coerce")
+    if getattr(ts.dt, "tz", None) is not None:
+        return ts.dt.tz_convert(IST)
+    return ts.dt.tz_localize(IST)
+
+
+def filter_report_rows(df: pd.DataFrame, source: str, since: str = "") -> pd.DataFrame:
+    out = df.copy()
+    entry_ist = _as_ist(out["entry_time"])
+    if since:
+        start = pd.Timestamp(since)
+        if start.tzinfo is None:
+            start = IST.localize(start.to_pydatetime())
+        out = out.loc[entry_ist >= start].copy()
+        entry_ist = _as_ist(out["entry_time"])
+    fno_like = source in {"paper_fno", "live_fno"} or (
+        "source" in out.columns and out["source"].astype(str).str.contains("fno", na=False).any()
+    )
+    if fno_like and not out.empty:
+        reasons = out.get("exit_reason", pd.Series(dtype=str)).fillna("").astype(str)
+        out = out.loc[~reasons.str.contains("restart_stale", na=False)].copy()
+        entry_ist = _as_ist(out["entry_time"])
+        times = entry_ist.dt.tz_localize(None) if getattr(entry_ist.dt, "tz", None) else entry_ist
+        clock = times.dt.time
+        in_hours = (clock >= _SESSION_OPEN) & (clock <= _SESSION_CLOSE)
+        out = out.loc[in_hours].copy()
+    return out
+
+
+def _parse_features(raw: object) -> dict:
+    if not raw:
+        return {}
+    if isinstance(raw, dict):
+        return raw
+    try:
+        parsed = json.loads(str(raw))
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def _max_drawdown(net: pd.Series) -> float:
+    curve = net.cumsum()
+    peak = curve.cummax()
+    dd = curve - peak
+    return float(dd.min()) if not dd.empty else 0.0
+
+
+def fno_breakdown(df: pd.DataFrame) -> dict:
+    if df.empty:
+        return {"arms": [], "max_drawdown_rs": 0, "cost_share_of_gross": None}
+    work = df.copy()
+    feats = work["entry_features"].map(_parse_features) if "entry_features" in work.columns else pd.Series([{}] * len(work))
+    work["arm"] = work.get("strategy_name", pd.Series([""] * len(work))).fillna("")
+    work["expiry_cycle_day"] = feats.map(lambda f: f.get("expiry_cycle_day"))
+    work["ema_state"] = feats.map(lambda f: f.get("ema_state"))
+    vix = pd.to_numeric(feats.map(lambda f: f.get("vix")), errors="coerce")
+    work["vix"] = vix
+    try:
+        work["vix_tercile"] = pd.qcut(work["vix"].dropna(), 3, labels=["low", "mid", "high"], duplicates="drop")
+        work.loc[work["vix"].isna(), "vix_tercile"] = "unknown"
+        work["vix_tercile"] = work["vix_tercile"].astype(str)
+    except (ValueError, TypeError):
+        work["vix_tercile"] = "unknown"
+    work["vix_tercile"] = work["vix_tercile"].fillna("unknown")
+
+    def _group_lines(frame: pd.DataFrame, key: str) -> list[dict]:
+        if key not in frame.columns:
+            return []
+        rows = []
+        grouped = frame.groupby(key, dropna=False)
+        for name, part in grouped:
+            gross = float(part["pnl_amount"].sum())
+            costs = float(part["trade_cost_rs"].sum())
+            net = float(part["net_pnl_amount"].sum())
+            rows.append(
+                {
+                    "key": str(name),
+                    "trades": int(len(part)),
+                    "gross_rs": round(gross, 0),
+                    "costs_rs": round(costs, 0),
+                    "net_rs": round(net, 0),
+                    "win_rate": round(100 * float(part["win"].mean()), 1) if len(part) else 0,
+                    "max_dd_rs": round(_max_drawdown(part["net_pnl_amount"]), 0),
+                }
+            )
+        return sorted(rows, key=lambda r: r["trades"], reverse=True)
+
+    gross = float(work["pnl_amount"].sum())
+    costs = float(work["trade_cost_rs"].sum())
+    cost_share = None if abs(gross) < 1e-9 else costs / abs(gross)
+    return {
+        "arms": _group_lines(work, "arm"),
+        "expiry_cycle_day": _group_lines(work, "expiry_cycle_day"),
+        "vix_tercile": _group_lines(work, "vix_tercile"),
+        "ema_state": _group_lines(work, "ema_state"),
+        "max_drawdown_rs": round(_max_drawdown(work["net_pnl_amount"]), 0),
+        "cost_share_of_gross": None if cost_share is None else round(cost_share, 3),
+        "net_after_fno_costs_rs": round(float(work["net_pnl_amount"].sum()), 0),
+    }
+
+
+def _print_breakdown_block(title: str, rows: list[dict]) -> None:
+    if not rows:
+        return
+    print(f"\n{title}")
+    for row in rows:
+        print(
+            f"  {row['key']}: {row['trades']} trades  "
+            f"net ₹{row['net_rs']:,.0f}  "
+            f"gross ₹{row['gross_rs']:,.0f}  "
+            f"costs ₹{row['costs_rs']:,.0f}  "
+            f"win {row['win_rate']}%"
+        )
 
 
 def compute_summary(df: pd.DataFrame) -> dict:
@@ -288,7 +417,21 @@ def main() -> int:
         print("Run: python tools/bootstrap_backtest.py --symbols RELIANCE,SBIN --days 30")
         return 1
 
+    before = len(df)
+    df = filter_report_rows(df, args.source, args.since)
+    if df.empty:
+        print(f"Error: no trades left after filters (had {before}, --since={args.since or 'none'})")
+        return 1
+
     summary = compute_summary(df)
+    breakdown = None
+    if args.source in {"paper_fno", "live_fno"} or (
+        "source" in df.columns and df["source"].astype(str).str.contains("fno", na=False).any()
+    ):
+        breakdown = fno_breakdown(df)
+        summary["fno_max_drawdown_rs"] = breakdown["max_drawdown_rs"]
+        summary["fno_cost_share_of_gross"] = breakdown["cost_share_of_gross"]
+        summary["fno_breakdown"] = breakdown
     files = {
         "summary_card": plot_summary_card(summary, df, args.output, tag, source_label),
         "equity_curve": plot_equity_curve(df, args.output, tag),
@@ -309,6 +452,14 @@ def main() -> int:
     print(f"Gross P&L: ₹{summary['gross_pnl_rs']:,.0f}  |  Est. costs: ₹{summary['total_costs_rs']:,.0f}")
     print(f"Net P&L:   ₹{summary['net_pnl_rs']:,.0f}  ({summary['cost_model']})")
     print(f"Avg net/trade: ₹{summary['avg_net_per_trade_rs']:,.1f}")
+    if breakdown:
+        print(f"Max net drawdown: ₹{breakdown['max_drawdown_rs']:,.0f}")
+        share = breakdown["cost_share_of_gross"]
+        print(f"Cost share of |gross|: {share if share is not None else 'n/a'}")
+        _print_breakdown_block("By arm", breakdown.get("arms") or [])
+        _print_breakdown_block("By expiry-cycle day", breakdown.get("expiry_cycle_day") or [])
+        _print_breakdown_block("By VIX tercile", breakdown.get("vix_tercile") or [])
+        _print_breakdown_block("By EMA state", breakdown.get("ema_state") or [])
     print(f"\nCharts saved to: {args.output}/")
     for name, path in files.items():
         print(f"  {name}: {os.path.basename(path)}")

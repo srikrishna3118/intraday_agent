@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import time
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from typing import Any, Mapping
 
 import pandas as pd
@@ -360,6 +360,116 @@ class AngelBroker:
             return None
         exchange = str(instrument.get("exchange") or Config.EXCHANGE_NSE)
         return self.get_ltp(str(tradingsymbol), str(symboltoken), exchange=exchange)
+
+    def get_ltp_batch(
+        self,
+        instruments: list[Mapping[str, Any]],
+    ) -> dict[str, float]:
+        """Batch LTP via ``getMarketData`` keyed by symboltoken."""
+        self.ensure_session()
+        by_exchange: dict[str, list[str]] = {}
+        token_to_key: dict[str, str] = {}
+        for inst in instruments:
+            token = str(inst.get("symboltoken") or "")
+            if not token:
+                continue
+            exchange = str(inst.get("exchange") or Config.EXCHANGE_NSE)
+            by_exchange.setdefault(exchange, [])
+            if token not in by_exchange[exchange]:
+                by_exchange[exchange].append(token)
+            token_to_key[token] = token
+        if not by_exchange:
+            return {}
+        try:
+            response = self.smart_api.getMarketData("LTP", by_exchange)
+            fetched = (response or {}).get("data") or {}
+            rows = fetched.get("fetched") if isinstance(fetched, dict) else fetched
+            if rows is None and isinstance(fetched, list):
+                rows = fetched
+            out: dict[str, float] = {}
+            for row in rows or []:
+                token = str(row.get("symbolToken") or row.get("symboltoken") or "")
+                ltp = row.get("ltp")
+                if token and ltp is not None:
+                    out[token] = float(ltp)
+            return out
+        except Exception as exc:
+            logger.warning("getMarketData LTP batch failed: %s", exc)
+            return {}
+
+    def get_basket_margin(
+        self,
+        legs: list[Mapping[str, Any]],
+        *,
+        product_type: str = Config.PRODUCT_INTRADAY,
+    ) -> float | None:
+        """SPAN/exposure estimate for a multi-leg basket (INTRADAY)."""
+        self.ensure_session()
+        positions = []
+        for spec in legs:
+            inst = spec.get("instrument") or spec
+            token = str(inst.get("symboltoken") or "")
+            qty = int(spec.get("quantity") or inst.get("lotsize") or 0)
+            if not token or qty <= 0:
+                continue
+            side = str(spec.get("side") or spec.get("tradeType") or "LONG").upper()
+            trade_type = "SELL" if side in {"SHORT", "SELL"} else "BUY"
+            positions.append(
+                {
+                    "exchange": str(inst.get("exchange") or "NFO"),
+                    "qty": qty,
+                    "price": float(spec.get("price") or spec.get("entry_price") or 0),
+                    "productType": product_type,
+                    "token": token,
+                    "tradeType": trade_type,
+                    "orderType": "LIMIT",
+                }
+            )
+        if not positions:
+            return None
+        try:
+            response = self.smart_api.getMarginApi({"positions": positions})
+            data = (response or {}).get("data") or {}
+            total = data.get("totalMarginRequired")
+            if total is None:
+                breakup = data.get("marginBreakup") or []
+                if breakup:
+                    total = breakup[0].get("totalMarginRequired")
+            return float(total) if total is not None else None
+        except Exception as exc:
+            logger.warning("getMarginApi failed: %s", exc)
+            return None
+
+    def get_option_greeks(
+        self,
+        name: str,
+        expiry: date | str,
+    ) -> list[dict[str, Any]]:
+        """Angel optionGreek chain (1 req/s). ``name`` is the underlying, e.g. NIFTY."""
+        self.ensure_session()
+        if hasattr(expiry, "strftime"):
+            expiry_text = expiry.strftime("%d%b%Y").upper()
+        else:
+            expiry_text = str(expiry)
+        try:
+            response = self.smart_api.optionGreek(
+                {"name": name, "expirydate": expiry_text}
+            )
+            if not response or not response.get("status"):
+                return []
+            rows = response.get("data") or []
+            return [row for row in rows if isinstance(row, dict)]
+        except Exception as exc:
+            logger.warning("optionGreek failed for %s %s: %s", name, expiry_text, exc)
+            return []
+
+    def estimate_charges(self, orders: list[Mapping[str, Any]]) -> dict[str, Any] | None:
+        self.ensure_session()
+        try:
+            return self.smart_api.estimateCharges({"orders": list(orders)})
+        except Exception as exc:
+            logger.warning("estimateCharges failed: %s", exc)
+            return None
 
     def place_order(
         self,

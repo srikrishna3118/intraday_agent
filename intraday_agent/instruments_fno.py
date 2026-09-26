@@ -190,6 +190,20 @@ class FnOInstrumentRegistry:
         )
         return expiries[0] if expiries else None
 
+    def nearest_expiry(
+        self,
+        underlying: str,
+        *,
+        as_of: date | None = None,
+    ) -> date | None:
+        """Nearest listed expiry, weekly or monthly.
+
+        ``FNO_WEEKLY_ONLY`` used to drop the monthly contract, so the last
+        week of the month jumped to next week's weekly. Paper arms trade the
+        front contract instead.
+        """
+        return self.next_expiry(underlying, weekly_only=False, as_of=as_of)
+
     def available_strikes(self, underlying: str, expiry: date) -> list[float]:
         self._ensure_loaded()
         return sorted(self._strikes.get((underlying.upper().strip(), expiry), set()))
@@ -238,6 +252,54 @@ def get_fno_registry() -> FnOInstrumentRegistry:
         _fno_registry = FnOInstrumentRegistry()
         _fno_registry.load()
     return _fno_registry
+
+
+def trading_dte(expiry: date, as_of: date | None = None) -> int:
+    """Weekday count from ``as_of`` to ``expiry`` (0 on expiry day).
+
+    NSE holidays are not in the scrip master, so a holiday week can be off by
+    one. Calendar days are ``(expiry - as_of).days``.
+    """
+    ref = as_of or date.today()
+    if expiry < ref:
+        return -1
+    days = 0
+    cursor = ref
+    while cursor < expiry:
+        cursor += timedelta(days=1)
+        if cursor.weekday() < 5:
+            days += 1
+    return days
+
+
+def expiry_cycle_day(expiry: date, as_of: date | None = None) -> int:
+    """Intraday label: 0 = expiry session, 1 = previous weekday, …"""
+    return trading_dte(expiry, as_of=as_of)
+
+
+THURSDAY_EXPIRY_ERA_END = date(2025, 8, 28)
+TUESDAY_EXPIRY_ERA_START = date(2025, 9, 2)
+
+
+def historical_weekly_expiry(session: date) -> date:
+    """Nearest weekly NIFTY expiry on or after ``session`` (era-aware).
+
+    Thursday weekly expiries ran through 28 Aug 2025. Tuesday weekly
+    expiries start 2 Sep 2025. Holiday weeks can still be off by one.
+    """
+    weekday = 3 if session <= THURSDAY_EXPIRY_ERA_END else 1
+    cursor = session
+    while cursor.weekday() != weekday:
+        cursor += timedelta(days=1)
+    return cursor
+
+
+def historical_expiry_era(session: date) -> str:
+    if session <= THURSDAY_EXPIRY_ERA_END:
+        return "thursday"
+    if session >= TUESDAY_EXPIRY_ERA_START:
+        return "tuesday"
+    return "transition"
 
 
 def resolve_nifty_atm_straddle(spot_price: float, expiry: date | None = None) -> dict[str, Any] | None:

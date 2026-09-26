@@ -10,6 +10,7 @@ from intraday_agent.agent import IntradayAgent
 from intraday_agent.agent_fno import IntradayAgentFnO
 from intraday_agent.config import Config
 from intraday_agent.logging_setup import setup_logger
+from intraday_agent.runner import DualAgentRunner
 
 
 def _acquire_single_instance() -> None:
@@ -43,9 +44,9 @@ def main() -> int:
     )
     parser.add_argument(
         "--mode",
-        choices=("equity", "fno"),
+        choices=("equity", "fno", "both"),
         default=Config.AGENT_MODE,
-        help="Select the agent path to run",
+        help="Select the agent path to run (both = one Angel login)",
     )
     args = parser.parse_args()
 
@@ -55,7 +56,12 @@ def main() -> int:
     if not args.once:
         _acquire_single_instance()
 
-    agent = IntradayAgentFnO() if args.mode == "fno" else IntradayAgent()
+    if args.mode == "both":
+        agent = DualAgentRunner()
+    elif args.mode == "fno":
+        agent = IntradayAgentFnO()
+    else:
+        agent = IntradayAgent()
 
     if args.once:
         if agent.is_market_open():

@@ -4,6 +4,9 @@
 **Paper mode:** `LIVE_TRADING=false` — do not enable live without explicit approval.
 
 Related artifacts:
+- [EDGE_VALIDATED.md](EDGE_VALIDATED.md) — T2 paper stack (+₹2,438)
+- [MEAN_REVERSION_REFERENCE.md](MEAN_REVERSION_REFERENCE.md) — Ep.17 video taxonomy synced Aug 2026
+- [COOKBOOK_REEVAL.md](COOKBOOK_REEVAL.md) — Packt cookbook vs registry reevaluation (Aug 2026)
 - [NIFTY200_RESEARCH.md](NIFTY200_RESEARCH.md) — T200 cache + sprint artifacts
 - [PHASE4_FINDINGS_T200.md](PHASE4_FINDINGS_T200.md) / [PHASE5_FINDINGS_T200.md](PHASE5_FINDINGS_T200.md)
 - [quadapt_ml_bakeoff_verdict_t200.md](quadapt_ml_bakeoff_verdict_t200.md)
@@ -229,6 +232,9 @@ Expanding from ~50–80 liquid names to 200 adds **continuation risk** without e
 - `VWAP_MR_FADE_SHORT=true`
 - Quadapt ML in paper/live
 - ORB / VWAP as **replacement** for MR (only complementary, capped, later)
+- **Cookbook EMA(4/9) / MACD trend crossovers** — same flip class as ORB/VWAP (−₹42k); do not add to paper registry ([COOKBOOK_REEVAL.md](COOKBOOK_REEVAL.md))
+- BB squeeze / NR7 as **equity** primary strategies — Type 2 deferred ([MEAN_REVERSION_REFERENCE.md](MEAN_REVERSION_REFERENCE.md))
+- Live NFO / naked shorts — blocked. Paper F&O is a **side** track, not an equity replacement ([OPTIONS_FNO_ANALYSIS.md](OPTIONS_FNO_ANALYSIS.md))
 - `LIVE_TRADING=true`
 - Pairs / stat arb in this agent
 
@@ -447,3 +453,5 @@ Phase 1 scripts (P4 only): T50/T80 liquidity backtest on cache.
 | 2026-07-10 | **Critical review:** reprioritise P0 sizing/trailing/alignment; defer universe expansion; schedule time-stop P1 |
 | 2026-07-10 | **P0 applied:** `.env` nifty50, ₹50k capital, surge block 2.0, learning off |
 | 2026-07-10 | **P1 complete:** time stop 4–5 bars net negative; baseline +₹2,176 at ₹50k — keep `TIME_STOP_BARS=0` |
+| 2026-08-04 | **Cookbook reeval:** Packt EMA/MACD trend flips rejected; see [COOKBOOK_REEVAL.md](COOKBOOK_REEVAL.md) |
+| 2026-08-04 | **Video MR sync:** refreshed [MEAN_REVERSION_REFERENCE.md](MEAN_REVERSION_REFERENCE.md); Type 2 BB/NR7 deferred; no paper `.env` change |
